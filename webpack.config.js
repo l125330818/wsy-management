@@ -30,7 +30,6 @@ module.exports = {
             "React": "react",
             "ReactDOM":"react-dom",
             "$": "jquery",
-            "jQuery": "jquery"
         }),
         new webpack.OldWatchingPlugin()
     ]
