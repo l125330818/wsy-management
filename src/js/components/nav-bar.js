@@ -22,19 +22,24 @@ const Nav = React.createClass({
         let {navList} = _this.state;
         return(
             <div className = "nav-div">
+                <div className="info-div">
+                    <img src={require("../../images/yeoman.png")} alt=""/>
+                </div>
                 <ul>
                     {
                         navList.map((item,index)=>{
-                            let parStyle = "first-li animated ";
-                            item.isExpand?parStyle+=" active fadeInDown" : parStyle;
+                            let parStyle = "first-li  ";
+                            let animateStyle = "animated ";
+                            item.isExpand?animateStyle+="fadeInDown" : animateStyle+="fadeInUp";
+                            item.isExpand?parStyle+=" active " : parStyle;
                             return(
                                 <li key = {index} onClick = {this.clickNav.bind(_this,item)} className={parStyle}>
-                                    <a href="javascript:;">{item.key}</a>
+                                    <a href="javascript:;" className="gradient">{item.key}</a>
                                     <ul className="se-ul">
                                         {
                                             item.children.map((item,index)=>{
                                                 return(
-                                                    <li onClick = {(e)=>{e.stopPropagation();}} key ={index}><a href="javascript:;">{item.key}</a></li>
+                                                    <li className={animateStyle} onClick = {(e)=>{e.stopPropagation();}} key ={index}><a href="javascript:;">{item.key}</a></li>
                                                 )
                                             })
                                         }
