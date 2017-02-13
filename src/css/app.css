@@ -3,12 +3,36 @@ html, body, div, h5, h6, p, ul, li {
   padding: 0px; }
 
 html {
-  font-size: 14px; }
+  font-size: 14px;
+  background-color: #ccc; }
 
 ul {
   list-style: none; }
 
-#app {
-  background: #f2f2f2; }
+.left {
+  float: left; }
+
+.right {
+  float: right; }
+
+.clearfix:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+.relative {
+  position: relative; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center; }
+  table tr:hover {
+    background-color: #f2f2f2; }
+  table td {
+    border: 1px solid #ccc;
+    height: 40px; }
 
 /*# sourceMappingURL=app.css.map */

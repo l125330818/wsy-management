@@ -1,0 +1,11 @@
+.depart-content {
+  position: relative; }
+  .depart-content .add-btn {
+    position: absolute;
+    right: 0;
+    top: 0; }
+  .depart-content .tbn-div {
+    position: relative;
+    height: 50px; }
+
+/*# sourceMappingURL=department-management.css.map */

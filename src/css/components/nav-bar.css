@@ -2214,12 +2214,12 @@
 
 .nav-div {
   height: 100%;
-  width: 150px;
+  width: 182px;
   position: fixed;
   left: 0;
   top: 0;
   border: 1px solid #ccc;
-  background-color: #cbdff2; }
+  background-color: #404040; }
   .nav-div li {
     text-align: center;
     line-height: 30px; }

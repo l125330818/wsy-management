@@ -3,21 +3,29 @@
  */
 import "../../css/components/nav-bar.scss";
 import 'antd/dist/antd.css';
-import { Button,Checkbox  } from 'antd';
+import { Menu, Icon } from 'antd';
+const SubMenu = Menu.SubMenu;
 const Nav = React.createClass({
+    contextTypes: {
+        router: React.PropTypes.object
+    },
     getInitialState(){
         return{
             navList:[
-                {key:"部门成员",isExpand:false,children:[{key:"部门管理"},{key:"成员管理"},{key:"帐号管理"}]},
-                {key:"产品库存",isExpand:false,children:[{key:"部门管理"},{key:"成员管理"},{key:"帐号管理"}]},
-                {key:"生产管理",isExpand:false,children:[{key:"部门管理"},{key:"成员管理"},{key:"帐号管理"}]},
-            ]
+                {key:"部门成员",type:"team",children:[{key:"部门管理",value:1},{key:"成员管理",value:2},{key:"帐号管理",value:3}]},
+                {key:"产品库存",type:"appstore",children:[{key:"分类管理",value:4},{key:"商品管理",value:5},{key:"库存管理",value:6},{key:"出入库管理",value:7}]},
+                {key:"生产管理",type:"solution",children:[{key:"生产订单",value:8},{key:"生产管理",value:9}]},
+            ],
+            currentKey:"1",
         }
     },
-    clickNav(item,e){
-        let {navList} = this.state;
-        item.isExpand = !item.isExpand;
-        this.setState({});
+    handleClick(e){
+        this.setState({
+           currentKey: e.key
+        },()=>{
+            this.context.router.push("/member");
+        });
+        console.log(e)
     },
     render(){
         let _this = this;
@@ -26,34 +34,31 @@ const Nav = React.createClass({
             <div className = "nav-div">
                 <div className="info-div">
                     <img src={require("../../images/yeoman.png")} alt=""/>
-                    <Button type="primary">按钮</Button>
-                    <Checkbox>Check</Checkbox>
                 </div>
-                <ul>
+                <Menu
+                    theme={"dark"}
+                    onClick={this.handleClick}
+                    style={{ width: 180 }}
+                    defaultOpenKeys={['sub0']}
+                    selectedKeys={[this.state.currentKey]}
+                    mode="inline"
+                >
                     {
                         navList.map((item,index)=>{
-                            let parStyle = "first-li  ";
-                            let animateStyle = "animated ";
-                            item.isExpand?animateStyle+="fadeInDown" : animateStyle+="fadeInUp";
-                            item.isExpand?parStyle+=" active " : parStyle;
                             return(
-                                <li key = {index} onClick = {this.clickNav.bind(_this,item)} className={parStyle}>
-                                    <a href="javascript:;" className="gradient">{item.key}</a>
-                                    <ul className="se-ul">
-                                        {
-                                            item.children.map((item,index)=>{
-                                                return(
-                                                    <li className={animateStyle} onClick = {(e)=>{e.stopPropagation();}} key ={index}><a href="javascript:;">{item.key}</a></li>
-                                                )
-                                            })
-                                        }
-                                    </ul>
-                                    <i className="more"></i>
-                                </li>
+                                <SubMenu key={"sub"+index} title={<span><Icon type={item.type} /><span>{item.key}</span></span>}>
+                                    {
+                                        item.children.map((childItem)=>{
+                                            return(
+                                                <Menu.Item key={childItem.value+""}>{childItem.key}</Menu.Item>
+                                            )
+                                        })
+                                    }
+                                </SubMenu>
                             )
                         })
                     }
-                </ul>
+                </Menu>
             </div>
         )
     }

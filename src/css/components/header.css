@@ -1,0 +1,37 @@
+.header-div {
+  height: 60px;
+  width: 100%;
+  border: 1px solid  #ccc; }
+  .header-div h1 {
+    font-size: 32px;
+    line-height: 60px;
+    padding-left: 50px; }
+
+.header-bread {
+  height: 50px;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-left: none; }
+
+.line-50 {
+  line-height: 50px; }
+
+.login-out {
+  font-size: 18px;
+  text-align: center;
+  position: absolute;
+  height: 60px;
+  width: 100px;
+  right: 0;
+  top: 0;
+  line-height: 60px; }
+  .login-out a {
+    color: #333; }
+
+.page-content {
+  padding: 30px 10px; }
+
+.right-page {
+  margin-left: 182px; }
+
+/*# sourceMappingURL=header.css.map */

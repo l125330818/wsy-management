@@ -5,10 +5,29 @@ html, body, div, h5, h6, p, ul, li {
 }
 html{
     font-size: 14px;
+    background-color: #ccc;
 }
 ul{
     list-style: none;
 }
-#app {
-    background: #f2f2f2;
+.left{float: left;}
+.right{float:right;}
+.clearfix:after{content:"";display:block;height:0;clear:both;visibility:hidden}
+.relative{
+    position: relative;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    tr{
+        &:hover{
+            background-color: #f2f2f2;
+        }
+    }
+    td{
+        border:1px solid #ccc;
+        height:40px;
+
+    }
 }

@@ -3,11 +3,18 @@
  */
 import { Router, Route, hashHistory } from 'react-router';
 import Nav from "./nav-bar";
+import Header from "./header";
 const Layout = React.createClass({
     render(){
         return(
             <div>
                 <Nav></Nav>
+                <div className="right-page">
+                    <Header bread = {this.props.bread}></Header>
+                    <div className ="page-content">
+                        {this.props.children}
+                    </div>
+                </div>
             </div>
         )
     }
