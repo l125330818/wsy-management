@@ -2,6 +2,8 @@
  * Created by luojie on 2017/2/9 16:39.
  */
 import "../../css/components/nav-bar.scss";
+import 'antd/dist/antd.css';
+import { Button,Checkbox  } from 'antd';
 const Nav = React.createClass({
     getInitialState(){
         return{
@@ -24,6 +26,8 @@ const Nav = React.createClass({
             <div className = "nav-div">
                 <div className="info-div">
                     <img src={require("../../images/yeoman.png")} alt=""/>
+                    <Button type="primary">按钮</Button>
+                    <Checkbox>Check</Checkbox>
                 </div>
                 <ul>
                     {
