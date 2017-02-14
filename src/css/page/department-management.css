@@ -7,5 +7,13 @@
   .depart-content .tbn-div {
     position: relative;
     height: 50px; }
+    .depart-content .tbn-div label {
+      margin-left: 30px; }
+
+.w-150 {
+  width: 150px !important; }
+
+.w-120 {
+  width: 120px !important; }
 
 /*# sourceMappingURL=department-management.css.map */

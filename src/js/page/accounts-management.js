@@ -7,7 +7,7 @@ import "../../css/page/department-management.scss";
 const Depart = React.createClass({
     render(){
         return(
-            <Layout currentKey = "2" bread = {["部门成员","成员管理"]}>
+            <Layout currentKey = "3" bread = {["部门成员","帐号管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
                         <label htmlFor="">部门：</label>
@@ -17,7 +17,7 @@ const Depart = React.createClass({
                             stuff={true}
                             className="rui-theme-1 w-120">
                         </RUI.Select>
-                        <label htmlFor="">名字：</label>
+                        <label htmlFor="">帐号：</label>
                         <RUI.Input className = "w-150"></RUI.Input>
                         <RUI.Button className="primary">搜索</RUI.Button>
                         <RUI.Button className="add-btn primary">添加</RUI.Button>
@@ -25,11 +25,9 @@ const Depart = React.createClass({
                     <table>
                         <thead>
                         <tr>
-                            <td>工号</td>
+                            <td>帐号</td>
                             <td>名字</td>
-                            <td>手机号</td>
-                            <td>入职时间</td>
-                            <td>部门</td>
+                            <td>类型</td>
                             <td>操作方式</td>
                         </tr>
                         </thead>
@@ -37,20 +35,16 @@ const Depart = React.createClass({
                             <tr>
                                 <td>01</td>
                                 <td>张三</td>
-                                <td>13568763633</td>
-                                <td>2017-02-14 22:10:22</td>
-                                <td>机车部</td>
+                                <td>上岸管理员</td>
                                 <td>
                                     <a href="">修改</a>
                                     <a href="">删除</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td>02</td>
-                                <td>李四</td>
-                                <td>13568763633</td>
-                                <td>2017-02-14 22:10:22</td>
-                                <td>机车部</td>
+                                <td>01</td>
+                                <td>张三</td>
+                                <td>上岸管理员</td>
                                 <td>
                                     <a href="">修改</a>
                                     <a href="">删除</a>

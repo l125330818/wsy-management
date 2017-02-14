@@ -13,20 +13,31 @@ const Nav = React.createClass({
     getInitialState(){
         return{
             navList:[
-                {key:"部门成员",type:"team",children:[{key:"部门管理",value:1},{key:"成员管理",value:2},{key:"帐号管理",value:3}]},
-                {key:"产品库存",type:"appstore",children:[{key:"分类管理",value:4},{key:"商品管理",value:5},{key:"库存管理",value:6},{key:"出入库管理",value:7}]},
-                {key:"生产管理",type:"solution",children:[{key:"生产订单",value:8},{key:"生产管理",value:9}]},
+                {key:"部门成员",type:"team",children:[
+                    {key:"部门管理",value:1,path:"/"},
+                    {key:"成员管理",value:2,path:"/member"},
+                    {key:"帐号管理",value:3,path:"/accounts"}]},
+                {key:"产品库存",type:"appstore",children:[
+                    {key:"分类管理",value:4,path:"/accounts"},
+                    {key:"商品管理",value:5,path:"/accounts"},
+                    {key:"库存管理",value:6,path:"/accounts"},{key:"出入库管理",value:7,path:"/accounts"}]},
+                {key:"生产管理",type:"solution",children:[
+                    {key:"生产订单",value:8,path:"/accounts"},
+                    {key:"生产管理",value:9,path:"/accounts"}]},
             ],
             currentKey:this.props.currentKey,
         }
     },
     handleClick(e){
+        let {navList} = this.state;
+        let key1 = Number(e.keyPath[1]);
+        let key2 = Number(e.keyPath[0])-1;
+        let path = navList[key1].children[key2].path;
         this.setState({
            currentKey: e.key
         },()=>{
-            hashHistory.push("/member");
+            hashHistory.push(path);
         });
-
     },
     render(){
         let _this = this;
@@ -41,14 +52,14 @@ const Nav = React.createClass({
                     theme={"dark"}
                     onClick={this.handleClick}
                     style={{ width: 180 }}
-                    defaultOpenKeys={['sub0']}
+                    defaultOpenKeys={['0']}
                     selectedKeys={[this.state.currentKey]}
                     mode="inline"
                 >
                     {
                         navList.map((item,index)=>{
                             return(
-                                <SubMenu key={"sub"+index} title={<span><Icon type={item.type} /><span>{item.key}</span></span>}>
+                                <SubMenu key={index} title={<span><Icon type={item.type} /><span>{item.key}</span></span>}>
                                     {
                                         item.children.map((childItem)=>{
                                             return(
