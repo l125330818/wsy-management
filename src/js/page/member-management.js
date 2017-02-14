@@ -10,7 +10,7 @@ import "../../css/page/department-management.scss";
 const Depart = React.createClass({
     render(){
         return(
-            <Layout bread = {["部门成员","成员管理"]}>
+            <Layout currentKey = "2" bread = {["部门成员","成员管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
                         <Button type="primary" className="add-btn">添加</Button>
