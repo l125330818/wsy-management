@@ -1,9 +1,9 @@
 /**
  * Created by Administrator on 2017-2-13.
  */
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 import { Button } from 'antd';
-import "../../css/page/department-management.scss";
+import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     render(){
         return(

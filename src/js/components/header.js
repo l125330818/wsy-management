@@ -8,7 +8,7 @@ const Header = React.createClass({
         return(
             <div>
                 <div className="header-div">
-                    <h1>wsy管理系统</h1>
+                    <h1>wsy</h1>
                 </div>
                 <div className="header-bread">
                     <Breadcrumb className = "line-50">

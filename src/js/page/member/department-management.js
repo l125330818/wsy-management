@@ -2,9 +2,10 @@
  * Created by Administrator on 2017-2-13.
  */
 import RUI from "react-component-lib";
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
+import Pager from "../../components/pager";
 import { Button } from 'antd';
-import "../../css/page/department-management.scss";
+import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     doPage(){
 
@@ -39,11 +40,7 @@ const Depart = React.createClass({
                        </tbody>
 
                    </table>
-                   <div className="footer">
-                       <div className="right">
-                           <RUI.Pagination pageSize={10} currentPage={1} totalNum={100} onPage={this.doPage} />
-                       </div>
-                   </div>
+                   <Pager></Pager>
                </div>
            </Layout>
        )
