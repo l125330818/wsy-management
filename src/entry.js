@@ -17,5 +17,15 @@ ReactDOM.render((
                      cb(null, require("./js/page/member/accounts-management"))
                 })
             }}/>
+        <Route path="/classify" getComponent={function(nextState, cb) {
+                require.ensure([], (require) => {
+                     cb(null, require("./js/page/commodity/classify-management"))
+                })
+            }}/>
+        <Route path="/commodity" getComponent={function(nextState, cb) {
+                require.ensure([], (require) => {
+                     cb(null, require("./js/page/commodity/commodity-management"))
+                })
+            }}/>
     </Router>
 ), document.getElementById('app'));

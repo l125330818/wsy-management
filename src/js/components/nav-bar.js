@@ -18,23 +18,29 @@ const Nav = React.createClass({
                     {key:"成员管理",value:2,path:"/member"},
                     {key:"帐号管理",value:3,path:"/accounts"}]},
                 {key:"产品库存",type:"appstore",children:[
-                    {key:"分类管理",value:4,path:"/accounts"},
-                    {key:"商品管理",value:5,path:"/accounts"},
+                    {key:"分类管理",value:4,path:"/classify"},
+                    {key:"商品管理",value:5,path:"/commodity"},
                     {key:"库存管理",value:6,path:"/accounts"},{key:"出入库管理",value:7,path:"/accounts"}]},
                 {key:"生产管理",type:"solution",children:[
                     {key:"生产订单",value:8,path:"/accounts"},
                     {key:"生产管理",value:9,path:"/accounts"}]},
             ],
             currentKey:this.props.currentKey,
+            defaultOpen : this.props.defaultOpen || "0"
         }
     },
     handleClick(e){
         let {navList} = this.state;
-        let key1 = Number(e.keyPath[1]);
-        let key2 = Number(e.keyPath[0])-1;
-        let path = navList[key1].children[key2].path;
+        let key = Number(e.keyPath[1]);
+        let value = e.keyPath[0];
+        let children = navList[key].children;
+        let currObj = children.find((item)=>{
+            return item.value == value;
+        });
+        let path = currObj.path;
         this.setState({
-           currentKey: e.key
+           currentKey: e.key,
+            defaultOpen : key
         },()=>{
             hashHistory.push(path);
         });
@@ -42,7 +48,6 @@ const Nav = React.createClass({
     render(){
         let _this = this;
         let {navList} = _this.state;
-        console.log(this.state.currentKey);
         return(
             <div className = "nav-div">
                 <div className="info-div">
@@ -52,7 +57,7 @@ const Nav = React.createClass({
                     theme={"dark"}
                     onClick={this.handleClick}
                     style={{ width: 180 }}
-                    defaultOpenKeys={['0']}
+                    defaultOpenKeys={[this.state.defaultOpen]}
                     selectedKeys={[this.state.currentKey]}
                     mode="inline"
                 >

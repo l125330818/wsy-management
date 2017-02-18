@@ -16,4 +16,15 @@
 .w-120 {
   width: 120px !important; }
 
+.handle-a {
+  color: #4a9df8;
+  margin-right: 20px; }
+  .handle-a:active {
+    color: #108ee9; }
+
+.commodity-img {
+  width: 80px;
+  height: 80px;
+  margin: 10px 0; }
+
 /*# sourceMappingURL=department-management.css.map */

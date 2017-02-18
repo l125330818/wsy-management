@@ -13,7 +13,7 @@ const Depart = React.createClass({
 
     render(){
         return(
-            <Layout currentKey = {"4"} bread = {["产品库存","分类管理"]}>
+            <Layout currentKey = {"4"} defaultOpen={"1"} bread = {["产品库存","分类管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
                         <Button type="primary" className="add-btn">添加</Button>
@@ -28,11 +28,17 @@ const Depart = React.createClass({
                         <tbody>
                         <tr>
                             <td>裁剪鞋料</td>
-                            <td>删除</td>
+                            <td>
+                                <a href="javascript:;" className="handle-a">操作</a>
+                                <a href="javascript:;" className="handle-a">删除</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>裁剪鞋料</td>
-                            <td>删除</td>
+                            <td>
+                                <a href="javascript:;" className="handle-a">操作</a>
+                                <a href="javascript:;" className="handle-a">删除</a>
+                            </td>
                         </tr>
                         </tbody>
 

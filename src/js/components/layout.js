@@ -8,7 +8,7 @@ const Layout = React.createClass({
     render(){
         return(
             <div>
-                <Nav currentKey = {this.props.currentKey}></Nav>
+                <Nav defaultOpen = {this.props.defaultOpen} currentKey = {this.props.currentKey}></Nav>
                 <div className="right-page">
                     <Header bread = {this.props.bread}></Header>
                     <div className ="page-content">
