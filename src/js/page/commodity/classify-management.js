@@ -4,7 +4,6 @@
 import RUI from "react-component-lib";
 import Layout from "../../components/layout";
 import Pager from "../../components/pager";
-import { Button } from 'antd';
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     doPage(){
@@ -16,7 +15,7 @@ const Depart = React.createClass({
             <Layout currentKey = {"4"} defaultOpen={"1"} bread = {["产品库存","分类管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
-                        <Button type="primary" className="add-btn">添加</Button>
+                        <RUI.Button className="add-btn primary">添加</RUI.Button>
                     </div>
                     <table>
                         <thead>
