@@ -27,10 +27,18 @@ ReactDOM.render((
                      cb(null, require("./js/page/commodity/commodity-management"))
                 })
             }}/>
-    <Route path="/commodity/add" getComponent={function(nextState, cb) {
-        require.ensure([], (require) => {
-             cb(null, require("./js/page/commodity/add-commodity"))
-        })
-    }}/>
+
+        <Route path="/commodity/add" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+                 cb(null, require("./js/page/commodity/add-commodity"))
+            })
+
+        }}/>
+        <Route path="/stock" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+                 cb(null, require("./js/page/commodity/stock-management"))
+            })
+
+        }}/>
     </Router>
 ), document.getElementById('app'));
