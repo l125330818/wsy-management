@@ -2,8 +2,30 @@
  * Created by Administrator on 2017-2-13.
  */
 import Layout from "../../components/layout";
+import LabelInput from "../../components/label-input";
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
+    getInitialState(){
+        return{
+
+        }
+    },
+    handleSelect(e){
+        console.log(e);
+        let key = e.value;
+        switch(key*1){
+            case 1:
+                this.refs.dialogDetail.show();
+                break;
+            case 2:
+                this.refs.dialogOutPut.show();
+                break;
+        }
+    },
+    outPut(){
+        return false;
+    },
+    handleInput(){},
     render(){
         return(
             <Layout currentKey = "6" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
@@ -62,6 +84,7 @@ const Depart = React.createClass({
                                     data={[{key:'库存详情',value:'1'}, {key:'出库',value:'2'}, {key:'入库',value:'3'}, {key:'出入库明细',value:'4'}, {key:'库存设置',value:'5'}]}
                                     value={{key:'库存详情',value:'1'}}
                                     stuff={true}
+                                    callback = {this.handleSelect}
                                     className="rui-theme-1 w-120">
                                 </RUI.Select>
                             </td>
@@ -87,7 +110,72 @@ const Depart = React.createClass({
                         </tr>
                         </tbody>
                     </table>
-
+                    <RUI.Dialog ref="dialogDetail" title="库存详情" draggable={false} buttons="submit" >
+                        <div style={{width:'400px', wordWrap:'break-word'}}>
+                            <div className="">
+                                <label htmlFor="" className="c">产品信息：</label>
+                                <span>120双</span>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>鞋码</td>
+                                            <td>库存</td>
+                                            <td>库存区间</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>35</td>
+                                            <td>20</td>
+                                            <td>10-100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>35</td>
+                                            <td>20</td>
+                                            <td>10-100</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </RUI.Dialog>
+                    <RUI.Dialog ref="dialogOutPut" title="产品出库" draggable={false} buttons="submit,cancel" onSubmit = {this.outPut}>
+                        <div style={{width:'400px', wordWrap:'break-word'}}>
+                            <div className="">
+                                <label htmlFor="" className="c">产品信息：</label>
+                                <span>120双</span>
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <td>鞋码</td>
+                                        <td>库存</td>
+                                        <td>库存区间</td>
+                                        <td>出库数量</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>35</td>
+                                        <td>20</td>
+                                        <td>10-100</td>
+                                        <td><RUI.Input></RUI.Input></td>
+                                    </tr>
+                                    <tr>
+                                        <td>35</td>
+                                        <td>20</td>
+                                        <td>10-100</td>
+                                        <td><RUI.Input></RUI.Input></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："></LabelInput>
+                                <div className="m-t-10">
+                                    <label htmlFor="" className="left-label left">部门职能：</label>
+                                    <RUI.Textarea onChange = {this.handleInput.bind(this,"function")}   className ="w-245"></RUI.Textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </RUI.Dialog>
                 </div>
             </Layout>
         )

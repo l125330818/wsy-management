@@ -2,8 +2,27 @@
  * Created by Administrator on 2017-2-13.
  */
 import Layout from "../../components/layout";
+import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
+    getInitialState(){
+        return{
+
+        }
+    },
+    add(){
+        let param = JSON.stringify({id:3,type:"add"});
+        hashHistory.push("/commodity/add/"+param)
+    },
+    delete(){
+        RUI.DialogManager.confirm({
+            message:'您确定要删除吗？?',
+            title:'删除成员',
+            submit:function() {
+                console.log(222)
+            },
+        });
+    },
     render(){
         return(
             <Layout currentKey = "5" defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
@@ -19,7 +38,7 @@ const Depart = React.createClass({
                         <label htmlFor="">名称：</label>
                         <RUI.Input className = "w-150"></RUI.Input>
                         <RUI.Button className="primary">搜索</RUI.Button>
-                        <RUI.Button className="add-btn primary">添加</RUI.Button>
+                        <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                     </div>
                     <table>
                         <thead>
@@ -44,8 +63,8 @@ const Depart = React.createClass({
                             <td>儿童</td>
                             <td>35</td>
                             <td>
-                                <a href="javascript:;" className="handle-a">操作</a>
-                                <a href="javascript:;" className="handle-a">删除</a>
+                                <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
+                                <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
                             </td>
                         </tr>
                         <tr>

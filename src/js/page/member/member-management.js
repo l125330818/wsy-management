@@ -44,7 +44,7 @@ const Depart = React.createClass({
     handleInput(type,e){
         let {request} = this.state;
         request[type] = e.target.value;
-        this.setState({});
+        this.setState({request});
     },
     render(){
         return(

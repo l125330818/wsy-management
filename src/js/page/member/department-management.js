@@ -32,7 +32,7 @@ console.log(this.state.request);
     handleInput(type,e){
         let {request} = this.state;
         request[type] = e.target.value;
-        this.setState({});
+        this.setState({request});
     },
     modify(){
         this.setState({
