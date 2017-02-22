@@ -16,29 +16,31 @@ const Detail = React.createClass({
     },
     render(){
         return(
-            <Layout currentKey = "2" defaultOpen={"0"} bread = {["部门成员","成员管理"]}>
+            <Layout currentKey = "6" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
                 <div className="depart-content">
-                    <div className="tbn-div">
-                        <label htmlFor="">部门：</label>
+                    <div className="tbn-div clearfix">
+                        <label htmlFor="" className="left">库存操作：</label>
                         <RUI.Select
-                            data={[{key:'裁剪部',value:'1'}, {key:'机车部',value:'2'}, {key:'质检部',value:'3'}]}
-                            value={{key:'机车部',value:'1'}}
+                            data={[{key:'全部',value:'1'}, {key:'出库',value:'2'}, {key:'入库',value:'3'}]}
+                            value={{key:'全部',value:'1'}}
                             stuff={true}
-                            className="rui-theme-1 w-120">
+                            className="rui-theme-1 w-120 left">
                         </RUI.Select>
-                        <label htmlFor="">名字：</label>
-                        <RUI.Input className = "w-150"></RUI.Input>
+                        <label htmlFor="" className="left">操作时间：</label>
+                        <RUI.DatePicker className = "left" startValue={''} endValue={''} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
+                        <label htmlFor="" className = "left">操作人：</label>
+                        <RUI.Input className = "w-150 left"></RUI.Input>
                         <RUI.Button className="primary">搜索</RUI.Button>
-                        <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                     </div>
-                    <table>
+                    <table className="table">
                         <thead>
                         <tr>
-                            <td>工号</td>
-                            <td>名字</td>
-                            <td>手机号</td>
-                            <td>入职时间</td>
-                            <td>部门</td>
+                            <td>库存操作</td>
+                            <td>操作日期</td>
+                            <td>操作人</td>
+                            <td>操作数量</td>
+                            <td>库存总量</td>
+                            <td>备注</td>
                             <td>操作方式</td>
                         </tr>
                         </thead>
@@ -49,6 +51,7 @@ const Detail = React.createClass({
                             <td>13568763633</td>
                             <td>2017-02-14 22:10:22</td>
                             <td>机车部</td>
+                            <td>备注</td>
                             <td>
                                 <a href="javascript:;" className="handle-a" onClick = {this.detail}>明细</a>
                             </td>

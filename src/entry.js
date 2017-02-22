@@ -40,5 +40,11 @@ ReactDOM.render((
             })
 
         }}/>
+            <Route path="/stock/detail" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+                 cb(null, require("./js/page/commodity/stock-detail"))
+            })
+
+        }}/>
     </Router>
 ), document.getElementById('app'));

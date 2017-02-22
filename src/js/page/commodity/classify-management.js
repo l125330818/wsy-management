@@ -57,7 +57,7 @@ const Depart = React.createClass({
                     <div className="tbn-div">
                         <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                     </div>
-                    <table>
+                    <table className="table">
                         <thead>
                         <tr>
                             <td>类别名称</td>

@@ -3,6 +3,7 @@
  */
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
+import {hashHistory} from "react-router"
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     getInitialState(){
@@ -21,13 +22,15 @@ const Depart = React.createClass({
             case 2:
                 this.setState({title:"产品出库",numTitle:"出库数量"},()=>{
                     this.refs.dialogOutPut.show();
-                })
+                });
                 break;
             case 3:
                 this.setState({title:"产品入库",numTitle:"入库数量"},()=>{
                     this.refs.dialogOutPut.show();
-                })
+                });
                 break;
+            case 4:
+                hashHistory.push("/stock/detail");
         }
     },
     outPut(){
@@ -63,7 +66,7 @@ const Depart = React.createClass({
                         <RUI.Input className = "w-150 m-l-20"></RUI.Input>
                         <RUI.Button className="primary">搜索</RUI.Button>
                     </div>
-                    <table>
+                    <table className="table">
                         <thead>
                         <tr>
                             <td>产品图片</td>
@@ -123,7 +126,7 @@ const Depart = React.createClass({
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
                                 <span>120双</span>
-                                <table>
+                                <table className="table">
                                     <thead>
                                         <tr>
                                             <td>鞋码</td>
@@ -152,7 +155,7 @@ const Depart = React.createClass({
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
                                 <span>120双</span>
-                                <table>
+                                <table className="table">
                                     <thead>
                                     <tr>
                                         <td>鞋码</td>

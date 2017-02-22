@@ -57,7 +57,7 @@ console.log(this.state.request);
                    <div className="tbn-div">
                        <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                    </div>
-                   <table>
+                   <table className="table">
                        <thead>
                            <tr>
                                <td>部门名称</td>
