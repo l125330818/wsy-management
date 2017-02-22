@@ -6,6 +6,9 @@ html {
   font-size: 14px;
   background-color: #ccc; }
 
+body, html {
+  height: 100%; }
+
 ul {
   list-style: none; }
 
@@ -25,17 +28,20 @@ ul {
 .relative {
   position: relative; }
 
-table {
+.table {
   width: 100%;
   border-collapse: collapse;
   text-align: center; }
-  table tr:hover {
+  .table tr:hover {
     background-color: #f2f2f2; }
-  table td {
+  .table td {
     border: 1px solid #ccc;
     height: 40px; }
 
 .require {
   color: red; }
+
+#app {
+  height: 100%; }
 
 /*# sourceMappingURL=app.css.map */

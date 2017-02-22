@@ -2,11 +2,13 @@
 import "./css/app.scss";
 import { Router, Route, hashHistory } from 'react-router';
 import Layout from "./js/components/layout";
+import Login from "./js/page/login";
 import Depart from "./js/page/member/department-management";
 //最终渲染
 ReactDOM.render((
     <Router history={hashHistory}>
-        <Route path='/' component={Depart}></Route>
+        <Route path='/' component={Login}></Route>
+        <Route path='/depart' component={Depart}></Route>
         <Route path="/member" getComponent={function(nextState, cb) {
                 require.ensure([], (require) => {
                      cb(null, require("./js/page/member/member-management"))
@@ -40,11 +42,15 @@ ReactDOM.render((
             })
 
         }}/>
-            <Route path="/stock/detail" getComponent={function(nextState, cb) {
+        <Route path="/stock/detail" getComponent={function(nextState, cb) {
             require.ensure([], (require) => {
                  cb(null, require("./js/page/commodity/stock-detail"))
             })
-
+        }}/>
+        <Route path="/production/order" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+                 cb(null, require("./js/page/production/production-order"))
+            })
         }}/>
     </Router>
 ), document.getElementById('app'));

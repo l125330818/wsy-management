@@ -7,6 +7,9 @@ html{
     font-size: 14px;
     background-color: #ccc;
 }
+body,html{
+    height: 100%;
+}
 ul{
     list-style: none;
 }
@@ -33,5 +36,8 @@ ul{
 }
 .require{
     color:red;
+}
+#app{
+    height:100%;
 }
 

@@ -14,7 +14,7 @@ const Nav = React.createClass({
         return{
             navList:[
                 {key:"部门成员",type:"team",children:[
-                    {key:"部门管理",value:1,path:"/"},
+                    {key:"部门管理",value:1,path:"/depart"},
                     {key:"成员管理",value:2,path:"/member"},
                     {key:"帐号管理",value:3,path:"/accounts"}]},
                 {key:"产品库存",type:"appstore",children:[
@@ -22,7 +22,7 @@ const Nav = React.createClass({
                     {key:"商品管理",value:5,path:"/commodity"},
                     {key:"库存管理",value:6,path:"/stock"},{key:"出入库管理",value:7,path:"/accounts"}]},
                 {key:"生产管理",type:"solution",children:[
-                    {key:"生产订单",value:8,path:"/accounts"},
+                    {key:"生产订单",value:8,path:"/production/order"},
                     {key:"生产管理",value:9,path:"/accounts"}]},
             ],
             currentKey:this.props.currentKey,
