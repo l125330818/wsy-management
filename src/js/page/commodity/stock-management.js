@@ -7,7 +7,8 @@ import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     getInitialState(){
         return{
-
+            title : "",
+            numTitle : "",
         }
     },
     handleSelect(e){
@@ -18,7 +19,14 @@ const Depart = React.createClass({
                 this.refs.dialogDetail.show();
                 break;
             case 2:
-                this.refs.dialogOutPut.show();
+                this.setState({title:"产品出库",numTitle:"出库数量"},()=>{
+                    this.refs.dialogOutPut.show();
+                })
+                break;
+            case 3:
+                this.setState({title:"产品入库",numTitle:"入库数量"},()=>{
+                    this.refs.dialogOutPut.show();
+                })
                 break;
         }
     },
@@ -139,7 +147,7 @@ const Depart = React.createClass({
                             </div>
                         </div>
                     </RUI.Dialog>
-                    <RUI.Dialog ref="dialogOutPut" title="产品出库" draggable={false} buttons="submit,cancel" onSubmit = {this.outPut}>
+                    <RUI.Dialog ref="dialogOutPut" title={this.state.title} draggable={false} buttons="submit,cancel" onSubmit = {this.outPut}>
                         <div style={{width:'400px', wordWrap:'break-word'}}>
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
@@ -150,7 +158,7 @@ const Depart = React.createClass({
                                         <td>鞋码</td>
                                         <td>库存</td>
                                         <td>库存区间</td>
-                                        <td>出库数量</td>
+                                        <td>{this.state.numTitle}</td>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -170,7 +178,7 @@ const Depart = React.createClass({
                                 </table>
                                 <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："></LabelInput>
                                 <div className="m-t-10">
-                                    <label htmlFor="" className="left-label left">部门职能：</label>
+                                    <label htmlFor="" className="left-label left">备注：</label>
                                     <RUI.Textarea onChange = {this.handleInput.bind(this,"function")}   className ="w-245"></RUI.Textarea>
                                 </div>
                             </div>
