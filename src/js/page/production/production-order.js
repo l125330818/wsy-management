@@ -11,6 +11,9 @@ const Depart = React.createClass({
 
         }
     },
+    create(){
+        hashHistory.push("/production/createOrder");
+    },
     render(){
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
@@ -29,7 +32,7 @@ const Depart = React.createClass({
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                             <RUI.Button className="primary">搜索</RUI.Button>
-                            <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
+                            <RUI.Button className="add-btn primary" onClick = {this.create}>创建</RUI.Button>
                         </div>
                         <div className="m-t-10">
                             <label htmlFor="">裁剪状态：</label>

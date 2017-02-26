@@ -11,8 +11,7 @@ const Depart = React.createClass({
         }
     },
     add(){
-        let param = JSON.stringify({id:3,type:"add"});
-        hashHistory.push("/commodity/add/"+param)
+        hashHistory.push("/commodity/add/")
     },
     delete(){
         RUI.DialogManager.confirm({

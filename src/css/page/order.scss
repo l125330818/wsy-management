@@ -1,0 +1,33 @@
+.order-div{
+  border:1px solid #ccc;
+  padding :20px;
+  .list{
+    width: 380px;
+    padding :10px;
+    border:1px solid #ccc;
+    margin-top:10px;
+    margin-right: 10px;
+  }
+  .avatar-uploader,
+  .avatar-uploader-trigger,
+  .avatar {
+    width: 150px;
+    height: 150px;
+  }
+  .avatar-uploader {
+    display: block;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .avatar-uploader-trigger {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 28px;
+    color: #999;
+  }
+  .cancel-btn{
+    margin-left: 100px;
+    margin-right: 50px;
+  }
+}

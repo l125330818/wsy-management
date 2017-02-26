@@ -21,7 +21,6 @@ const Add = React.createClass({
         console.log(info);
     },
    render(){
-       console.log(this.props.location.query);
        let {imageUrl} = this.state;
        return(
            <Layout currentKey = {"5"} defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
