@@ -5,8 +5,8 @@
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
-import { Upload, Icon, message } from 'antd';
-
+import  Upload  from 'antd/lib/Upload';
+import  Icon  from 'antd/lib/Icon';
 import "../../../css/page/add-commodity.scss";
 function beforeUpload(file){
     console.log(file)

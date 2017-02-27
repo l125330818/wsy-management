@@ -2,7 +2,8 @@
  * Created by luojie on 2017/2/9 16:26.
  */
 import "../../css/components/header.scss";
-import { Breadcrumb, Icon } from 'antd';
+import  Icon  from 'antd/lib/Icon';
+import  Breadcrumb  from 'antd/lib/Breadcrumb';
 const Header = React.createClass({
     render(){
         return(

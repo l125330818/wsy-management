@@ -3,7 +3,8 @@
  */
 import "../../css/components/nav-bar.scss";
 import 'antd/dist/antd.css';
-import { Menu, Icon } from 'antd';
+import  Menu  from 'antd/lib/Menu';
+import  Icon  from 'antd/lib/Icon';
 import {hashHistory } from 'react-router';
 const SubMenu = Menu.SubMenu;
 const Nav = React.createClass({

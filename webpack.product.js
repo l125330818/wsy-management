@@ -7,11 +7,14 @@ module.exports = {
     devtool : false,
     entry: {
         index: './src/entry.js',
-        vendor: ['react', 'react-dom', 'react-router', 'antd']
     },
     output: {
         path: __dirname + '/dist', //打包后的文件存放的地方
         filename: "[name].js", //打包后输出文件的文件名
+    },
+    externals: {
+        "react": 'React',
+        "react-dom": "ReactDOM",
     },
     module: {
         loaders: [

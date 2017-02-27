@@ -6,7 +6,8 @@ import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
 import LabelDate from "../../components/label-date";
 import LabelArea from "../../components/label-textarea";
-import { Upload, Icon, message } from 'antd';
+import  Upload  from 'antd/lib/Upload';
+import  Icon  from 'antd/lib/Icon';
 import "../../../css/page/order.scss";
 export default class Order extends React.Component{
     // 构造
