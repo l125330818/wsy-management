@@ -6,7 +6,7 @@ const Pager = React.createClass({
        return(
            <div className="footer">
                <div className="right">
-                   <RUI.Pagination pageSize={10} currentPage={1} totalNum={100} onPage={this.doPage} />
+                   <RUI.Pagination {...this.props} onPage={(page)=>{this.props.onPage && this.props.onPage(page)}} />
                </div>
            </div>
        )

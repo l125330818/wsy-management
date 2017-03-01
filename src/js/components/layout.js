@@ -4,6 +4,7 @@
 import { Router, Route, hashHistory } from 'react-router';
 import Nav from "./nav-bar";
 import Header from "./header";
+window.commonBaseUrl = "http://www.bigxigua.com"
 const Layout = React.createClass({
     render(){
         return(
