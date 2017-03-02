@@ -16,7 +16,7 @@ const Input = React.createClass({
                     value = {this.props.value}
                     disabled = {this.props.disabled || false}
                     placeholder = {this.props.placeholder || ""}
-                    onChange = {(e)=>{this.props.onChange && this.props.onChange(e)}}></RUI.Input>
+                    onChange = {(e)=>{this.props.onChange && this.props.onChange(e)}}/>
             </div>
         )
     }
