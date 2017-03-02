@@ -14,7 +14,8 @@ const Depart = React.createClass({
         return{
             title:"添加成员",
             request : {
-                departmentId : "",
+                id : "",
+                departmentId : 1,
                 departmentName : "",
                 employeeNo : "",
                 name : "",
@@ -77,6 +78,7 @@ const Depart = React.createClass({
     add(){
         let {request} = this.state;
         request = {
+            id : "",
             departmentId : "",
             departmentName : "",
             employeeNo : "",
@@ -84,13 +86,12 @@ const Depart = React.createClass({
             mobile : "",
             entryTime : Date.now(),
         };
-        this.setState({title:"添加成员",request,type:"add"},()=>{
+        this.setState({title:"添加成员",request,type:"add",defaultSelectValue : {key:"全部",value:""}},()=>{
             this.refs.dialog.show();
         });
     },
     modify(item){
         let {request,defaultSelectValue} = this.state;
-        delete item.id;
         let jsonStr = JSON.stringify(item);
         request = JSON.parse(jsonStr);
         request.entryTime = DateFormatter.setSource(request.entryTime).getTime();
@@ -99,16 +100,31 @@ const Depart = React.createClass({
             this.refs.dialog.show();
         });
     },
-    delete(){
+    delete(id){
+        let _this = this;
         RUI.DialogManager.confirm({
             message:'您确定要删除吗？?',
             title:'删除成员',
             submit:function() {
-                console.log(222)
+                $.ajax({
+                   url:commonBaseUrl+"/employee/delete.htm",
+                    type:"post",
+                    dataType:"json",
+                    data:{d:JSON.stringify({employeeId:id})},
+                    success(data){
+                        if(data.success){
+                            Pubsub.publish("showMsg",["success","删除成功"]);
+                            _this.getList();
+                        }else{
+                            Pubsub.publish("showMsg",["wrong",data.description]);
+                        }
+                    }
+                });
             },
         });
     },
     dialogSubmit(){
+        let _this = this;
         let {type,request} = this.state;
         let jsonStr = JSON.stringify(request);
         let requestJson = JSON.parse(jsonStr);
@@ -118,10 +134,13 @@ const Depart = React.createClass({
             url:commonBaseUrl + url,
             type:"post",
             dataType:"json",
-            data:{d:requestJson},
+            data:{d:JSON.stringify(requestJson)},
             success(data){
                 if(data.success){
                     Pubsub.publish("showMsg",["success",type=="add"?"添加成功":"修改成功"]);
+                    _this.getList();
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description])
                 }
             }
         });
@@ -138,9 +157,9 @@ const Depart = React.createClass({
         this.setState({listRequest});
     },
     nameInput(e){
-        //let {listRequest} = this.state;
-        //listRequest.name = e.target.value;
-        //this.setState({listRequest});
+        let {listRequest} = this.state;
+        listRequest.name = e.target.value;
+        this.setState({listRequest});
     },
     search(){
         this.getList();
@@ -148,6 +167,12 @@ const Depart = React.createClass({
     datePickerChange(e){
         let {request} = this.state;
         request.entryTime = e.data;
+    },
+    selectFn(e){
+        let {request} = this.state;
+        request.departmentName = e.key;
+        request.departmentId = e.value;
+        this.setState({listRequest});
     },
     render(){
         let {list,pager,request,defaultSelectValue,selectValue} = this.state;
@@ -164,7 +189,7 @@ const Depart = React.createClass({
                             className="rui-theme-1 w-120">
                         </RUI.Select>
                         <label htmlFor="">名字：</label>
-                        <RUI.Input  className = "w-150"/>
+                        <RUI.Input onChange = {this.nameInput} className = "w-150"/>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                         <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                     </div>
@@ -213,7 +238,8 @@ const Depart = React.createClass({
                                 require = {true}
                                 label = "部门"
                                 data = {selectValue}
-                                default = {{key:"机车部",value:"1"}}/>
+                                callback = {this.selectFn}
+                                default = {defaultSelectValue}/>
 
                         </div>
                     </RUI.Dialog>

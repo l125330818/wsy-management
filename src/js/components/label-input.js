@@ -12,7 +12,7 @@ const Input = React.createClass({
                         <i className="require">*</i>
                     }
                     {this.props.label || ""}</label>
-                <RUI.Input
+                <RUI.Input {...this.props}
                     value = {this.props.value}
                     disabled = {this.props.disabled || false}
                     placeholder = {this.props.placeholder || ""}
