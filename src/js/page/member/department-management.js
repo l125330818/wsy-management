@@ -5,6 +5,7 @@ import RUI from "react-component-lib";
 import Layout from "../../components/layout";
 import Pager from "../../components/pager";
 import LabelInput from "../../components/label-input";
+import Pubsub from "../../util/pubsub";
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     getInitialState(){
@@ -77,10 +78,11 @@ const Depart = React.createClass({
             data:{d:JSON.stringify(request)},
             success(data){
                 if(data.success){
-                    RUI.DialogManager.alert(type=="add"?"添加成功":"修改成功");
+                    Pubsub.publish("showMsg",["success",type=="add"?"添加成功":"修改成功"]);
                     _this.getList();
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description])
                 }
-
             }
         });
     },

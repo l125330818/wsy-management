@@ -27,7 +27,7 @@ const Detail = React.createClass({
                             className="rui-theme-1 w-120 left">
                         </RUI.Select>
                         <label htmlFor="" className="left">操作时间：</label>
-                        <RUI.DatePicker className = "left" startValue={''} endValue={''} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
+                        <RUI.DatePicker max = {Date.now()}  className = "left" startValue={''} endValue={''} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
                         <label htmlFor="" className = "left">操作人：</label>
                         <RUI.Input className = "w-150 left"></RUI.Input>
                         <RUI.Button className="primary">搜索</RUI.Button>

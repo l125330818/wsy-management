@@ -41,7 +41,7 @@ const Login = React.createClass({
                 }
             }
         })
-        hashHistory.push("/depart");
+        //hashHistory.push("/depart");
     },
     render(){
         return(

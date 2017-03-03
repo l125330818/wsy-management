@@ -232,7 +232,11 @@ const Depart = React.createClass({
                             <LabelInput placeholder = "请输入手机号" require={true} value = {request.mobile} onChange = {this.handleInput.bind(this,"mobile")} label = "手机号："/>
                             <div className = "m-t-10 clearfix">
                                 <label className = "left-label left"><i className="require">*</i>入职时间</label>
-                                <RUI.DatePicker className = "left" value={request.entryTime} formatter={new RUI.DateFormatter("Y-m-d")} onChange={this.datePickerChange} />
+                                <RUI.DatePicker max = {Date.now()}
+                                                className = "left"
+                                                value={request.entryTime}
+                                                formatter={new RUI.DateFormatter("Y-m-d")}
+                                                onChange={this.datePickerChange} />
                             </div>
                             <LabelSelect
                                 require = {true}

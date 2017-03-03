@@ -2,13 +2,53 @@
  * Created by Administrator on 2017-2-13.
  */
 import Layout from "../../components/layout";
+import Pager from "../../components/pager";
+import Pubsub from "../../util/pubsub";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
+const sexArr = ["","男","女","通用"];
+const crowdArr = ["","成人","儿童","通用"];
 const Depart = React.createClass({
     getInitialState(){
         return{
-
+            listRequest:{
+                classifyId : "",
+                name : "",
+            },
+            pager:{
+                currentPage:1,
+                pageSize:20,
+                totalNum:0,
+            },
+            list:[],
         }
+    },
+    componentDidMount(){
+        this.getList();
+    },
+    getList(pageNo=1){
+        let _this = this;
+        let {pager,listRequest} = this.state;
+        $.ajax({
+            url:commonBaseUrl+"/product/findByPage.htm",
+            type:"get",
+            dataType:"json",
+            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            success(data){
+                if(data.success){
+                    pager.currentPage = pageNo;
+                    pager.totalNum = data.resultMap.iTotalDisplayRecords;
+                    _this.setState({
+                        list : data.resultMap.rows,
+                        pager : pager
+                    })
+                }else{
+                    pager.currentPage = 1;
+                    pager.totalNum = 0;
+                    _this.setState({list:[],pager})
+                }
+            }
+        });
     },
     add(){
         hashHistory.push("/commodity/add/")
@@ -22,7 +62,14 @@ const Depart = React.createClass({
             },
         });
     },
+    applySex(type){
+        return sexArr[type];
+    },
+    applyCrowd(type){
+        return crowdArr[type];
+    },
     render(){
+        let {list,pager} = this.state;
         return(
             <Layout currentKey = "5" defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
                 <div className="depart-content">
@@ -52,37 +99,29 @@ const Depart = React.createClass({
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
-                            </td>
-                            <td>拉丁鞋</td>
-                            <td>分类</td>
-                            <td>男</td>
-                            <td>儿童</td>
-                            <td>35</td>
-                            <td>
-                                <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
-                                <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
-                            </td>
-                            <td>拉丁鞋</td>
-                            <td>分类</td>
-                            <td>男</td>
-                            <td>儿童</td>
-                            <td>35</td>
-                            <td>
-                                <a href="javascript:;" className="handle-a">操作</a>
-                                <a href="javascript:;" className="handle-a">删除</a>
-                            </td>
-                        </tr>
+                        {
+                            list.length>0 && list.map((item)=>{
+                                return(
+                                    <tr>
+                                        <td>
+                                            <img className = "commodity-img" src={item.url} alt=""/>
+                                        </td>
+                                        <td>{item.name}</td>
+                                        <td>{item.classifyName}</td>
+                                        <td>{this.applySex(item.applySex)}</td>
+                                        <td>{this.applyCrowd(item.applyCrowd)}</td>
+                                        <td>{item.minCode+ "~"+item.maxCode}</td>
+                                        <td>
+                                            <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
+                                            <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
                         </tbody>
                     </table>
-
+                    <Pager onPage ={this.getList} {...pager}/>
                 </div>
             </Layout>
         )
