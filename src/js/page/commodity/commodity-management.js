@@ -6,6 +6,7 @@ import Pager from "../../components/pager";
 import Pubsub from "../../util/pubsub";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
+import {classifyList} from "../../components/memberAjax";
 const sexArr = ["","男","女","通用"];
 const crowdArr = ["","成人","儿童","通用"];
 const Depart = React.createClass({
@@ -20,11 +21,23 @@ const Depart = React.createClass({
                 pageSize:20,
                 totalNum:0,
             },
+            selectValue:[{key:"全部",value:""}],
             list:[],
         }
     },
     componentDidMount(){
         this.getList();
+        this.classifyList();
+    },
+    classifyList(){
+        let _this = this;
+        let {selectValue} = this.state;
+        classifyList().then((result)=>{
+            result.rows && result.rows.map((item)=>{
+                selectValue.push({key:item.classifyName,value:item.id})
+            });
+            _this.setState({selectValue});
+        });
     },
     getList(pageNo=1){
         let _this = this;
@@ -68,17 +81,23 @@ const Depart = React.createClass({
     applyCrowd(type){
         return crowdArr[type];
     },
+    select(e){
+        let {listRequest} = this.state;
+        listRequest.classifyId = e.value;
+        this.setState({});
+    },
     render(){
-        let {list,pager} = this.state;
+        let {list,pager,selectValue} = this.state;
         return(
             <Layout currentKey = "5" defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
                         <label htmlFor="">分类：</label>
                         <RUI.Select
-                            data={[{key:'拉丁',value:'1'}, {key:'爵士',value:'2'}, {key:'民族',value:'3'}]}
-                            value={{key:'拉丁',value:'1'}}
+                            data={selectValue}
+                            value={{key:'全部',value:""}}
                             stuff={true}
+                            callback = {this.select}
                             className="rui-theme-1 w-120">
                         </RUI.Select>
                         <label htmlFor="">名称：</label>
@@ -112,7 +131,7 @@ const Depart = React.createClass({
                                         <td>{this.applyCrowd(item.applyCrowd)}</td>
                                         <td>{item.minCode+ "~"+item.maxCode}</td>
                                         <td>
-                                            <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
+                                            <Link to={"/commodity/add/?id="+item.id} className="handle-a">修改</Link>
                                             <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
                                         </td>
                                     </tr>

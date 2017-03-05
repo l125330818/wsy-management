@@ -17,3 +17,18 @@ export function departList(){
         }
     })
 }
+export function classifyList(){
+    return $.ajax({
+        url:commonBaseUrl+"/classify/findByPage.htm",
+        type:"get",
+        dataType:"json",
+        data:{d:"",pageNo:1,pageSize:20},
+    }).then((data)=>{
+        if(data.success){
+            return data.resultMap;
+        }else{
+            Pubsub.publish("showMsg",["wrong",data.description]);
+            return data;
+        }
+    })
+}

@@ -1,18 +1,14 @@
-.add-commodity .avatar-uploader,
-.add-commodity .avatar-uploader-trigger,
-.add-commodity .avatar {
-  width: 150px;
-  height: 150px; }
-.add-commodity .avatar-uploader {
-  display: block;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer; }
+@charset "UTF-8";
+.add-commodity .ant-upload.ant-upload-select-picture-card > .ant-upload {
+  display: table; }
 .add-commodity .avatar-uploader-trigger {
   display: table-cell;
   vertical-align: middle;
   font-size: 28px;
   color: #999; }
+.add-commodity .anticon-eye-o:before {
+  content: "↻";
+  font-size: 18px; }
 
 .add-content {
   padding: 20px 0 50px 100px; }
