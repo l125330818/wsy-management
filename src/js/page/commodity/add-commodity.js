@@ -10,6 +10,7 @@ import  Icon  from 'antd/lib/Icon';
 import {classifyList} from "../../components/memberAjax";
 import Pubsub from "../../util/pubsub";
 import {hashHistory } from 'react-router';
+import "../../library/ajaxupload.3.5";
 import "../../../css/page/add-commodity.scss";
 
 const sexArr = ["","男","女","通用"];
@@ -50,6 +51,7 @@ const Add = React.createClass({
             this.getDetail(query.id);
         }
         this.classifyList();
+
     },
     componentWillUnmount(){
     },
@@ -135,6 +137,16 @@ const Add = React.createClass({
         request[type] = e.value;
         this.setState({request});
     },
+    preview(file){
+        console.log(file);
+        let node = $(".anticon-eye-o");
+
+        new AjaxUpload(node,{
+            action: "http://www.bigxigua.com/product/upload.htm",
+            name: "upload",
+            responseType: "json",
+        });
+    },
    render(){
        let {imageUrl,fileList,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
        console.log(defaultFileList)
@@ -153,7 +165,7 @@ const Add = React.createClass({
                                 fileList={fileList}
                                 defaultFileList={defaultFileList}
                                 onRemove={this.onRemove}
-                                onPreview={this.handleChange}
+                                onPreview={this.preview}
                                 onChange={this.handleChange}
                             >
                                 {
@@ -201,7 +213,7 @@ const Add = React.createClass({
                         <LabelInput value = {request.remark} onChange = {this.changeInput.bind(this,"remark")}  label = "备注"/>
                     </div>
                     <RUI.Button className="add-cancel-btn">取消</RUI.Button>
-                    <RUI.Button className="primary" onClick = {this.submit}>确定</RUI.Button>
+                    <RUI.Button className="primary"  ref = "submit">确定</RUI.Button>
                 </div>
            </Layout>
        )
