@@ -84,7 +84,15 @@ const Depart = React.createClass({
     select(e){
         let {listRequest} = this.state;
         listRequest.classifyId = e.value;
-        this.setState({});
+        this.setState({listRequest});
+    },
+    search(){
+        this.getList();
+    },
+    inputChange(e){
+        let {listRequest} = this.state;
+        listRequest.name = e.target.value;
+        this.setState({listRequest});
     },
     render(){
         let {list,pager,selectValue} = this.state;
@@ -101,8 +109,8 @@ const Depart = React.createClass({
                             className="rui-theme-1 w-120">
                         </RUI.Select>
                         <label htmlFor="">名称：</label>
-                        <RUI.Input className = "w-150"></RUI.Input>
-                        <RUI.Button className="primary">搜索</RUI.Button>
+                        <RUI.Input onChange = {this.inputChange} className = "w-150"></RUI.Input>
+                        <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                         <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
                     </div>
                     <table className="table">
@@ -119,9 +127,9 @@ const Depart = React.createClass({
                         </thead>
                         <tbody>
                         {
-                            list.length>0 && list.map((item)=>{
+                            list.length>0 && list.map((item,index)=>{
                                 return(
-                                    <tr>
+                                    <tr key = {index}>
                                         <td>
                                             <img className = "commodity-img" src={item.url} alt=""/>
                                         </td>

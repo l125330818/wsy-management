@@ -5,12 +5,10 @@
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
-import  Upload  from 'antd/lib/Upload';
-import  Icon  from 'antd/lib/Icon';
+import Upload from "../../components/upload";
 import {classifyList} from "../../components/memberAjax";
 import Pubsub from "../../util/pubsub";
 import {hashHistory } from 'react-router';
-import "../../library/ajaxupload.3.5";
 import "../../../css/page/add-commodity.scss";
 
 const sexArr = ["","男","女","通用"];
@@ -51,6 +49,7 @@ const Add = React.createClass({
             this.getDetail(query.id);
         }
         this.classifyList();
+        this.classifyList();
 
     },
     componentWillUnmount(){
@@ -69,8 +68,7 @@ const Add = React.createClass({
                     defaultSelect = {key:detail.classifyName,value:detail.classifyId};
                     sexSelect = {key:_this.applySex(detail.applySex),value:detail.applySex};
                     crowdSelect = {key:_this.applyCrowd(detail.applyCrowd),value:detail.applyCrowd};
-                    defaultFileList.push({uid:detail.id,status:"done",url:detail.url,name:"1488725113299.jpg"});
-                    _this.setState({request:data.resultMap.productDO,defaultSelect,sexSelect,crowdSelect});
+                    _this.setState({request:data.resultMap.productDO,defaultSelect,sexSelect,crowdSelect,imgUrl:detail.url});
                 }else{
                     Pubsub.publish("showMsg",["wrong",data.description]);
                 }
@@ -93,10 +91,6 @@ const Add = React.createClass({
             });
             _this.setState({selectValue});
         });
-    },
-    handleChange(file){
-        console.log(file)
-        this.setState({fileList:file.fileList});
     },
     changeInput(type,e){
         let {request} = this.state;
@@ -139,17 +133,30 @@ const Add = React.createClass({
     },
     preview(file){
         console.log(file);
-        let node = $(".anticon-eye-o");
 
+    },
+
+    replace(){
+        let _this = this;
+        let node = $(ReactDOM.findDOMNode(this.refs.replace));
         new AjaxUpload(node,{
             action: "http://www.bigxigua.com/product/upload.htm",
             name: "upload",
             responseType: "json",
+            onComplete:function(e,data){
+                if(data.success){
+                    _this.setState({imgUrl : data.resultMap.picPath});
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
+            }
         });
     },
+    deleteUpload(){
+        this.setState({imgUrl:""});
+    },
    render(){
-       let {imageUrl,fileList,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
-       console.log(defaultFileList)
+       let {imageUrl,imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
        return(
            <Layout currentKey = {"5"} defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
                 <div className="add-commodity">
@@ -157,23 +164,7 @@ const Add = React.createClass({
                     <div className = "add-content ">
                         <div className = "clearfix">
                             <label htmlFor="" className = "left-label left"><i className="require">*</i>产品图片</label>
-                            <Upload
-                                className="avatar-uploader"
-                                name="upload"
-                                action="http://www.bigxigua.com/product/upload.htm"
-                                listType="picture-card"
-                                fileList={fileList}
-                                defaultFileList={defaultFileList}
-                                onRemove={this.onRemove}
-                                onPreview={this.preview}
-                                onChange={this.handleChange}
-                            >
-                                {
-                                    imageUrl ?
-                                        <img src={imageUrl} alt="" className="avatar" /> :
-                                        <Icon type="plus" className="avatar-uploader-trigger" />
-                                }
-                            </Upload>
+                            <Upload edit={true} url = {imgUrl}/>
                         </div>
                         <LabelInput value = {request.name} onChange = {this.changeInput.bind(this,"name")}  require = {true} label = "产品名称"/>
                         <LabelInput value = {request.colour} onChange = {this.changeInput.bind(this,"colour")}  require = {true} label = "产品颜色"/>

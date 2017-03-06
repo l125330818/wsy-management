@@ -7,7 +7,7 @@ export function departList(){
         url:commonBaseUrl+"/department/findByPage.htm",
         type:"get",
         dataType:"json",
-        data:{d:"",pageNo:1,pageSize:20},
+        data:{d:"",pageNo:1,pageSize:20000},
     }).then((data)=>{
         if(data.success){
             return data.resultMap;
@@ -22,7 +22,22 @@ export function classifyList(){
         url:commonBaseUrl+"/classify/findByPage.htm",
         type:"get",
         dataType:"json",
-        data:{d:"",pageNo:1,pageSize:20},
+        data:{d:"",pageNo:1,pageSize:20000},
+    }).then((data)=>{
+        if(data.success){
+            return data.resultMap;
+        }else{
+            Pubsub.publish("showMsg",["wrong",data.description]);
+            return data;
+        }
+    })
+}
+export function productList(){
+    return $.ajax({
+        url:commonBaseUrl+"/product/findByPage.htm",
+        type:"get",
+        dataType:"json",
+        data:{d:JSON.stringify({classifyId:"",name:""}),pageNo:1,pageSize:20000},
     }).then((data)=>{
         if(data.success){
             return data.resultMap;
