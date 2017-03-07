@@ -3,6 +3,7 @@
  */
 import "../../css/components/upload.scss";
 import "../library/ajaxupload.3.5";
+import  Modal  from 'antd/lib/Modal';
 
 import Pubsub from "../util/pubsub";
 export default class Upload extends React.Component{
@@ -12,19 +13,15 @@ export default class Upload extends React.Component{
           // 初始状态
           this.state = {
               imgUrl : "",
+              visible:false
           };
-        this.replace = this.replace.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.clickImg = this.clickImg.bind(this);
     }
 
     componentDidMount() {
         let node = $(ReactDOM.findDOMNode(this.refs.upload));
-        let edit = this.props.edit || false;
         this.upload(node);
-        if(edit){
-            setTimeout(()=>{
-                this.replace();
-            },200);
-        }
     }
     upload(node){
         let _this = this;
@@ -35,44 +32,44 @@ export default class Upload extends React.Component{
             onComplete:function(e,data){
                 if(data.success){
                     _this.setState({imgUrl : data.resultMap.picPath});
-                    _this.replace();
                 }else{
                     Pubsub.publish("showMsg",["wrong",data.description]);
                 }
             }
         });
     }
-    replace(){
-        let _this = this;
-        let node = $(ReactDOM.findDOMNode(this.refs.replace));
-        this.upload(node);
-    }
-    deleteUpload(){
-        this.setState({imgUrl:""});
-    }
     componentWillReceiveProps(nextProps){
         if(nextProps.url){
             this.setState({imgUrl:nextProps.url});
+            this.replace();
         }
     }
+    handleCancel(){
+        this.setState({visible:false});
+    }
+    clickImg(){
+        this.setState({visible:true});
+    }
     render(){
-        let {imgUrl} = this.state;
+        let {imgUrl,visible} = this.state;
         return(
             <div>
                 {
-                    imgUrl &&
+                    imgUrl ?
                     <div className="upload-div relative">
-                        <img src={imgUrl} className="upload-img" alt=""/>
-                        <div className="mask"></div>
-                        <div className = "mask-text">
-                            <span className="text" onClick = {this.replace}  ref = "replace">替换</span>
-                            <span onClick = {this.deleteUpload}>删除</span>
-                        </div>
+                        <img src={imgUrl} onClick = {this.clickImg} className="upload-img" alt=""/>
+                    </div>
+                        :
+                    <div className="upload-div" >
+                        <i className="upload-trigger"/>
                     </div>
                 }
-                <div className="upload-div" ref = "upload">
-                    <i className="upload-trigger"/>
+                <div className={this.props.uploadBtn}>
+                    <RUI.Button className = "primary" ref = "upload">上传</RUI.Button>
                 </div>
+                <Modal visible={visible} footer={null} onCancel={this.handleCancel}>
+                    <img alt="example" style={{ width: '100%' }} src={imgUrl} />
+                </Modal>
             </div>
         )
     }

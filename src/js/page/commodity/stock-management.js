@@ -21,6 +21,13 @@ const Depart = React.createClass({
                 classifyId : "",
                 status : "",
             },
+            outputRequest:{
+                productId:"",
+                storeBeforeNum:"",
+                type:1,
+                remak:"",
+                productStoreVOs:[]
+            },
             pager:{
                 currentPage:1,
                 pageSize:20,
@@ -83,7 +90,7 @@ const Depart = React.createClass({
         });
     },
     handleSelect(item,e){
-        console.log(e);
+        let {outputRequest} = this.state;
         let key = e.value;
         switch(key*1){
             case 1:
@@ -91,19 +98,21 @@ const Depart = React.createClass({
                 this.refs.dialogDetail.show();
                 break;
             case 2:
+                outputRequest.type = 1;
                 this.getStockDetail(item);
                 this.setState({title:"产品出库",numTitle:"出库数量"},()=>{
                     this.refs.dialogOutPut.show();
                 });
                 break;
             case 3:
+                outputRequest.type = 2;
                 this.getStockDetail(item);
                 this.setState({title:"产品入库",numTitle:"入库数量"},()=>{
                     this.refs.dialogOutPut.show();
                 });
                 break;
             case 4:
-                hashHistory.push("/stock/detail");
+                hashHistory.push("/output?type=1");
             case 5:
                 this.getStockDetail(item);
                 this.refs.dialogSet.show();
@@ -112,7 +121,9 @@ const Depart = React.createClass({
     },
     getStockDetail(item){
         let _this = this;
-        let {stockDetail} = this.state;
+        let {stockDetail,outputRequest} = this.state;
+        outputRequest.productId = item.id;
+        outputRequest.storeBeforeNum = item.storeTotalNum;
         $.ajax({
             url:commonBaseUrl + "/store/findStoreDetail.htm",
             type : "get",
@@ -121,6 +132,9 @@ const Depart = React.createClass({
             success(data){
                 if(data.success){
                     let stockDetail = data.resultMap.productStoreDOs;
+                    stockDetail.map((item)=>{
+                        item.operateNum = 0;
+                    });
                     _this.setState({stockDetail});
                 }else{
                     Pubsub.publish("showMsg",["wrong",data.description]);
@@ -131,7 +145,23 @@ const Depart = React.createClass({
         })
     },
     outPut(){
-        return false;
+        let {outputRequest,stockDetail} = this.state;
+        let _this = this;
+        outputRequest.productStoreVOs = stockDetail;
+        $.ajax({
+           url:commonBaseUrl + "/store/inputOrOutput.htm",
+            type:"post",
+            dataType:"json",
+            data:{d:JSON.stringify(outputRequest)},
+            success(data){
+                if(data.success){
+                    Pubsub.publish("showMsg",["success","操作成功"]);
+                    _this.getList();
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
+            }
+        });
     },
     applySex(type){
         return sexArr[type];
@@ -149,7 +179,11 @@ const Depart = React.createClass({
     search(){
         this.getList();
     },
-    handleInput(){},
+    handleInput(type,e){
+        let {outputRequest} = this.state;
+        outputRequest[type] = e.target.value;
+        this.setState({});
+    },
     stockSet(){
         let {stockDetail} = this.state;
         let request = [];
@@ -169,11 +203,36 @@ const Depart = React.createClass({
                 }
             }
         })
-        console.log(this.state.stockDetail)
     },
     stockChange(type,index,e){
         let {stockDetail} = this.state;
         stockDetail[index][type] = e.target.value;
+        this.setState({stockDetail});
+    },
+    outputChange(index,item,e){
+        let {stockDetail,outputRequest} = this.state;
+        let type = outputRequest.type;
+        let shoeNum = item.shoeNum;
+        let storeMax = item.storeMax;
+        let storeMin = item.storeMin;
+        let value = e.target.value;
+        let tips = "";
+        if(type==1){
+            if(value>shoeNum){
+                stockDetail[index].tips = "出库双数不大于库存数量";
+            }else if((shoeNum-(value*1)<storeMin)){
+                stockDetail[index].tips = "出库后小于库存最小值";
+            }else{
+                stockDetail[index].tips = "";
+            }
+        }else{
+            if(value+shoeNum>storeMax){
+                stockDetail[index].tips = "入库后大于库存最大值";
+            }else{
+                stockDetail[index].tips ="";
+            }
+        }
+        stockDetail[index].operateNum = e.target.value;
         this.setState({stockDetail});
     },
     render(){
@@ -282,7 +341,7 @@ const Depart = React.createClass({
                         </div>
                     </RUI.Dialog>
                     <RUI.Dialog ref="dialogOutPut" title={this.state.title} draggable={false} buttons="submit,cancel" onSubmit = {this.outPut}>
-                        <div style={{width:'400px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
+                        <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
                                 <span>120双</span>
@@ -303,7 +362,10 @@ const Depart = React.createClass({
                                                     <td>{item.shoeCode}</td>
                                                     <td>{item.shoeNum}</td>
                                                     <td>{(item.storeMin==-1?"无限制":item.storeMin) + "-"+(item.storeMax==-1?"无限制":item.storeMax)}</td>
-                                                    <td><RUI.Input className = "w-80"/></td>
+                                                    <td>
+                                                        <RUI.Input value = {item.operateNum || ""} onChange = {this.outputChange.bind(this,index,item)} className = "w-80"/>
+                                                        <p className = "require">{item.tips}</p>
+                                                    </td>
                                                 </tr>
                                             )
                                         })
@@ -313,7 +375,7 @@ const Depart = React.createClass({
                                 <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："/>
                                 <div className="m-t-10">
                                     <label htmlFor="" className="left-label left">备注：</label>
-                                    <RUI.Textarea onChange = {this.handleInput.bind(this,"function")}   className ="w-245"/>
+                                    <RUI.Textarea onChange = {this.handleInput.bind(this,"remak")}   className ="w-245"/>
                                 </div>
                             </div>
                         </div>

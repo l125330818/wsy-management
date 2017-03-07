@@ -111,9 +111,11 @@ const Detail = React.createClass({
         });
     },
     render(){
+        let query = this.props.location.query;
+        let detailType = query.type;
         let {productSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
         return(
-            <Layout currentKey = "7" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
+            <Layout currentKey = {detailType==1?"6":"7"} defaultOpen={"1"} bread = {["产品库存",detailType==1?"库存管理":"出入库明细"]}>
                 <div className="depart-content">
                     <div className="tbn-div clearfix">
                         <label htmlFor="" className="left">库存操作：</label>
@@ -126,14 +128,21 @@ const Detail = React.createClass({
                         </RUI.Select>
                         <label htmlFor="" className="left">操作时间：</label>
                         <RUI.DatePicker max = {Date.now()}  className = "left" startValue={startValue} endValue={endValue} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
-                        <label htmlFor="" className="left">产品：</label>
-                        <RUI.Select
-                            data={productSelect}
-                            value={{key:'全部',value:''}}
-                            stuff={true}
-                            callback = {this.select.bind(this,"productId")}
-                            className="rui-theme-1 w-120 left">
-                        </RUI.Select>
+                        {
+                            detailType!=1 &&
+                            <label htmlFor="" className="left">产品：</label>
+
+                        }
+                        {
+                            detailType!=1 &&
+                            <RUI.Select
+                                data={productSelect}
+                                value={{key:'全部',value:''}}
+                                stuff={true}
+                                callback = {this.select.bind(this,"productId")}
+                                className="rui-theme-1 w-120 left">
+                            </RUI.Select>
+                        }
                         <label htmlFor="" className = "left">操作人：</label>
                         <RUI.Input onChange = {this.inputChange.bind(this,"createUser")} className = "w-150 left"/>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
@@ -141,7 +150,10 @@ const Detail = React.createClass({
                     <table className="table">
                         <thead>
                         <tr>
-                            <td>产品名称</td>
+                            {
+                                detailType!=1 &&
+                                <td>产品名称</td>
+                            }
                             <td>库存操作</td>
                             <td>操作日期</td>
                             <td>操作人</td>
@@ -156,7 +168,10 @@ const Detail = React.createClass({
                             list.length>0 && list.map((item,index)=>{
                                 return(
                                     <tr key = {index}>
-                                        <td>{item.productId}</td>
+                                        {
+                                            detailType!=1 &&
+                                            <td>{item.productId}</td>
+                                        }
                                         <td>{item.type==1?"出库":"入库"}</td>
                                         <td>{item.createTime}</td>
                                         <td>{item.createUser}</td>

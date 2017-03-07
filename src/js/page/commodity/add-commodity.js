@@ -18,7 +18,8 @@ const Add = React.createClass({
     timer :"",
     getInitialState(){
         return{
-            imageUrl:"",
+            imgUrl:"",
+            visible : false,
             request :{
                 name : "",
                 url : "",
@@ -49,8 +50,6 @@ const Add = React.createClass({
             this.getDetail(query.id);
         }
         this.classifyList();
-        this.classifyList();
-
     },
     componentWillUnmount(){
     },
@@ -155,8 +154,9 @@ const Add = React.createClass({
     deleteUpload(){
         this.setState({imgUrl:""});
     },
+
    render(){
-       let {imageUrl,imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
+       let {imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
        return(
            <Layout currentKey = {"5"} defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
                 <div className="add-commodity">
@@ -164,7 +164,7 @@ const Add = React.createClass({
                     <div className = "add-content ">
                         <div className = "clearfix">
                             <label htmlFor="" className = "left-label left"><i className="require">*</i>产品图片</label>
-                            <Upload edit={true} url = {imgUrl}/>
+                            <Upload uploadBtn = "p-l-100" onClick = {this.clickImg} edit={true} url = {imgUrl}/>
                         </div>
                         <LabelInput value = {request.name} onChange = {this.changeInput.bind(this,"name")}  require = {true} label = "产品名称"/>
                         <LabelInput value = {request.colour} onChange = {this.changeInput.bind(this,"colour")}  require = {true} label = "产品颜色"/>
@@ -206,6 +206,7 @@ const Add = React.createClass({
                     <RUI.Button className="add-cancel-btn">取消</RUI.Button>
                     <RUI.Button className="primary"  ref = "submit">确定</RUI.Button>
                 </div>
+
            </Layout>
        )
    }
