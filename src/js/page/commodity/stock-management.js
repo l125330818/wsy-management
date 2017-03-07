@@ -177,7 +177,7 @@ const Depart = React.createClass({
         this.setState({stockDetail});
     },
     render(){
-        let {list,productSelect,classifySelect,stockDetail} = this.state;
+        let {list,productSelect,classifySelect,stockDetail,pager} = this.state;
         return(
             <Layout currentKey = "6" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
                 <div className="depart-content">
@@ -277,6 +277,7 @@ const Depart = React.createClass({
                                     }
                                     </tbody>
                                 </table>
+                                <Pager onPage ={this.getList} {...pager}/>
                             </div>
                         </div>
                     </RUI.Dialog>
@@ -302,17 +303,17 @@ const Depart = React.createClass({
                                                     <td>{item.shoeCode}</td>
                                                     <td>{item.shoeNum}</td>
                                                     <td>{(item.storeMin==-1?"无限制":item.storeMin) + "-"+(item.storeMax==-1?"无限制":item.storeMax)}</td>
-                                                    <td><RUI.Input></RUI.Input></td>
+                                                    <td><RUI.Input className = "w-80"/></td>
                                                 </tr>
                                             )
                                         })
                                     }
                                     </tbody>
                                 </table>
-                                <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："></LabelInput>
+                                <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："/>
                                 <div className="m-t-10">
                                     <label htmlFor="" className="left-label left">备注：</label>
-                                    <RUI.Textarea onChange = {this.handleInput.bind(this,"function")}   className ="w-245"></RUI.Textarea>
+                                    <RUI.Textarea onChange = {this.handleInput.bind(this,"function")}   className ="w-245"/>
                                 </div>
                             </div>
                         </div>
@@ -336,10 +337,10 @@ const Depart = React.createClass({
                                             return(
                                                 <tr key = {index}>
                                                     <td>{item.shoeCode}</td>
-                                                    <td><RUI.Input onChange = {this.stockChange.bind(this,"storeMin",index)}
-                                                                   value = {item.storeMin}></RUI.Input></td>
-                                                    <td><RUI.Input onChange = {this.stockChange.bind(this,"storeMax",index)}
-                                                                   value = {item.storeMax}></RUI.Input></td>
+                                                    <td><RUI.Input className = "w-80" onChange = {this.stockChange.bind(this,"storeMin",index)}
+                                                                   value = {item.storeMin}/></td>
+                                                    <td><RUI.Input className = "w-80" onChange = {this.stockChange.bind(this,"storeMax",index)}
+                                                                   value = {item.storeMax}/></td>
                                                 </tr>
                                             )
                                         })

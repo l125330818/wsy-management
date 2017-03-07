@@ -57,5 +57,10 @@ ReactDOM.render((
                  cb(null, require("./js/page/production/create-order"))
             })
         }}/>
+            <Route path="/output" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+                 cb(null, require("./js/page/commodity/output-detail"))
+            })
+        }}/>
     </Router>
 ), document.getElementById('app'));

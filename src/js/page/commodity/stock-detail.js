@@ -1,9 +1,6 @@
 /**
  * Created by Administrator on 2017-2-21.
  */
-/**
- * Created by Administrator on 2017-2-13.
- */
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";

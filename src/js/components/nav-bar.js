@@ -21,7 +21,7 @@ const Nav = React.createClass({
                 {key:"产品库存",type:"appstore",children:[
                     {key:"分类管理",value:4,path:"/classify"},
                     {key:"商品管理",value:5,path:"/commodity"},
-                    {key:"库存管理",value:6,path:"/stock"},{key:"出入库管理",value:7,path:"/accounts"}]},
+                    {key:"库存管理",value:6,path:"/stock"},{key:"出入库明细",value:7,path:"/output"}]},
                 {key:"生产管理",type:"solution",children:[
                     {key:"生产订单",value:8,path:"/production/order"},
                     {key:"生产管理",value:9,path:"/accounts"}]},
