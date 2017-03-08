@@ -135,26 +135,6 @@ const Add = React.createClass({
 
     },
 
-    replace(){
-        let _this = this;
-        let node = $(ReactDOM.findDOMNode(this.refs.replace));
-        new AjaxUpload(node,{
-            action: "http://www.bigxigua.com/product/upload.htm",
-            name: "upload",
-            responseType: "json",
-            onComplete:function(e,data){
-                if(data.success){
-                    _this.setState({imgUrl : data.resultMap.picPath});
-                }else{
-                    Pubsub.publish("showMsg",["wrong",data.description]);
-                }
-            }
-        });
-    },
-    deleteUpload(){
-        this.setState({imgUrl:""});
-    },
-
    render(){
        let {imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
        return(
@@ -204,7 +184,7 @@ const Add = React.createClass({
                         <LabelInput value = {request.remark} onChange = {this.changeInput.bind(this,"remark")}  label = "备注"/>
                     </div>
                     <RUI.Button className="add-cancel-btn">取消</RUI.Button>
-                    <RUI.Button className="primary"  ref = "submit">确定</RUI.Button>
+                    <RUI.Button className="primary" onClick = {this.submit} ref = "submit">确定</RUI.Button>
                 </div>
 
            </Layout>

@@ -41,7 +41,6 @@ export default class Upload extends React.Component{
     componentWillReceiveProps(nextProps){
         if(nextProps.url){
             this.setState({imgUrl:nextProps.url});
-            this.replace();
         }
     }
     handleCancel(){
