@@ -13,7 +13,7 @@ const Input = React.createClass({
                     }
                     {this.props.label || ""}</label>
                 <RUI.DatePicker
-                    value = {Date.now()}
+                    value = {this.props.value}
                     className = "left"
                     formatter={new RUI.DateFormatter("Y-m-d")}
                     onChange = {(e)=>{this.props.onChange && this.props.onChange(e)}}/>

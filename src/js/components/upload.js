@@ -31,6 +31,7 @@ export default class Upload extends React.Component{
             responseType: "json",
             onComplete:function(e,data){
                 if(data.success){
+                    _this.props.callback && _this.props.callback(data.resultMap.picPath);
                     _this.setState({imgUrl : data.resultMap.picPath});
                 }else{
                     Pubsub.publish("showMsg",["wrong",data.description]);

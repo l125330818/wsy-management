@@ -7,7 +7,10 @@ import LabelSelect from "../../components/label-select";
 import LabelDate from "../../components/label-date";
 import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
+import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
+
+let DateFormatter = new RUI.DateFormatter();
 export default class Order extends React.Component{
     // 构造
       constructor(props) {
@@ -15,10 +18,11 @@ export default class Order extends React.Component{
         // 初始状态
         this.state = {
             imgUrl : "",
+            deliveryDate : Date.now(),
             request:{
                 orderName:"",
-                isUrgent:"",
-                deliveryTime:"",
+                isUrgent:1,
+                deliveryTime:DateFormatter.setPattern("Y-m-d").format(Date.now()),
 
             },
             list:[
@@ -37,48 +41,132 @@ export default class Order extends React.Component{
             ],
         };
         this.clickImg = this.clickImg.bind(this);
+        this.addSonOrder = this.addSonOrder.bind(this);
+        this.select = this.select.bind(this);
+        this.submit = this.submit.bind(this);
       }
-    dateChange(e){
-        console.log(e)
-    }
-    beforeUpload(){}
-    addLine(){
 
+    beforeUpload(){}
+    addLine(index){
+        let {list} = this.state;
+        list[index].produceOrderProductDetailDOs.push({
+            shoeCode:"",
+            shoeNum:""
+        });
+        this.setState({list});
+    }
+    addSonOrder(){
+        let {list} = this.state;
+        list.push({
+                productName : "",
+                produceAsk : "",
+                productUrl : "",
+                remark : "",
+                produceOrderProductDetailDOs:[
+                    {
+                        shoeCode:"",
+                        shoeNum:""
+                    }
+                ]
+            });
+        this.setState({list});
+    }
+    delete(index){
+        let {list} = this.state;
+        list.splice(index,1);
+        this.setState({list});
+        console.log(list)
     }
     clickImg(){}
+    handleChange(type,e){
+        let {request} = this.state;
+        request[type] = e.target.value;
+        this.setState({});
+    }
+    dateChange(e){
+        let {request} = this.state;
+        request.deliveryTime = DateFormatter.setPattern("Y-m-d").format(e.data);
+        this.setState({deliveryDate: e.data});
+    }
+    select(e){
+        let {request} = this.state;
+        request.isUrgent = e.value;
+        this.setState({});
+    }
+    submit(){
+        let {request,list} = this.state;
+        request.produceOrderProductVOs = list;
+        $.ajax({
+            url:commonBaseUrl + "/order/add.htm",
+            type:"post",
+            dataType:"json",
+            data:{d:JSON.stringify(request)},
+            success(data){
+                if(data.success){
+                    Pubsub.publish("showMsg",["success","创建成功"]);
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
+            }
+        })
+    }
+    uploadCallback(index,url){
+        let {list} = this.state;
+        list[index].productUrl = url;
+        this.setState({});
+    }
+    productChange(type,index,e){
+        let {list} = this.state;
+        list[index][type] = e.target.value;
+        this.setState({});
+    }
+    shoeChange(type,index,sonIndex,e){
+        let {list} = this.state;
+        list[index].produceOrderProductDetailDOs[sonIndex][type] = e.target.value;
+        this.setState({});
+    }
+    shoeDelete(index,sonIndex){
+        let {list} = this.state;
+        list[index].produceOrderProductDetailDOs.splice(sonIndex,1);
+        this.setState({});
+    }
     render(){
-        let {imgUrl,list} = this.state;
+        let {imgUrl,list,deliveryDate} = this.state;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="order-div">
                     <h3>创建订单</h3>
-                    <LabelInput label="订单名称：" require = {true}/>
+                    <LabelInput onChange = {this.handleChange.bind(this,"orderName")} label="订单名称：" require = {true}/>
                     <LabelSelect
                         require = {true}
                         label = "是否加急："
                         data = {[{key:"是",value:1},{key:"否",value:2}]}
+                        callback = {this.select}
                         default = {{key:"是",value:"1"}}/>
                     <LabelDate
+                        value = {deliveryDate}
                         require = {true}
                         label = "交货时间："
                         onChange = {this.dateChange.bind(this)}
                     />
-                    <RUI.Button className = "m-t-10 primary">添加子订单</RUI.Button>
+                    <RUI.Button className = "m-t-10 primary" onClick = {this.addSonOrder}>添加子订单</RUI.Button>
                     <div className="order-content clearfix">
                         {
                             list.map((item,index)=>{
                                 return(
-                                    <div className="list left">
+                                    <div className="list left" key = {index}>
                                         {
                                             index!=0 &&
-                                            <RUI.Button className = "delete">删除子订单</RUI.Button>
+                                            <RUI.Button className = "delete" onClick = {this.delete.bind(this,index)}>删除子订单</RUI.Button>
                                         }
                                         <div className = "clearfix">
                                             <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
-                                            <Upload uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
+                                            <Upload callback = {this.uploadCallback.bind(this,index)} uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
                                         </div>
                                         <div>
-                                            <LabelInput label="订单名称：" require = {true}/>
+                                            <LabelInput value = {item.productName} label="产品名称："
+                                                        onChange = {this.productChange.bind(this,"productName",index)}
+                                                        require = {true}/>
                                         </div>
                                         <div className="m-t-10">
                                             <label><i className="require">*</i>生产鞋码与数量：</label>
@@ -92,29 +180,34 @@ export default class Order extends React.Component{
                                                 </thead>
                                                 <tbody>
                                                 {
-                                                    item.produceOrderProductDetailDOs.map(()=>{
+                                                    item.produceOrderProductDetailDOs.map((sonItem,sonIndex)=>{
                                                         return(
-                                                            <tr>
+                                                            <tr key = {sonIndex}>
                                                                 <td>
-                                                                    <RUI.Input className = "w-80"/>
+                                                                    <RUI.Input value = {sonItem.shoeCode}
+                                                                               onChange = {this.shoeChange.bind(this,"shoeCode",index,sonIndex)}
+                                                                               className = "w-80"/>
                                                                 </td>
                                                                 <td>
-                                                                    <RUI.Input className = "w-80"/>
+                                                                    <RUI.Input value = {sonItem.shoeNum}
+                                                                               onChange = {this.shoeChange.bind(this,"shoeNum",index,sonIndex)}
+                                                                               className = "w-80"/>
                                                                 </td>
                                                                 <td>
-                                                                    <RUI.Button>删除</RUI.Button>
+                                                                    <RUI.Button onClick = {this.shoeDelete.bind(this,index,sonIndex)}>删除</RUI.Button>
                                                                 </td>
                                                             </tr>
                                                         )
                                                     })
                                                 }
-
                                                 </tbody>
                                             </table>
                                             <RUI.Button className="m-t-10 primary" onClick = {this.addLine.bind(this,index)}>添加一行</RUI.Button>
                                         </div>
-                                        <LabelArea label="生产要求："/>
-                                        <LabelArea label="备注："/>
+                                        <LabelArea label="生产要求："
+                                                   onChange = {this.productChange.bind(this,"produceAsk",index)} />
+                                        <LabelArea label="备注："
+                                                   onChange = {this.productChange.bind(this,"remark",index)} />
                                     </div>
                                 )
                             })
@@ -122,7 +215,7 @@ export default class Order extends React.Component{
                     </div>
                     <div className="m-t-30">
                         <RUI.Button className = "cancel-btn">取消</RUI.Button>
-                        <RUI.Button className = "primary">确定</RUI.Button>
+                        <RUI.Button className = "primary" onClick = {this.submit}>确定</RUI.Button>
                     </div>
                 </div>
             </Layout>
