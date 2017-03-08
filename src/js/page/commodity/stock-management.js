@@ -113,6 +113,7 @@ const Depart = React.createClass({
                 break;
             case 4:
                 hashHistory.push("/output?type=1");
+                break;
             case 5:
                 this.getStockDetail(item);
                 this.refs.dialogSet.show();
@@ -309,6 +310,7 @@ const Depart = React.createClass({
                         }
                         </tbody>
                     </table>
+                    <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialogDetail" title="库存详情" draggable={false} buttons="submit" >
                         <div style={{width:'400px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                             <div className="">
@@ -336,7 +338,6 @@ const Depart = React.createClass({
                                     }
                                     </tbody>
                                 </table>
-                                <Pager onPage ={this.getList} {...pager}/>
                             </div>
                         </div>
                     </RUI.Dialog>

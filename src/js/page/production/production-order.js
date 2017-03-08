@@ -3,31 +3,74 @@
  */
 import Layout from "../../components/layout";
 import LabelSelect from "../../components/label-select";
+import Pager from "../../components/pager";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
 const Depart = React.createClass({
     getInitialState(){
         return{
-
+            listRequest:{
+                orderNo:"",
+                orderName:"",
+                isUrgent:"",
+                tailorStatus:"",
+                vampStatus:"",
+                soleStatus:"",
+                qcStatus:"",
+            },
+            pager:{
+                currentPage:1,
+                pageSize:20,
+                totalNum:0,
+            },
+            list:[]
         }
+    },
+    componentDidMount(){
+        this.getList();
+    },
+    getList(pageNo=1){
+        let _this = this;
+        let {pager,listRequest} = this.state;
+        $.ajax({
+            url:commonBaseUrl+"/order/findOrderList.htm",
+            type:"get",
+            dataType:"json",
+            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            success(data){
+                if(data.success){
+                    pager.currentPage = pageNo;
+                    pager.totalNum = data.resultMap.iTotalDisplayRecords;
+                    _this.setState({
+                        list : data.resultMap.rows || [],
+                        pager : pager
+                    })
+                }else{
+                    pager.currentPage = 1;
+                    pager.totalNum = 0;
+                    _this.setState({list:[],pager})
+                }
+            }
+        });
     },
     create(){
         hashHistory.push("/production/createOrder");
     },
     render(){
+        let {pager,list} = this.state;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="depart-content">
                     <div className="tbn-div h-100">
                         <div>
                             <label htmlFor="">订单编号：</label>
-                            <RUI.Input className = "w-150"></RUI.Input>
+                            <RUI.Input className = "w-150"/>
                             <label htmlFor="">订单名称：</label>
-                            <RUI.Input className = "w-150"></RUI.Input>
+                            <RUI.Input className = "w-150"/>
                             <label htmlFor="">加急：</label>
                             <RUI.Select
-                                data={[{key:'全部',value:'1'}, {key:'是',value:'2'}, {key:'否',value:'3'}]}
-                                value={{key:'全部',value:'1'}}
+                                data={[{key:'全部',value:''}, {key:'是',value:'1'}, {key:'否',value:'2'}]}
+                                value={{key:'全部',value:''}}
                                 stuff={true}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
@@ -83,28 +126,35 @@ const Depart = React.createClass({
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
-                            </td>
-                            <td>拉丁鞋</td>
-                            <td>分类</td>
-                            <td>男</td>
-                            <td>儿童</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>35</td>
-                            <td>
-                                <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
-                                <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
-                            </td>
-                        </tr>
+                        {
+                            list.map((item,index)=>{
+                                return(
+                                    <tr key = {index}>
+                                        <td>
+                                            <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
+                                        </td>
+                                        <td>拉丁鞋</td>
+                                        <td>分类</td>
+                                        <td>男</td>
+                                        <td>儿童</td>
+                                        <td>35</td>
+                                        <td>35</td>
+                                        <td>35</td>
+                                        <td>35</td>
+                                        <td>35</td>
+                                        <td>35</td>
+                                        <td>
+                                            <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
+                                            <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+
                         </tbody>
                     </table>
-
+                    <Pager onPage ={this.getList} {...pager}/>
                 </div>
             </Layout>
         )

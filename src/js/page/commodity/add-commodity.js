@@ -164,7 +164,7 @@ const Add = React.createClass({
                     <div className = "add-content ">
                         <div className = "clearfix">
                             <label htmlFor="" className = "left-label left"><i className="require">*</i>产品图片</label>
-                            <Upload uploadBtn = "p-l-100" onClick = {this.clickImg} edit={true} url = {imgUrl}/>
+                            <Upload uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
                         </div>
                         <LabelInput value = {request.name} onChange = {this.changeInput.bind(this,"name")}  require = {true} label = "产品名称"/>
                         <LabelInput value = {request.colour} onChange = {this.changeInput.bind(this,"colour")}  require = {true} label = "产品颜色"/>
