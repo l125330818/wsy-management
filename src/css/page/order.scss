@@ -19,6 +19,30 @@
     margin-right: 50px;
   }
 }
+.detail-div{
+
+}
 .p-l-100{
   padding-left: 100px;
+}
+.p-l-20{
+  padding-left: 20px;
+}
+.m-r-20{
+  margin-right: 20px;
+}
+.m-b-20{
+  margin-bottom: 20px;
+}
+.next-btn{
+  width: 280px;
+  &:first-child{
+    margin-right: 50px;
+  }
+}
+.upload-img{
+  margin: 5px 0;
+  height: 86px;
+  width: 86px;
+  border-radius: 4px;
 }
