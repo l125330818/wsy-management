@@ -57,9 +57,14 @@ ReactDOM.render((
                  cb(null, require("./js/page/production/create-order"))
             })
         }}/>
-            <Route path="/output" getComponent={function(nextState, cb) {
+        <Route path="/output" getComponent={function(nextState, cb) {
             require.ensure([], (require) => {
-                 cb(null, require("./js/page/commodity/output-detail"))
+             cb(null, require("./js/page/commodity/output-detail"))
+            })
+        }}/>
+        <Route path="/order/detail" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+             cb(null, require("./js/page/production/order-detail"))
             })
         }}/>
     </Router>
