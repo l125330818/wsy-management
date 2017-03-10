@@ -6,6 +6,7 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
+let arr = ["未处理","已分配","已完成"]
 const Depart = React.createClass({
     getInitialState(){
         return{
@@ -55,6 +56,9 @@ const Depart = React.createClass({
     },
     create(){
         hashHistory.push("/production/createOrder");
+    },
+    getType(type){
+        return arr[type*1];
     },
     render(){
         let {pager,list} = this.state;
@@ -133,16 +137,16 @@ const Depart = React.createClass({
                                         <td>
                                             <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
                                         </td>
-                                        <td>拉丁鞋</td>
-                                        <td>分类</td>
-                                        <td>男</td>
-                                        <td>儿童</td>
-                                        <td>35</td>
-                                        <td>35</td>
-                                        <td>35</td>
-                                        <td>35</td>
-                                        <td>35</td>
-                                        <td>35</td>
+                                        <td>{item.orderNo}</td>
+                                        <td>{item.orderName}</td>
+                                        <td>{item.deliveryTime}</td>
+                                        <td>{item.orderNum}</td>
+                                        <td>{item.isUrgent==1?"是":"否"}</td>
+                                        <td>{item.tailorStatus==0?"未处理":"裁料完成"}</td>
+                                        <td>{this.getType(item.vampStatus)}</td>
+                                        <td>{this.getType(item.soleStatus)}</td>
+                                        <td>{item.qcStatus==0?"未处理":"已处理"}</td>
+                                        <td>{item.residueTime}</td>
                                         <td>
                                             <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
                                             <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
