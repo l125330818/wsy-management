@@ -148,7 +148,7 @@ const Depart = React.createClass({
                                         <td>{item.qcStatus==0?"未处理":"已处理"}</td>
                                         <td>{item.residueTime}</td>
                                         <td>
-                                            <Link to={"/commodity/add/?id=3&type=2"} className="handle-a">修改</Link>
+                                            <Link to={"/order/detail/?id=3&type=2"} className="handle-a">修改</Link>
                                             <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
                                         </td>
                                     </tr>

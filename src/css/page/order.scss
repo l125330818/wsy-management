@@ -46,3 +46,49 @@
   width: 86px;
   border-radius: 4px;
 }
+@media print {
+  body{
+    padding: 0;
+  }
+  .order-div{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+    padding:0
+  }
+  .nav-div{
+    visibility: hidden;
+  }
+  .header-div{
+    visibility: hidden;
+  }
+  .header-bread{
+    visibility: hidden;
+  }
+  .not-print{
+    visibility: hidden;
+  }
+  .login-out{
+    visibility: hidden;
+  }
+  .index-title{
+    visibility: hidden;
+  }
+  .page-content{
+    padding: 0;
+  }
+  .m-b-20{
+    margin-bottom: 0;
+  }
+  .upload-img{
+    height:200px;
+    width:200px;
+  }
+}
+.table-bottom-line{
+  &:last-child{
+    border-bottom: none;
+  }
+  border-bottom: 1px solid #ccc;
+}
