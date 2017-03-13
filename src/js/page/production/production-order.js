@@ -24,7 +24,7 @@ const Depart = React.createClass({
                 pageSize:20,
                 totalNum:0,
             },
-            handleSelect:[{key:"裁剪完成",value:"1"},{key:"机车分配",value:"2"},{key:"机车完成",value:"3"},{key:"查看",value:"4"},{key:"修改",value:"5"}],
+            handleSelect:[{key:"裁剪完成",value:"1"},{key:"机车分配",value:"2"},{key:"机车完成",value:"3"},{key:"查看",value:"4"},{key:"修改",value:"5"},{key:"删除",value:"6"}],
             list:[]
         }
     },
@@ -65,10 +65,40 @@ const Depart = React.createClass({
         let value = e.value;
         console.log(e);
         switch(value*1){
+            case 2:
+                hashHistory.push("/order/distribution?id="+item.orderNo);
+                break;
             case 4:
                 hashHistory.push("/order/detail?id="+item.orderNo);
                 break;
+            case 6:
+                this.delete(item);
+                break;
         }
+    },
+    delete(item){
+        let orderNo = item.orderNo;
+        let _this = this;
+        RUI.DialogManager.confirm({
+            message:'您确定要删除吗？?',
+            title:'删除订单',
+            submit:function() {
+                $.ajax({
+                    url:commonBaseUrl + "/order/delete.htm",
+                    type:"post",
+                    dataType:"json",
+                    data:{d:JSON.stringify({orderNo})},
+                    success(data){
+                        if(data.success){
+                            RUI.DialogManager.alert("删除成功");
+                            _this.getList();
+                        }else{
+                            RUI.DialogManager.alert(data.description);
+                        }
+                    }
+                })
+            },
+        });
     },
     render(){
         let {pager,list,handleSelect} = this.state;

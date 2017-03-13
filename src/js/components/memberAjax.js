@@ -17,6 +17,21 @@ export function departList(){
         }
     })
 }
+export function employeeList(){
+    return $.ajax({
+        url:commonBaseUrl+"/employee/findByPage.htm",
+        type:"get",
+        dataType:"json",
+        data:{d:"",pageNo:1,pageSize:20000},
+    }).then((data)=>{
+        if(data.success){
+            return data.resultMap;
+        }else{
+            Pubsub.publish("showMsg",["wrong",data.description]);
+            return data;
+        }
+    })
+}
 export function classifyList(){
     return $.ajax({
         url:commonBaseUrl+"/classify/findByPage.htm",
@@ -38,6 +53,21 @@ export function productList(){
         type:"get",
         dataType:"json",
         data:{d:JSON.stringify({classifyId:"",name:""}),pageNo:1,pageSize:20000},
+    }).then((data)=>{
+        if(data.success){
+            return data.resultMap;
+        }else{
+            Pubsub.publish("showMsg",["wrong",data.description]);
+            return data;
+        }
+    })
+}
+export function orderDetail(orderNo){
+    return $.ajax({
+        url:commonBaseUrl+"/order/findByOrderNo.htm",
+        type:"get",
+        dataType:"json",
+        data:{d:JSON.stringify({orderNo})},
     }).then((data)=>{
         if(data.success){
             return data.resultMap;

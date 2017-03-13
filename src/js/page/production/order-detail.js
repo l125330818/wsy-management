@@ -52,13 +52,25 @@ export default class Detail extends React.Component{
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="order-div print">
-                    <h3 className="not-print">分配生产</h3>
+                    <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">
+                        <div className="m-b-20">
+                            <RUI.Button className = "primary next-btn">上案</RUI.Button>
+                            <RUI.Button className = "primary next-btn">下案</RUI.Button>
+                        </div>
                         <div className="m-b-20">
                             <label>订单编号：</label><span className="m-r-20">20165656565</span>
                             <label>订单名称：</label><span className="m-r-20">张哥订单</span>
                             <label>是否加急：</label><span className="m-r-20">是</span>
                             <label>交货时间：</label><span className="m-r-20">2017-03-09 22:22:52</span>
+                        </div>
+                        <div className="m-b-20">
+                            <label>创建时间：</label><span className="m-r-20">2017-03-09 22:24:52</span>
+                            <label>裁剪完成时间：</label><span className="m-r-20">2017-03-09 22:24:56</span>
+                        </div>
+                        <div className="m-b-20">
+                            <label>机车分配时间：</label><span className="m-r-20">2017-03-09 22:25:17</span>
+                            <label>机车完成时间：</label><span className="m-r-20">2017-03-09 22:25:20</span>
                         </div>
                         <div className="order-content clearfix">
                             {
