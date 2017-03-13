@@ -24,6 +24,7 @@ const Depart = React.createClass({
                 pageSize:20,
                 totalNum:0,
             },
+            handleSelect:[{key:"裁剪完成",value:"1"},{key:"机车分配",value:"2"},{key:"机车完成",value:"3"},{key:"查看",value:"4"},{key:"修改",value:"5"}],
             list:[]
         }
     },
@@ -60,8 +61,17 @@ const Depart = React.createClass({
     getType(type){
         return arr[type*1];
     },
+    handleListSelect(item,e){
+        let value = e.value;
+        console.log(e);
+        switch(value*1){
+            case 4:
+                hashHistory.push("/order/detail?id="+item.orderNo);
+                break;
+        }
+    },
     render(){
-        let {pager,list} = this.state;
+        let {pager,list,handleSelect} = this.state;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="depart-content">
@@ -148,8 +158,10 @@ const Depart = React.createClass({
                                         <td>{item.qcStatus==0?"未处理":"已处理"}</td>
                                         <td>{item.residueTime}</td>
                                         <td>
-                                            <Link to={"/order/detail/?id=3&type=2"} className="handle-a">修改</Link>
-                                            <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
+                                            <RUI.Select data = {handleSelect}
+                                                        className="rui-theme-1 w-120"
+                                                        callback = {this.handleListSelect.bind(this,item)}
+                                                        stuff={true}/>
                                         </td>
                                     </tr>
                                 )

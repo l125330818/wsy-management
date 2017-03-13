@@ -23,7 +23,26 @@ export default class Detail extends React.Component{
       }
 
     componentDidMount() {
-console.log(Data)
+        this.getList();
+    }
+    getList(){
+        let _this = this;
+        let orderNo = this.props.location.query.id;
+        $.ajax({
+            url:commonBaseUrl+"/order/findByOrderNo.htm",
+            type:"get",
+            dataType:"json",
+            data:{d:JSON.stringify({orderNo})},
+            success(data){
+                if(data.success){
+                    _this.setState({
+                        list : data.resultMap || [],
+                    })
+                }else{
+                    _this.setState({list:[]})
+                }
+            }
+        });
     }
     submit(){
        window.print();
