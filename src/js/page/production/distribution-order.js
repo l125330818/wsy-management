@@ -49,7 +49,33 @@ export default class Detail extends React.Component{
         })
     }
     submit(){
-        console.log(this.state.list)
+        let request = {orderDistributes:[]};
+        let {list} = this.state;
+        list.produceOrderProductVOs.map((item,index)=>{
+            item.produceOrderProductDetailVOs.map((sItem,sIndex)=>{
+                sItem.produceOrderProductDistributeDOs.map((ssItem,ssIndex)=>{
+                    request.orderDistributes.push({
+                        produceOrderProductId:item.id,
+                        produceOrderProductDetailId:sItem.id,
+                        shoeCode:sItem.shoeCode,
+                        shoeNum:ssItem.shoeNum,
+                        employeeNo:ssItem.defaultValue.key,
+                        employeeName:ssItem.defaultValue.value})
+                })
+            });
+        });
+        request.produceOrderNo = list.orderNo;
+        request.type  = 1;
+        $.ajax({
+           url:commonBaseUrl + "/order/distribute.htm",
+            type : "post",
+            dataType:"json",
+            data:{d:JSON.stringify(request)},
+            success(data){
+
+            }
+        });
+        console.log(request)
     }
     addTable(item,sonIndex,index){
         let {list} = this.state;
@@ -154,7 +180,7 @@ export default class Detail extends React.Component{
                         </div>
                         <div className="m-t-30 not-print">
                             <RUI.Button className = "cancel-btn">取消</RUI.Button>
-                            <RUI.Button className = "primary" onClick = {this.submit} >打印</RUI.Button>
+                            <RUI.Button className = "primary" onClick = {this.submit} >确定</RUI.Button>
                         </div>
                     </div>
                 </div>

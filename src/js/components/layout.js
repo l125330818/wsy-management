@@ -25,6 +25,9 @@ const Layout = React.createClass({
             }
         });
     },
+    componentWillUnmount(){
+        this.pubsub_token && Pubsub.unsubscribe(this.pubsub_token);
+    },
     showMsg(type, msg) {
         var _this = this;
         window.setTimeout(function() {

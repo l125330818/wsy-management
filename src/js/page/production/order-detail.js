@@ -9,6 +9,7 @@ import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
+import {orderDetail} from "../../components/memberAjax";
 import Data from "./testData"
 let DateFormatter = new RUI.DateFormatter();
 export default class Detail extends React.Component{
@@ -17,7 +18,9 @@ export default class Detail extends React.Component{
         super(props);
         // 初始状态
         this.state = {
-            list:[{},{}]
+            list:{
+                produceOrderProductVOs :[]
+            },
         };
         this.submit = this.submit.bind(this);
       }
@@ -28,27 +31,55 @@ export default class Detail extends React.Component{
     getList(){
         let _this = this;
         let orderNo = this.props.location.query.id;
-        $.ajax({
-            url:commonBaseUrl+"/order/findByOrderNo.htm",
-            type:"get",
-            dataType:"json",
-            data:{d:JSON.stringify({orderNo})},
-            success(data){
-                if(data.success){
-                    _this.setState({
-                        list : data.resultMap || [],
-                    })
-                }else{
-                    _this.setState({list:[]})
-                }
-            }
-        });
+        orderDetail(orderNo).then((data)=>{
+            _this.setState({list:data.produceOrderVO});
+        })
     }
     submit(){
        window.print();
     }
+    getTableHtml(produceOrderProductDetailVOs){
+        let {list} = this.state;
+        if(list.vampStatus == 0 && )
+        if(produceOrderProductDetailVOs.length>0){
+            return(
+                produceOrderProductDetailVOs.map((item)=>{
+                    return (
+                        <tr>
+                            <td>
+                                {item.shoeCode+"码->"+item.shoeNum+"双"}
+                            </td>
+                            <td>
+                                {
+                                    item.produceOrderProductDistributeDOs.map((sonItem)=>{
+                                            return (
+                                                <div className="table-bottom-line">{sonItem.employeeName}</div>
+                                            )
+                                        }
+                                    )
+                                }
+                            </td>
+                        </tr>
+                    )
+                })
+            )
+        }else{
+            let arr = [{},{},{}];
+            return (
+                arr.map(()=>{
+                    return (
+                        <tr>
+                            <td/>
+                            <td/>
+                        </tr>
+                    )
+                })
+            )
+        }
+    }
     render(){
         let {list} = this.state;
+        let produceOrderProductVOs = list.produceOrderProductVOs;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="order-div print">
@@ -59,54 +90,36 @@ export default class Detail extends React.Component{
                             <RUI.Button className = "primary next-btn">下案</RUI.Button>
                         </div>
                         <div className="m-b-20">
-                            <label>订单编号：</label><span className="m-r-20">20165656565</span>
-                            <label>订单名称：</label><span className="m-r-20">张哥订单</span>
-                            <label>是否加急：</label><span className="m-r-20">是</span>
-                            <label>交货时间：</label><span className="m-r-20">2017-03-09 22:22:52</span>
+                            <label>订单编号：</label><span className="m-r-20">{list.orderNo}</span>
+                            <label>订单名称：</label><span className="m-r-20">{list.orderName}</span>
+                            <label>是否加急：</label><span className="m-r-20">{list.isUrgent==1?"是":"否"}</span>
+                            <label>交货时间：</label><span className="m-r-20">{list.deliveryTime}</span>
                         </div>
                         <div className="m-b-20">
-                            <label>创建时间：</label><span className="m-r-20">2017-03-09 22:24:52</span>
-                            <label>裁剪完成时间：</label><span className="m-r-20">2017-03-09 22:24:56</span>
+                            <label>创建时间：</label><span className="m-r-20">{list.createTime}</span>
+                            <label>裁剪完成时间：</label><span className="m-r-20">{list.tailorFinishTime}</span>
                         </div>
                         <div className="m-b-20">
-                            <label>机车分配时间：</label><span className="m-r-20">2017-03-09 22:25:17</span>
-                            <label>机车完成时间：</label><span className="m-r-20">2017-03-09 22:25:20</span>
+                            <label>机车分配时间：</label><span className="m-r-20">{list.vampHandleTime}</span>
+                            <label>机车完成时间：</label><span className="m-r-20">{list.vampFinishTime}</span>
                         </div>
                         <div className="order-content clearfix">
                             {
-                                list.map(()=>{
+                                produceOrderProductVOs.map((item,index)=>{
                                     return(
-                                        <div className="list left" >
+                                        <div className="list left" key = {index}>
                                             <div className = "clearfix">
                                                 <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
-                                                <img src={require("../../../images/yeoman.png")} onClick = {this.clickImg} className="upload-img" alt=""/>
+                                                <img src={item.productUrl} onClick = {this.clickImg} className="upload-img" alt=""/>
                                             </div>
                                             <div className="m-b-20">
-                                                <label>产品名称：</label><span>min</span>
+                                                <label>产品名称：</label><span>{item.productName}</span>
                                             </div>
                                             <div className="m-t-10">
                                                 <label><i className="require">*</i>生产鞋码与数量：</label>
                                                 <table className = "table m-t-10 m-b-20">
                                                     {
-                                                        Data.list.produceOrderProductDetailVOs.map((item)=>{
-                                                            return (
-                                                                <tr>
-                                                                    <td>
-                                                                        {item.shoeCode}
-                                                                    </td>
-                                                                    <td>
-                                                                        {
-                                                                            item.produceOrderProductDistributeDOs.map((sonItem)=>{
-                                                                                return (
-                                                                                    <div className="table-bottom-line">{sonItem.employeeName}</div>
-                                                                                )
-                                                                            }
-                                                                            )
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            )
-                                                        })
+                                                        this.getTableHtml(item.produceOrderProductDetailVOs)
                                                     }
 
                                                 </table>

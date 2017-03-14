@@ -120,8 +120,8 @@ const Detail = React.createClass({
                     <div className="tbn-div clearfix">
                         <label htmlFor="" className="left">库存操作：</label>
                         <RUI.Select
-                            data={[{key:'全部',value:'1'}, {key:'出库',value:'2'}, {key:'入库',value:'3'}]}
-                            value={{key:'全部',value:'1'}}
+                            data={[{key:'全部',value:''}, {key:'出库',value:'1'}, {key:'入库',value:'2'}]}
+                            value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"type")}
                             className="rui-theme-1 w-120 left">

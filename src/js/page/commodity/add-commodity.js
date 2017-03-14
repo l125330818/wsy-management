@@ -98,8 +98,8 @@ const Add = React.createClass({
     submit(){
         let _this =this;
         let query = this.props.location.query;
-        let {request,fileList} = this.state;
-        request.url = request.url|| fileList[0].response.resultMap.picPath;
+        let {request,imgUrl} = this.state;
+        request.url = request.url|| imgUrl;
         let url = query.id?"/product/update.htm":"/product/add.htm";
         request.id = query.id;
         $.ajax({
@@ -134,7 +134,9 @@ const Add = React.createClass({
         console.log(file);
 
     },
-
+    uploadCallback(imgUrl){
+        this.setState({imgUrl});
+    },
    render(){
        let {imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
        return(
@@ -144,7 +146,7 @@ const Add = React.createClass({
                     <div className = "add-content ">
                         <div className = "clearfix">
                             <label htmlFor="" className = "left-label left"><i className="require">*</i>产品图片</label>
-                            <Upload uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
+                            <Upload callback = {this.uploadCallback} uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
                         </div>
                         <LabelInput value = {request.name} onChange = {this.changeInput.bind(this,"name")}  require = {true} label = "产品名称"/>
                         <LabelInput value = {request.colour} onChange = {this.changeInput.bind(this,"colour")}  require = {true} label = "产品颜色"/>

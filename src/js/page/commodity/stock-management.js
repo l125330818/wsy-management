@@ -227,6 +227,7 @@ const Depart = React.createClass({
                 stockDetail[index].tips = "";
             }
         }else{
+            console.log(value+shoeNum)
             if(value+shoeNum>storeMax){
                 stockDetail[index].tips = "入库后大于库存最大值";
             }else{

@@ -7,7 +7,7 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import Pubsub from "../../util/pubsub";
 import "../../../css/page/department-management.scss";
-let typeArr = ["","超级管理员","上岸管理员","下案管理员","质检管理员","库存管理员"]
+let typeArr = ["","超级管理员","上案管理员","下案管理员","质检管理员","库存管理员"]
 const Depart = React.createClass({
     getInitialState(){
         return{
@@ -169,7 +169,7 @@ const Depart = React.createClass({
                             data={[
                             {key:'全部',value:''},
                             {key:'超级管理员',value:'1'},
-                            {key:'上岸管理员',value:'2'},
+                            {key:'上案管理员',value:'2'},
                             {key:'下案管理员',value:'3'},
                             {key:'质检管理员',value:'4'},
                             {key:'库存管理员',value:'5'}]}
@@ -221,7 +221,7 @@ const Depart = React.createClass({
                                 label = "类型："
                                 data = {[
                                 {key:"超级管理员",value:1},
-                                {key:"上岸管理员",value:2},
+                                {key:"上案管理员",value:2},
                                 {key:"下案管理员",value:3},
                                 {key:"质检管理员",value:4},
                                 {key:"库存管理员",value:5}]}

@@ -6,7 +6,7 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
-let arr = ["未处理","已分配","已完成"]
+let arr1 = ["未处理","已分配","已完成"];
 const Depart = React.createClass({
     getInitialState(){
         return{
@@ -58,8 +58,8 @@ const Depart = React.createClass({
     create(){
         hashHistory.push("/production/createOrder");
     },
-    getType(type){
-        return arr[type*1];
+    getVampType(type){
+        return arr1[type*1];
     },
     handleListSelect(item,e){
         let value = e.value;
@@ -162,7 +162,7 @@ const Depart = React.createClass({
                             <td>双数</td>
                             <td>加急</td>
                             <td>裁剪状态</td>
-                            <td>上岸状态</td>
+                            <td>上案状态</td>
                             <td>下案状态</td>
                             <td>质检状态</td>
                             <td>剩余时间</td>
@@ -183,8 +183,8 @@ const Depart = React.createClass({
                                         <td>{item.orderNum}</td>
                                         <td>{item.isUrgent==1?"是":"否"}</td>
                                         <td>{item.tailorStatus==0?"未处理":"裁料完成"}</td>
-                                        <td>{this.getType(item.vampStatus)}</td>
-                                        <td>{this.getType(item.soleStatus)}</td>
+                                        <td>{this.getVampType(item.vampStatus)}</td>
+                                        <td>{this.getVampType(item.soleStatus)}</td>
                                         <td>{item.qcStatus==0?"未处理":"已处理"}</td>
                                         <td>{item.residueTime}</td>
                                         <td>
