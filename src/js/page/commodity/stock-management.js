@@ -16,6 +16,7 @@ const Depart = React.createClass({
         return{
             title : "",
             numTitle : "",
+            currList : {},
             listRequest:{
                 id : "",
                 classifyId : "",
@@ -23,6 +24,7 @@ const Depart = React.createClass({
             },
             outputRequest:{
                 productId:"",
+                productName:"",
                 storeBeforeNum:"",
                 type:1,
                 remak:"",
@@ -47,6 +49,7 @@ const Depart = React.createClass({
     getList(pageNo=1){
         let _this = this;
         let {pager,listRequest} = this.state;
+
         $.ajax({
             url:commonBaseUrl+"/store/findStoreList.htm",
             type:"get",
@@ -112,13 +115,14 @@ const Depart = React.createClass({
                 });
                 break;
             case 4:
-                hashHistory.push("/output?type=1");
+                hashHistory.push("/output?type=1&id="+item.id);
                 break;
             case 5:
                 this.getStockDetail(item);
                 this.refs.dialogSet.show();
                 break;
         }
+        this.setState({currList : item});
     },
     getStockDetail(item){
         let _this = this;
@@ -146,9 +150,10 @@ const Depart = React.createClass({
         })
     },
     outPut(){
-        let {outputRequest,stockDetail} = this.state;
+        let {outputRequest,stockDetail,currList} = this.state;
         let _this = this;
         outputRequest.productStoreVOs = stockDetail;
+        outputRequest.productName = currList.name;
         $.ajax({
            url:commonBaseUrl + "/store/inputOrOutput.htm",
             type:"post",
@@ -213,11 +218,10 @@ const Depart = React.createClass({
     outputChange(index,item,e){
         let {stockDetail,outputRequest} = this.state;
         let type = outputRequest.type;
-        let shoeNum = item.shoeNum;
-        let storeMax = item.storeMax;
-        let storeMin = item.storeMin;
-        let value = e.target.value;
-        let tips = "";
+        let shoeNum = item.shoeNum*1;
+        let storeMax = item.storeMax*1;
+        let storeMin = item.storeMin*1;
+        let value = e.target.value*1;
         if(type==1){
             if(value>shoeNum){
                 stockDetail[index].tips = "出库双数不大于库存数量";
@@ -227,8 +231,7 @@ const Depart = React.createClass({
                 stockDetail[index].tips = "";
             }
         }else{
-            console.log(value+shoeNum)
-            if(value+shoeNum>storeMax){
+            if(value+shoeNum>storeMax && storeMax!=-1){
                 stockDetail[index].tips = "入库后大于库存最大值";
             }else{
                 stockDetail[index].tips ="";
@@ -238,7 +241,7 @@ const Depart = React.createClass({
         this.setState({stockDetail});
     },
     render(){
-        let {list,productSelect,classifySelect,stockDetail,pager} = this.state;
+        let {list,productSelect,classifySelect,stockDetail,pager,currList} = this.state;
         return(
             <Layout currentKey = "6" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
                 <div className="depart-content">
@@ -313,10 +316,10 @@ const Depart = React.createClass({
                     </table>
                     <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialogDetail" title="库存详情" draggable={false} buttons="submit" >
-                        <div style={{width:'400px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
+                        <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
-                                <span>{stockDetail.length}双</span>
+                                <span>{currList.name}&nbsp;&nbsp;&nbsp;{currList.storeTotalNum}双</span>
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -328,8 +331,14 @@ const Depart = React.createClass({
                                     <tbody>
                                     {
                                         stockDetail.length>0 && stockDetail.map((item,index)=>{
+                                            let errorStyle = "";
+                                            console.log(item.shoeNum)
+                                            console.log(item.storeMax)
+                                            if((item.shoeNum>item.storeMax && item.storeMax!=-1) || item.shoeNum<item.storeMin){
+                                                errorStyle = "bg-red"
+                                            }
                                             return(
-                                                <tr key = {index}>
+                                                <tr key = {index} className={errorStyle}>
                                                     <td>{item.shoeCode}</td>
                                                     <td>{item.shoeNum}</td>
                                                     <td>{(item.storeMin==-1?"无限制":item.storeMin) + "-"+(item.storeMax==-1?"无限制":item.storeMax)}</td>
@@ -346,7 +355,7 @@ const Depart = React.createClass({
                         <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
-                                <span>120双</span>
+                                <span>{currList.name}&nbsp;&nbsp;&nbsp;{currList.storeTotalNum}双</span>
                                 <table className="table">
                                     <thead>
                                     <tr>
@@ -383,10 +392,10 @@ const Depart = React.createClass({
                         </div>
                     </RUI.Dialog>
                     <RUI.Dialog ref="dialogSet" title="库存设置" draggable={false} onSubmit = {this.stockSet} buttons="submit,cancel" >
-                        <div style={{width:'400px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
+                        <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                             <div className="">
                                 <label htmlFor="" className="c">产品信息：</label>
-                                <span>{stockDetail.length}双</span>
+                                <span>{currList.name}&nbsp;&nbsp;&nbsp;{currList.storeTotalNum}双</span>
                                 <table className="table">
                                     <thead>
                                     <tr>

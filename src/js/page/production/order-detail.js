@@ -40,7 +40,6 @@ export default class Detail extends React.Component{
     }
     getTableHtml(produceOrderProductDetailVOs){
         let {list} = this.state;
-        if(list.vampStatus == 0 && )
         if(produceOrderProductDetailVOs.length>0){
             return(
                 produceOrderProductDetailVOs.map((item)=>{

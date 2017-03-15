@@ -66,6 +66,9 @@ const Depart = React.createClass({
     },
     dialogSubmit(){
         let _this = this;
+        if(!this.checkValid()){
+            return false;
+        }
         $.ajax({
             url:commonBaseUrl+"/account/add.htm",
             type:"post",
@@ -81,6 +84,28 @@ const Depart = React.createClass({
             }
         })
         console.log(this.state.request);
+    },
+    checkValid(){
+        let {request} = this.state;
+        let flag = true;
+        let msg = "";
+        if(!request.username){
+            msg = "请输入帐号";
+            flag = false;
+        }else if(!request.realname){
+            msg = "请输入姓名";
+            flag = false;
+        }else if(!request.mobile){
+            msg = "请输入手机号";
+            flag = false;
+        }else{
+            msg = "";
+            flag = true;
+        }
+        if(msg){
+            Pubsub.publish("showMsg",["wrong",msg]);
+        }
+        return flag;
     },
     handleInput(type,e){
         let {request,modifyRequest} = this.state;
@@ -123,6 +148,11 @@ const Depart = React.createClass({
     },
     pwddialogSubmit(){
         let _this = this;
+        let {modifyRequest} = this.state;
+        if(!modifyRequest.password){
+            Pubsub.publish("showMsg",["wrong","请输入密码"]);
+            return false;
+        }
         $.ajax({
            url:commonBaseUrl+"/account/updatePassword.htm",
             dataType:"json",

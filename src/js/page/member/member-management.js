@@ -33,6 +33,7 @@ const Depart = React.createClass({
             },
             list:[],
             type:"",
+            msg:"",
             selectValue:[{key:"全部",value:""}],
             defaultSelectValue:{}
         }
@@ -124,8 +125,11 @@ const Depart = React.createClass({
         });
     },
     dialogSubmit(){
-        let _this = this;
         let {type,request} = this.state;
+        if(!this.checkValid()){
+            return false;
+        }
+        let _this = this;
         let jsonStr = JSON.stringify(request);
         let requestJson = JSON.parse(jsonStr);
         requestJson.entryTime = DateFormatter.setPattern("Y-m-d").format(requestJson.entryTime);
@@ -145,6 +149,31 @@ const Depart = React.createClass({
             }
         });
         console.log(this.state.request);
+    },
+    checkValid(){
+        let {request} = this.state;
+        let flag = true;
+        let msg = "";
+        if(!request.employeeNo){
+            msg = "请输入工号";
+            flag = false;
+        }else if(!request.name){
+            msg = "请输入姓名";
+            flag = false;
+        }else if(!request.mobile){
+            msg = "请输入手机号";
+            flag = false;
+        }else if(!request.departmentName){
+            msg = "请选择部门";
+            flag = false;
+        }else{
+            msg = "";
+            flag = true;
+        }
+        if(msg){
+            Pubsub.publish("showMsg",["wrong",msg]);
+        }
+        return flag;
     },
     handleInput(type,e){
         let {request} = this.state;
@@ -172,10 +201,10 @@ const Depart = React.createClass({
         let {request} = this.state;
         request.departmentName = e.key;
         request.departmentId = e.value;
-        this.setState({listRequest});
+        this.setState({request});
     },
     render(){
-        let {list,pager,request,defaultSelectValue,selectValue} = this.state;
+        let {list,pager,request,defaultSelectValue,selectValue,type} = this.state;
         return(
             <Layout currentKey = "2" defaultOpen={"0"} bread = {["部门成员","成员管理"]}>
                 <div className="depart-content">
@@ -188,7 +217,7 @@ const Depart = React.createClass({
                             callback = {this.selectDepart}
                             className="rui-theme-1 w-120">
                         </RUI.Select>
-                        <label htmlFor="">名字：</label>
+                        <label htmlFor="">姓名：</label>
                         <RUI.Input onChange = {this.nameInput} className = "w-150"/>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                         <RUI.Button className="add-btn primary" onClick = {this.add}>添加</RUI.Button>
@@ -197,7 +226,7 @@ const Depart = React.createClass({
                         <thead>
                         <tr>
                             <td>工号</td>
-                            <td>名字</td>
+                            <td>姓名</td>
                             <td>手机号</td>
                             <td>入职时间</td>
                             <td>部门</td>
@@ -227,8 +256,8 @@ const Depart = React.createClass({
                     <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialog" title={this.state.title} draggable={false} buttons="submit,cancel" onCancel={this.dialogCancel} onSubmit={this.dialogSubmit}>
                         <div style={{width:'400px', wordWrap:'break-word'}}>
-                            <LabelInput placeholder = "请输入工号" require={true} value = {request.employeeNo} onChange = {this.handleInput.bind(this,"employeeNo")} label = "工号："/>
-                            <LabelInput placeholder = "请输入名字" require={true} value = {request.name} onChange = {this.handleInput.bind(this,"name")} label = "名字："/>
+                            <LabelInput placeholder = "请输入工号" require={true} disabled = {type=="edit"?true:false} value = {request.employeeNo} onChange = {this.handleInput.bind(this,"employeeNo")} label = "工号："/>
+                            <LabelInput placeholder = "请输入姓名" require={true} value = {request.name} onChange = {this.handleInput.bind(this,"name")} label = "姓名："/>
                             <LabelInput placeholder = "请输入手机号" require={true} value = {request.mobile} onChange = {this.handleInput.bind(this,"mobile")} label = "手机号："/>
                             <div className = "m-t-10 clearfix">
                                 <label className = "left-label left"><i className="require">*</i>入职时间</label>

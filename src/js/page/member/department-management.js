@@ -71,6 +71,13 @@ const Depart = React.createClass({
         let _this = this;
         let {request,type} = this.state;
         let url = type=="add"?"/department/add.htm":"/department/update.htm";
+        if(!request.name){
+            Pubsub.publish("showMsg",["wrong","请输入部门名称"]);
+            return false;
+        }else if (!request.function){
+            Pubsub.publish("showMsg",["wrong","请输入部门职能"]);
+            return false;
+        }
         $.ajax({
            url:commonBaseUrl + url,
             dataType:"json",
@@ -81,7 +88,7 @@ const Depart = React.createClass({
                     Pubsub.publish("showMsg",["success",type=="add"?"添加成功":"修改成功"]);
                     _this.getList();
                 }else{
-                    Pubsub.publish("showMsg",["wrong",data.description])
+                    Pubsub.publish("showMsg",["wrong",data.description]);
                 }
             }
         });

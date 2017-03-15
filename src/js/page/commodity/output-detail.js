@@ -39,6 +39,10 @@ const Detail = React.createClass({
     getList(pageNo=1){
         let _this = this;
         let {pager,listRequest} = this.state;
+        let query = this.props.location.query;
+        listRequest.startTime = listRequest.startTime + " 00:00:00";
+        listRequest.endTime = listRequest.endTime + " 23:59:59";
+        listRequest.productId = query.id || "";
         $.ajax({
             url:commonBaseUrl+"/store/inputOrOutputList.htm",
             type:"get",
@@ -191,7 +195,7 @@ const Detail = React.createClass({
                     <Pager onPage ={this.getList} {...pager}/>
                 </div>
                 <RUI.Dialog ref="dialogDetail" title="操作明细" draggable={false} onSubmit = {this.stockSet} buttons="submit" >
-                    <div style={{width:'400px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
+                    <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                         <div className="">
                             <label htmlFor="" className="c">产品信息：</label>
                             <span>{stockDetail.length}双</span>

@@ -69,6 +69,10 @@ const Depart = React.createClass({
     dialogSubmit(){
         let _this = this;
         let {request,type} = this.state;
+        if(!request.classifyName){
+            Pubsub.publish("showMsg",["wrong","请输入类别名称"]);
+            return false;
+        }
         let url = type=="add"?"/classify/add.htm":"/classify/update.htm";
         $.ajax({
             url:commonBaseUrl + url,

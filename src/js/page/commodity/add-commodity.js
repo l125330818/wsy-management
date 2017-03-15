@@ -26,8 +26,8 @@ const Add = React.createClass({
                 colour : "",
                 classifyId : "",
                 classifyName : "",
-                applySex : "",
-                applyCrowd : "",
+                applySex : 1,
+                applyCrowd : 1,
                 maxCode : "",
                 minCode : "",
                 vampMaterial : "",
@@ -97,6 +97,9 @@ const Add = React.createClass({
     },
     submit(){
         let _this =this;
+        if(!_this.checkValid()){
+            return false;
+        }
         let query = this.props.location.query;
         let {request,imgUrl} = this.state;
         request.url = request.url|| imgUrl;
@@ -119,6 +122,46 @@ const Add = React.createClass({
             }
         });
     },
+    checkValid(){
+        let {request,imgUrl} = this.state;
+        let flag = true;
+        let msg = "";
+        if(!imgUrl){
+            msg = "请上传产品图片";
+            flag = false;
+        }else if(!request.name){
+            msg = "请输入产品名称";
+            flag = false;
+        }else if(!request.colour){
+            msg = "请输入产品颜色";
+            flag = false;
+        }else if(!request.classifyId){
+            msg = "请选择产品分类";
+            flag = false;
+        }else if(!request.minCode || !request.maxCode){
+            msg = "请输入鞋码区间";
+            flag = false;
+        }else if(!request.vampMaterial){
+            msg = "请输入鞋面材质";
+            flag = false;
+        }else if(!request.soleMaterial){
+            msg = "请输入鞋底材质";
+            flag = false;
+        }else if(!request.flowerType){
+            msg = "请输入花型";
+            flag = false;
+        }else if(!request.remark){
+            msg = "请输入备注";
+            flag = false;
+        }else{
+            msg = "";
+            flag = true;
+        }
+        if(msg){
+            Pubsub.publish("showMsg",["wrong",msg]);
+        }
+        return flag;
+    },
     classifySelect(e){
         let {request} = this.state;
         request.classifyName = e.key;
@@ -139,6 +182,8 @@ const Add = React.createClass({
     },
    render(){
        let {imgUrl,request,selectValue,defaultSelect,sexSelect,crowdSelect,id,defaultFileList} = this.state;
+       let query = this.props.location.query;
+
        return(
            <Layout currentKey = {"5"} defaultOpen={"1"} bread = {["产品库存","产品管理"]}>
                 <div className="add-commodity">
@@ -168,15 +213,21 @@ const Add = React.createClass({
                             callback = {this.applySelect.bind(this,"applyCrowd")}
                             data = {[{key:"成人",value:1},{key:"儿童",value:2},{key:"通用",value:3}]}
                             default = {crowdSelect}/>
-                        <div>
+                        <div className="m-t-10">
                             <label className="left-label ">
                                 <i className="require">*</i>
                                 <span>鞋码区间</span>
                             </label>
                             <span>
-                                    <RUI.Input value = {request.minCode} onChange = {this.changeInput.bind(this,"minCode")}  className="w-50"/>
+                                    <RUI.Input value = {request.minCode}
+                                               disabled = {query.id?true:false}
+                                               onChange = {this.changeInput.bind(this,"minCode")}
+                                               className="w-50"/>
                                     <span>----</span>
-                                    <RUI.Input value = {request.maxCode} onChange = {this.changeInput.bind(this,"maxCode")}  className="w-50"/>
+                                    <RUI.Input value = {request.maxCode}
+                                               disabled = {query.id?true:false}
+                                               onChange = {this.changeInput.bind(this,"maxCode")}
+                                               className="w-50"/>
                                     <span>码</span>
                             </span>
                         </div>
