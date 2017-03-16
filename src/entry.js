@@ -72,5 +72,10 @@ ReactDOM.render((
              cb(null, require("./js/page/production/distribution-order"))
             })
         }}/>
+        <Route path="/statistic" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+             cb(null, require("./js/page/production/order-statistic"))
+            })
+        }}/>
     </Router>
 ), document.getElementById('app'));

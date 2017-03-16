@@ -24,7 +24,7 @@ const Nav = React.createClass({
                     {key:"库存管理",value:6,path:"/stock"},{key:"出入库明细",value:7,path:"/output"}]},
                 {key:"生产管理",type:"solution",children:[
                     {key:"生产订单",value:8,path:"/production/order"},
-                    {key:"生产管理",value:9,path:"/accounts"}]},
+                    {key:"生产管理",value:9,path:"/statistic"}]},
             ],
             currentKey:this.props.currentKey,
             defaultOpen : this.props.defaultOpen || "0"
