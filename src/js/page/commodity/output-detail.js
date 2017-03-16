@@ -36,10 +36,15 @@ const Detail = React.createClass({
         this.getList();
         this.productList();
     },
+    componentWillReceiveProps(nextProps){
+        this.props.location.query = nextProps.location.query;
+        this.getList();
+    },
     getList(pageNo=1){
         let _this = this;
         let {pager,listRequest} = this.state;
         let query = this.props.location.query;
+        console.log(query)
         listRequest.startTime = listRequest.startTime + " 00:00:00";
         listRequest.endTime = listRequest.endTime + " 23:59:59";
         listRequest.productId = query.id || "";
@@ -94,7 +99,6 @@ const Detail = React.createClass({
     inputChange(type,e){
         let {listRequest} = this.state;
         listRequest[type] = e.target.value;
-        this.setState({listRequest});
     },
     search(){
         this.getList();

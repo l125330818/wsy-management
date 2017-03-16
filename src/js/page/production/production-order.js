@@ -25,7 +25,12 @@ const Depart = React.createClass({
                 totalNum:0,
             },
             handleSelect:[{key:"裁剪完成",value:"1"},{key:"机车分配",value:"2"},{key:"机车完成",value:"3"},{key:"查看",value:"4"},{key:"修改",value:"5"},{key:"删除",value:"6"}],
-            list:[]
+            list:[],
+            isUrgent:{key:"全部",value:""},
+            tailorStatus:{key:"全部",value:""},
+            vampStatus:{key:"全部",value:""},
+            qcStatus:{key:"全部",value:""},
+            soleStatus:{key:"全部",value:""}
         }
     },
     componentDidMount(){
@@ -100,54 +105,72 @@ const Depart = React.createClass({
             },
         });
     },
+    handleSelect(type,e){
+        let {listRequest} = this.state;
+        listRequest[type] = e.value;
+        this.state[type] = e;
+    },
+    handleInput(type,e){
+        let {listRequest} = this.state;
+        listRequest[type] = e.target.value;
+        this.setState({})
+    },
+    search(){
+        this.getList();
+    },
     render(){
-        let {pager,list,handleSelect} = this.state;
+        let {pager,list,handleSelect,isUrgent,tailorStatus,vampStatus,soleStatus,qcStatus} = this.state;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="depart-content">
                     <div className="tbn-div h-100">
                         <div>
                             <label htmlFor="">订单编号：</label>
-                            <RUI.Input className = "w-150"/>
+                            <RUI.Input onChange = {this.handleInput.bind(this,"orderNo")} className = "w-150"/>
                             <label htmlFor="">订单名称：</label>
-                            <RUI.Input className = "w-150"/>
+                            <RUI.Input onChange = {this.handleInput.bind(this,"orderName")} className = "w-150"/>
                             <label htmlFor="">加急：</label>
                             <RUI.Select
                                 data={[{key:'全部',value:''}, {key:'是',value:'1'}, {key:'否',value:'2'}]}
-                                value={{key:'全部',value:''}}
+                                value={isUrgent}
                                 stuff={true}
+                                callback = {this.handleSelect.bind(this,"isUrgent")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
-                            <RUI.Button className="primary">搜索</RUI.Button>
+                            <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                             <RUI.Button className="add-btn primary" onClick = {this.create}>创建</RUI.Button>
                         </div>
                         <div className="m-t-10">
                             <label htmlFor="">裁剪状态：</label>
                             <RUI.Select
-                                data={[{key:'全部',value:'1'}, {key:'未处理',value:'2'}, {key:'已完成',value:'3'}]}
-                                value={{key:'全部',value:'1'}}
+                                data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'已完成',value:'1'}]}
+                                value={tailorStatus}
                                 stuff={true}
+                                callback = {this.handleSelect.bind(this,"tailorStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                             <label htmlFor="">上案状态：</label>
                             <RUI.Select
-                                data={[{key:'全部',value:'1'}, {key:'未处理',value:'2'}, {key:'处理中',value:'3'}, {key:'已完成',value:'4'}]}
-                                value={{key:'全部',value:'1'}}
+                                data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'处理中',value:'1'}, {key:'已完成',value:'2'}]}
+                                value={vampStatus}
                                 stuff={true}
+                                callback = {this.handleSelect.bind(this,"vampStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                             <label htmlFor="">下案状态：</label>
                             <RUI.Select
-                                data={[{key:'全部',value:'1'}, {key:'未处理',value:'2'}, {key:'处理中',value:'3'}, {key:'已完成',value:'4'}]}
-                                value={{key:'全部',value:'1'}}
+                                data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'处理中',value:'1'}, {key:'已完成',value:'2'}]}
+                                value={soleStatus}
                                 stuff={true}
+                                callback = {this.handleSelect.bind(this,"soleStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                             <label htmlFor="">质检状态：</label>
                             <RUI.Select
-                                data={[{key:'全部',value:'1'}, {key:'未处理',value:'2'}, {key:'已完成',value:'3'}]}
-                                value={{key:'全部',value:'1'}}
+                                data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'已完成',value:'1'}]}
+                                value={qcStatus}
                                 stuff={true}
+                                callback = {this.handleSelect.bind(this,"qcStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                         </div>

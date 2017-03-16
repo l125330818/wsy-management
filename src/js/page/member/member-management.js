@@ -178,7 +178,6 @@ const Depart = React.createClass({
     handleInput(type,e){
         let {request} = this.state;
         request[type] = e.target.value;
-        this.setState({request});
     },
     selectDepart(e){
         let {listRequest} = this.state;
@@ -188,7 +187,6 @@ const Depart = React.createClass({
     nameInput(e){
         let {listRequest} = this.state;
         listRequest.name = e.target.value;
-        this.setState({listRequest});
     },
     search(){
         this.getList();
