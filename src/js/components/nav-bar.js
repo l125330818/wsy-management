@@ -6,11 +6,9 @@ import 'antd/dist/antd.css';
 import  Menu  from 'antd/lib/Menu';
 import  Icon  from 'antd/lib/Icon';
 import {hashHistory } from 'react-router';
+import Data from "./Data";
 const SubMenu = Menu.SubMenu;
 const Nav = React.createClass({
-    contextTypes: {
-        router: React.PropTypes.object
-    },
     getInitialState(){
         return{
             navList:[
@@ -24,17 +22,40 @@ const Nav = React.createClass({
                     {key:"库存管理",value:6,path:"/stock"},{key:"出入库明细",value:7,path:"/output"}]},
                 {key:"生产管理",type:"solution",children:[
                     {key:"生产订单",value:8,path:"/production/order"},
-                    {key:"生产管理",value:9,path:"/statistic"}]},
+                    {key:"订单统计",value:9,path:"/statistic"}]},
+            ],
+            downList:[
+                {key:"产品库存",type:"appstore",children:[
+                    {key:"库存管理",value:6,path:"/stock"},{key:"出入库明细",value:7,path:"/output"}]},
+                {key:"生产管理",type:"solution",children:[
+                    {key:"生产订单",value:8,path:"/production/order"}]},
+            ],
+            upList:[
+                {key:"生产管理",type:"solution",children:[
+                    {key:"生产订单",value:8,path:"/production/order"}]},
             ],
             currentKey:this.props.currentKey,
             defaultOpen : this.props.defaultOpen || "0"
         }
     },
     handleClick(e){
-        let {navList} = this.state;
+        let {navList,downList,upList} = this.state;
+        let type = localStorage.type;
+        let list = [];
+        switch (type*1){
+            case 1:
+                list = navList;
+                break;
+            case 2:
+                list = upList;
+                break;
+            case 3:
+                list = downList;
+                break;
+        }
         let key = Number(e.keyPath[1]);
         let value = e.keyPath[0];
-        let children = navList[key].children;
+        let children = list[key].children;
         let currObj = children.find((item)=>{
             return item.value == value;
         });
@@ -48,7 +69,20 @@ const Nav = React.createClass({
     },
     render(){
         let _this = this;
-        let {navList} = _this.state;
+        let {navList,downList,upList} = _this.state;
+        let type =  localStorage.type;
+        let list = [];
+        switch (type*1){
+            case 1:
+                list = navList;
+                break;
+            case 2:
+                list = upList;
+                break;
+            case 3:
+                list = downList;
+                break;
+        }
         return(
             <div className = "nav-div">
                 <div className="info-div">
@@ -63,7 +97,7 @@ const Nav = React.createClass({
                     mode="inline"
                 >
                     {
-                        navList.map((item,index)=>{
+                        list.map((item,index)=>{
                             return(
                                 <SubMenu key={index} title={<span><Icon type={item.type} /><span>{item.key}</span></span>}>
                                     {

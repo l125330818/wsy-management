@@ -122,8 +122,14 @@ const Detail = React.createClass({
         let query = this.props.location.query;
         let detailType = query.type;
         let {productSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
+        let loginType = localStorage.type;
+        var openKey = 0;
+        switch (loginType*1){
+            case 1 : openKey = 1;break;
+            case 3 : openKey = 0;break;
+        }
         return(
-            <Layout currentKey = {detailType==1?"6":"7"} defaultOpen={"1"} bread = {["产品库存",detailType==1?"库存管理":"出入库明细"]}>
+            <Layout currentKey = {detailType==1?"6":"7"} defaultOpen={openKey+""} bread = {["产品库存",detailType==1?"库存管理":"出入库明细"]}>
                 <div className="depart-content">
                     <div className="tbn-div clearfix">
                         <label htmlFor="" className="left">库存操作：</label>

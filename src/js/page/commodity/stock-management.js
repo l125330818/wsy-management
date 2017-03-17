@@ -242,8 +242,14 @@ const Depart = React.createClass({
     },
     render(){
         let {list,productSelect,classifySelect,stockDetail,pager,currList} = this.state;
+        let type = localStorage.type;
+        var openKey = 0;
+        switch (type*1){
+            case 1 : openKey = 1;break;
+            case 3 : openKey = 0;break;
+        }
         return(
-            <Layout currentKey = "6" defaultOpen={"1"} bread = {["产品库存","库存管理"]}>
+            <Layout currentKey = "6" defaultOpen={openKey+""} bread = {["产品库存","库存管理"]}>
                 <div className="depart-content">
                     <div className="tbn-div">
                         <label htmlFor="">分类：</label>

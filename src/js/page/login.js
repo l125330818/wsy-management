@@ -3,7 +3,8 @@
  */
 import "../../css/login.scss";
 import RUI from "react-component-lib";
-import {hashHistory} from "react-router"
+import {hashHistory} from "react-router";
+import GlobalData from "../components/Data";
 const Login = React.createClass({
     componentDidMount(){
         let _this = this;
@@ -35,7 +36,15 @@ const Login = React.createClass({
             data:{username:this.refs.userName.getValue(),password:this.refs.pwd.getValue()},
             success(data){
                 if(data.success){
-                    hashHistory.push("/depart");
+                    let type = data.resultMap.loginUser.type;
+                    let path = "/depart";
+                    localStorage.type = type;
+                    switch (type*1){
+                        case 1 : path = "/depart";break;
+                        case 2 : path = "/production/order";break;
+                        case 3 : path = "/stock";break;
+                    }
+                    hashHistory.push(path);
                 }else{
                     RUI.DialogManager.alert("请输入正确的用户名和密码");
                 }

@@ -6,6 +6,7 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
+import Data from "../../components/Data";
 let arr1 = ["未处理","已分配","已完成"];
 const Depart = React.createClass({
     getInitialState(){
@@ -118,10 +119,46 @@ const Depart = React.createClass({
     search(){
         this.getList();
     },
+    getSelectList(item){
+        let arr = [{key:"查看",value:"1"}];
+        let type = localStorage.type;
+        if(type==1){
+            arr.push({key:"修改",value:"2"},{key:"删除",value:"9"});
+        }else if(type == 2){ //上案
+            if(item.vampStatus ==1){
+                arr.push({key:"修改",value:"2"});
+            }else if(item.tailorStatus==0){
+                arr.push({key:"裁剪完成",value:"3"});
+            }else if(item.vampStatus==0){
+                arr.push({key:"机车分配",value:"4"});
+            }else if(item.tailorStatus==1 && item.vampStatus==1){
+                arr.push({key:"机车完成",value:"5"});
+            }
+        }else if(type == 3){//下案
+            if(item.soleStatus ==1){
+                arr.push({key:"修改",value:"2"});
+            }else if(item.soleStatus==0){
+                arr.push({key:"底工分配",value:"6"});
+            }else if(item.soleStatus==1){
+                arr.push({key:"底工完成",value:"7"});
+            }else if(item.qcStatus==0 && item.soleStatus==2){
+                arr.push({key:"质检完成",value:"8"});
+            }
+        }
+        return arr;
+    },
     render(){
+        let _this = this;
         let {pager,list,handleSelect,isUrgent,tailorStatus,vampStatus,soleStatus,qcStatus} = this.state;
+        let type = localStorage.type;
+        var openKey = 0;
+        switch (type*1){
+            case 1 : openKey = 2;break;
+            case 2 : openKey = 0;break;
+            case 3 : openKey = 1;break;
+        }
         return(
-            <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
+            <Layout currentKey = "8" defaultOpen={openKey+""} bread = {["生产管理","生产订单"]}>
                 <div className="depart-content">
                     <div className="tbn-div h-100">
                         <div>
@@ -195,6 +232,7 @@ const Depart = React.createClass({
                         <tbody>
                         {
                             list.map((item,index)=>{
+                                let selectData = _this.getSelectList(item);
                                 return(
                                     <tr key = {index}>
                                         <td>
@@ -211,7 +249,7 @@ const Depart = React.createClass({
                                         <td>{item.qcStatus==0?"未处理":"已处理"}</td>
                                         <td>{item.residueTime}</td>
                                         <td>
-                                            <RUI.Select data = {handleSelect}
+                                            <RUI.Select data = {selectData}
                                                         className="rui-theme-1 w-120"
                                                         callback = {this.handleListSelect.bind(this,item)}
                                                         stuff={true}/>
