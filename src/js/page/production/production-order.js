@@ -7,6 +7,7 @@ import Pager from "../../components/pager";
 import {hashHistory,Link } from 'react-router';
 import "../../../css/page/department-management.scss";
 import Data from "../../components/Data";
+import Pubsub from "../../util/pubsub";
 let arr1 = ["未处理","已分配","已完成"];
 const Depart = React.createClass({
     getInitialState(){
@@ -69,18 +70,67 @@ const Depart = React.createClass({
     },
     handleListSelect(item,e){
         let value = e.value;
-        console.log(e);
         switch(value*1){
-            case 2:
+            case 4:
+            case 6:
                 hashHistory.push("/order/distribution?id="+item.orderNo);
                 break;
-            case 4:
+            case 1:
                 hashHistory.push("/order/detail?id="+item.orderNo);
                 break;
-            case 6:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+                this.commonHandle(value,item);
+                break;
+            case 9:
                 this.delete(item);
                 break;
         }
+    },
+    commonHandle(type,item){
+        let _this = this;
+        let url,msg = "";
+        switch(type*1){
+            case 3:  //裁剪完成
+                url = "/order/tailorFinish.htm";
+                msg = "确认是否裁剪完成？";
+                break;
+            case 5:  //机车完成
+                url = "/order/vampFinish.htm";
+                msg = "确认是否机车完成？";
+                break;
+            case 7:  //底工完成
+                url = "/order/soleFinish.htm";
+                msg = "确认是否底工完成？";
+                break;
+            case 8:  //质检完成
+                url = "/order/qcFinish.htm";
+                msg = "确认是否质检完成？";
+                break;
+        }
+        RUI.DialogManager.confirm({
+            message:msg,
+            title:'提示',
+            submit:function() {
+                $.ajax({
+                    url:commonBaseUrl+url,
+                    type:"post",
+                    dataType:"json",
+                    data:{d:JSON.stringify({orderNo:item.orderNo})},
+                    success(data){
+                        if(data.success){
+                            Pubsub.publish("showMsg",["success","操作成功"]);
+                            _this.getList();
+                        }else{
+                            Pubsub.publish("showMsg",["wrong",data.description]);
+                        }
+                    }
+                })
+            },
+        });
+
     },
     delete(item){
         let orderNo = item.orderNo;
@@ -114,7 +164,6 @@ const Depart = React.createClass({
     handleInput(type,e){
         let {listRequest} = this.state;
         listRequest[type] = e.target.value;
-        this.setState({})
     },
     search(){
         this.getList();
@@ -127,21 +176,27 @@ const Depart = React.createClass({
         }else if(type == 2){ //上案
             if(item.vampStatus ==1){
                 arr.push({key:"修改",value:"2"});
-            }else if(item.tailorStatus==0){
+            }
+            if(item.tailorStatus==0){
                 arr.push({key:"裁剪完成",value:"3"});
-            }else if(item.vampStatus==0){
+            }
+            if(item.vampStatus==0){
                 arr.push({key:"机车分配",value:"4"});
-            }else if(item.tailorStatus==1 && item.vampStatus==1){
+            }
+            if(item.tailorStatus==1 && item.vampStatus==1){
                 arr.push({key:"机车完成",value:"5"});
             }
         }else if(type == 3){//下案
             if(item.soleStatus ==1){
                 arr.push({key:"修改",value:"2"});
-            }else if(item.soleStatus==0){
+            }
+            if(item.soleStatus==0){
                 arr.push({key:"底工分配",value:"6"});
-            }else if(item.soleStatus==1){
+            }
+            if(item.soleStatus==1){
                 arr.push({key:"底工完成",value:"7"});
-            }else if(item.qcStatus==0 && item.soleStatus==2){
+            }
+            if(item.qcStatus==0 && item.soleStatus==2){
                 arr.push({key:"质检完成",value:"8"});
             }
         }
@@ -250,6 +305,7 @@ const Depart = React.createClass({
                                         <td>{item.residueTime}</td>
                                         <td>
                                             <RUI.Select data = {selectData}
+                                                        value = {{key:"查看",value:"1"}}
                                                         className="rui-theme-1 w-120"
                                                         callback = {this.handleListSelect.bind(this,item)}
                                                         stuff={true}/>

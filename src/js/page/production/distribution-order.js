@@ -9,6 +9,7 @@ import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
+import {hashHistory } from 'react-router';
 import {orderDetail,employeeList} from "../../components/memberAjax";
 import Data from "./testData"
 let DateFormatter = new RUI.DateFormatter();
@@ -29,6 +30,10 @@ export default class Detail extends React.Component{
     componentDidMount() {
         this.getList();
         this.getEmployee();
+    }
+
+    componentWillMount() {
+        this.timer && clearTimeout(this.timer);
     }
     getEmployee(){
         let employeesList = [];
@@ -51,6 +56,7 @@ export default class Detail extends React.Component{
     submit(){
         let request = {orderDistributes:[]};
         let {list} = this.state;
+        let type = localStorage.type;
         list.produceOrderProductVOs.map((item,index)=>{
             item.produceOrderProductDetailVOs.map((sItem,sIndex)=>{
                 sItem.produceOrderProductDistributeDOs.map((ssItem,ssIndex)=>{
@@ -65,14 +71,21 @@ export default class Detail extends React.Component{
             });
         });
         request.produceOrderNo = list.orderNo;
-        request.type  = 1;
+        request.type  = type==2?1:2;
         $.ajax({
            url:commonBaseUrl + "/order/distribute.htm",
             type : "post",
             dataType:"json",
             data:{d:JSON.stringify(request)},
             success(data){
-
+                if(data.success){
+                    Pubsub.publish("showMsg",["success","操作成功"]);
+                    this.timer = setTimeout(()=>{
+                        hashHistory.push("/production/order");
+                    },2000)
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
             }
         });
         console.log(request)

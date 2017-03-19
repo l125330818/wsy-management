@@ -9,19 +9,16 @@ const Login = React.createClass({
     componentDidMount(){
         let _this = this;
         let node = ReactDOM.findDOMNode(this.refs.pwd);
-        let node1 = ReactDOM.findDOMNode(this.refs.userName);
         //let node = document.querySelectorAll("input"); //返回的是数组对象 NodeList
         //let node1 = document.getElementsByTagName("input");//返回的是类数组对象 HTMLCollection
         //let node2 = [].slice.call(node1) //可以通过[].slice.call方法将类数组对象转化成数组对象
 
-        //(node,node1).addEventListener("keyup",this.listener);
+        (node).addEventListener("keyup",this.listener);
     },
     componentWillUnmount(){
-        console.log("un")
         let _this = this;
         let node = ReactDOM.findDOMNode(this.refs.pwd);
-        let node1 = ReactDOM.findDOMNode(this.refs.userName);
-        //(node,node1).removeEventListener("keyup",this.listener);
+        (node).removeEventListener("keyup",this.listener);
     },
     listener(e){
         if(e.keyCode == 13){
