@@ -14,9 +14,9 @@ const Detail = React.createClass({
             title:"添加成员",
             productSelect : [{key:"全部",value:""}],
             listRequest:{
-                productId : "",
-                type : "",
-                createUser : "",
+                vampEmployeeNo : "",
+                soleEmployeeNo : "",
+                orderName : "",
                 startTime : DateFormatter.setPattern("Y-m-d").format(Date.now()-86400*30*1000),
                 endTime : DateFormatter.setPattern("Y-m-d").format(Date.now()),
             },
@@ -39,21 +39,22 @@ const Detail = React.createClass({
     getList(pageNo=1){
         let _this = this;
         let {pager,listRequest} = this.state;
+        let request = $.extend(true,{},listRequest);
         let query = this.props.location.query;
-        listRequest.startTime = listRequest.startTime + " 00:00:00";
-        listRequest.endTime = listRequest.endTime + " 23:59:59";
+        request.startTime = request.startTime + " 00:00:00";
+        request.endTime = request.endTime + " 23:59:59";
         listRequest.productId = query.id || "";
         $.ajax({
-            url:commonBaseUrl+"/store/inputOrOutputList.htm",
+            url:commonBaseUrl+"/order/orderStatistic.htm",
             type:"get",
             dataType:"json",
-            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            data:{d:JSON.stringify(request),pageNo:pageNo,pageSize:20},
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;
                     pager.totalNum = data.resultMap.iTotalDisplayRecords;
                     _this.setState({
-                        list : data.resultMap.rows,
+                        list : data.resultMap.produceOrderDOs,
                         pager : pager
                     })
                 }else{
@@ -113,7 +114,7 @@ const Detail = React.createClass({
                             data={productSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
-                            callback = {this.select.bind(this,"productId")}
+                            callback = {this.select.bind(this,"vampEmployeeNo")}
                             className="rui-theme-1 w-120 left">
                         </RUI.Select>
                         <label htmlFor="" className="left">制底员工：</label>
@@ -121,7 +122,7 @@ const Detail = React.createClass({
                             data={productSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
-                            callback = {this.select.bind(this,"productId")}
+                            callback = {this.select.bind(this,"soleEmployeeNo")}
                             className="rui-theme-1 w-120 left">
                         </RUI.Select>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
@@ -131,12 +132,12 @@ const Detail = React.createClass({
                         <tr>
                             <td>订单编号</td>
                             <td>订单名称</td>
-                            <td>库存操作</td>
                             <td>交货时间</td>
                             <td>双数</td>
                             <td>加急</td>
                             <td>创建时间</td>
                             <td>裁剪完成时间</td>
+                            <td>上案完成时间</td>
                             <td>下案完成时间</td>
                             <td>质检时间</td>
                             <td>操作</td>
@@ -147,16 +148,16 @@ const Detail = React.createClass({
                             list.length>0 && list.map((item,index)=>{
                                 return(
                                     <tr key = {index}>
-                                        <td>{item.productId}</td>
-                                        <td>{item.type==1?"出库":"入库"}</td>
+                                        <td>{item.orderNo}</td>
+                                        <td>{item.orderName}</td>
+                                        <td>{item.deliveryTime}</td>
+                                        <td>{item.orderNum}</td>
+                                        <td>{item.isUrgent==1?"是":"否"}</td>
                                         <td>{item.createTime}</td>
-                                        <td>{item.createUser}</td>
-                                        <td>{item.storeAfterNum}</td>
-                                        <td>{item.storeOperateNum}</td>
-                                        <td>{item.remak}</td>
-                                        <td>{item.remak}</td>
-                                        <td>{item.remak}</td>
-                                        <td>{item.remak}</td>
+                                        <td>{item.tailorFinishTime}</td>
+                                        <td>{item.vampFinishTime}</td>
+                                        <td>{item.soleFinishTime}</td>
+                                        <td>{item.qcFinishTime}</td>
                                         <td>
                                             <a href="javascript:;" className="handle-a" >查看</a>
                                         </td>

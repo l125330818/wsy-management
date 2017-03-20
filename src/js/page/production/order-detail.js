@@ -11,6 +11,8 @@ import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
 import {orderDetail} from "../../components/memberAjax";
 import Data from "./testData"
+let type = localStorage.type;
+
 let DateFormatter = new RUI.DateFormatter();
 export default class Detail extends React.Component{
     // 构造
@@ -19,19 +21,24 @@ export default class Detail extends React.Component{
         // 初始状态
         this.state = {
             list:{
-                produceOrderProductVOs :[]
+                produceOrderProductVOs :[],
             },
+            typeFlag : type==3?true : false
         };
         this.submit = this.submit.bind(this);
       }
 
     componentDidMount() {
+        console.log(this.state.typeFlag)
         this.getList();
     }
     getList(){
         let _this = this;
         let orderNo = this.props.location.query.id;
-        orderDetail(orderNo).then((data)=>{
+        let type = 1;
+        let {typeFlag} = this.state;
+        type = typeFlag?2:1;
+        orderDetail(orderNo,type).then((data)=>{
             _this.setState({list:data.produceOrderVO});
         })
     }
@@ -76,17 +83,30 @@ export default class Detail extends React.Component{
             )
         }
     }
+    typeSwitch(typeFlag){
+        this.setState({typeFlag},()=>{
+            this.getList();
+        });
+    }
     render(){
-        let {list} = this.state;
+        let {list,typeFlag} = this.state;
         let produceOrderProductVOs = list.produceOrderProductVOs;
+        var openKey = 0;
+        switch (type*1){
+            case 1 : openKey = 2;break;
+            case 2 : openKey = 0;break;
+            case 3 : openKey = 1;break;
+        }
         return(
-            <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
+            <Layout currentKey = "8" defaultOpen={openKey+""} bread = {["生产管理","生产订单"]}>
                 <div className="order-div print">
                     <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">
                         <div className="m-b-20">
-                            <RUI.Button className = "primary next-btn">上案</RUI.Button>
-                            <RUI.Button className = "primary next-btn">下案</RUI.Button>
+                            <RUI.Button className = {!typeFlag?"primary next-btn active":"primary next-btn "}
+                                        onClick = {this.typeSwitch.bind(this,false)}>上案</RUI.Button>
+                            <RUI.Button className = {typeFlag?"primary next-btn active":"primary next-btn"}
+                                        onClick = {this.typeSwitch.bind(this,true)}>下案</RUI.Button>
                         </div>
                         <div className="m-b-20">
                             <label>订单编号：</label><span className="m-r-20">{list.orderNo}</span>
@@ -124,10 +144,10 @@ export default class Detail extends React.Component{
                                                 </table>
                                             </div>
                                             <div className="m-b-20">
-                                                <label>生产要求：</label><span>没有要求</span>
+                                                <label>生产要求：</label><span>{item.produceAsk}</span>
                                             </div>
                                             <div className="m-b-20">
-                                                <label>备注：</label><span>备注一下</span>
+                                                <label>备注：</label><span>{item.remark}</span>
                                             </div>
                                         </div>
                                     )

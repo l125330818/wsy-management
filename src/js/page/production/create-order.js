@@ -130,8 +130,10 @@ export default class Order extends React.Component{
             })
         });
         request.produceOrderProductVOs = reList; //produceOrderProductDetailDOs
+        let url = "";
+        url = query.id? "/order/update.htm" : "/order/add.htm";
         $.ajax({
-            url:commonBaseUrl + "/order/add.htm",
+            url:commonBaseUrl + url,
             type:"post",
             dataType:"json",
             data:{d:JSON.stringify(request)},

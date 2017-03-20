@@ -56,6 +56,8 @@ export default class Detail extends React.Component{
     submit(){
         let request = {orderDistributes:[]};
         let {list} = this.state;
+        let url = "";
+        let query = this.props.location.query;
         let type = localStorage.type;
         list.produceOrderProductVOs.map((item,index)=>{
             item.produceOrderProductDetailVOs.map((sItem,sIndex)=>{
@@ -72,8 +74,9 @@ export default class Detail extends React.Component{
         });
         request.produceOrderNo = list.orderNo;
         request.type  = type==2?1:2;
+        url = query.id?"/order/updateDistribute.htm":"/order/distribute.htm"
         $.ajax({
-           url:commonBaseUrl + "/order/distribute.htm",
+           url:commonBaseUrl + url,
             type : "post",
             dataType:"json",
             data:{d:JSON.stringify(request)},
@@ -158,6 +161,15 @@ export default class Detail extends React.Component{
                                                                     (function(){
                                                                         if(item.produceOrderProductDistributeDOs.length==0){
                                                                             item.produceOrderProductDistributeDOs.push({shoeNum:0,employeeNo:"",employeeName:"",defaultValue:{key:"请选择",value:""}});
+                                                                        }
+                                                                        let query = _this.props.location.query;
+                                                                        if(query.id){
+                                                                            item.produceOrderProductDistributeDOs.map((data)=>{
+                                                                                if(data.defaultValue){
+                                                                                    return;
+                                                                                }
+                                                                                data.defaultValue = {key:data.employeeNo,value:data.employeeName}
+                                                                            })
                                                                         }
                                                                         return(
                                                                             item.produceOrderProductDistributeDOs.map((sonItem,sonIndex)=>{

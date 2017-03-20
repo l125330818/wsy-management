@@ -62,12 +62,20 @@ export function productList(){
         }
     })
 }
-export function orderDetail(orderNo){
+export function orderDetail(orderNo,paramType){
+    let loginType = localStorage.type;
+    let type = 1;
+    if(loginType==2){
+        type = 1;
+    }else if(loginType==3){
+        type = 2;
+    }
+    type = paramType || type;
     return $.ajax({
         url:commonBaseUrl+"/order/findByOrderNo.htm",
         type:"get",
         dataType:"json",
-        data:{d:JSON.stringify({orderNo})},
+        data:{d:JSON.stringify({orderNo,type})},
     }).then((data)=>{
         if(data.success){
             return data.resultMap;
