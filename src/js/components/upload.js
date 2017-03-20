@@ -40,9 +40,9 @@ export default class Upload extends React.Component{
         });
     }
     componentWillReceiveProps(nextProps){
-        if(nextProps.url){
-            this.setState({imgUrl:nextProps.url});
-        }
+        //if(nextProps.url){
+        //    this.setState({imgUrl:nextProps.url});
+        //}
     }
     handleCancel(){
         this.setState({visible:false});
@@ -52,12 +52,14 @@ export default class Upload extends React.Component{
     }
     render(){
         let {imgUrl,visible} = this.state;
+        let url = imgUrl || this.props.url;
+        console.log(url)
         return(
             <div>
                 {
-                    imgUrl ?
+                    url ?
                     <div className="upload-div relative">
-                        <img src={imgUrl} onClick = {this.clickImg} className="upload-img" alt=""/>
+                        <img src={url} onClick = {this.clickImg} className="upload-img" alt=""/>
                     </div>
                         :
                     <div className="upload-div" >
@@ -68,7 +70,7 @@ export default class Upload extends React.Component{
                     <RUI.Button className = "primary" ref = "upload">上传</RUI.Button>
                 </div>
                 <Modal visible={visible} footer={null} onCancel={this.handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={imgUrl} />
+                    <img alt="example" style={{ width: '100%' }} src={url} />
                 </Modal>
             </div>
         )

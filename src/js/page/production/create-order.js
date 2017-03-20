@@ -8,7 +8,10 @@ import LabelDate from "../../components/label-date";
 import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
+import {orderDetail} from "../../components/memberAjax";
+import {hashHistory} from "react-router"
 import "../../../css/page/order.scss";
+
 
 let DateFormatter = new RUI.DateFormatter();
 export default class Order extends React.Component{
@@ -19,6 +22,7 @@ export default class Order extends React.Component{
         this.state = {
             imgUrl : "",
             deliveryDate : Date.now(),
+            defaultSelect:{key:"是",value:"1"},
             request:{
                 orderName:"",
                 isUrgent:1,
@@ -31,7 +35,7 @@ export default class Order extends React.Component{
                     produceAsk : "",
                     productUrl : "",
                     remark : "",
-                    produceOrderProductDetailDOs:[
+                    produceOrderProductDetailVOs:[
                         {
                             shoeCode:"",
                             shoeNum:""
@@ -46,10 +50,27 @@ export default class Order extends React.Component{
         this.submit = this.submit.bind(this);
       }
 
-    beforeUpload(){}
+    componentDidMount(){
+        let _this = this;
+        let query = this.props.location.query;
+        let {request} = this.state;
+        if(query.id){
+            orderDetail(query.id).then((data)=>{
+                request.orderName = data.produceOrderVO.orderName;
+                request.deliveryTime = data.produceOrderVO.deliveryTime;
+                request.isUrgent = data.produceOrderVO.isUrgent;
+                _this.setState({
+                    list:data.produceOrderVO.produceOrderProductVOs,
+                    deliveryDate: DateFormatter.setSource(data.produceOrderVO.deliveryTime).getTime(),
+                    defaultSelect : data.produceOrderVO.isUrgent == 1?{key:"是",value:1}:{key:"否",value:1},
+                });
+            })
+        }
+
+    }
     addLine(index){
         let {list} = this.state;
-        list[index].produceOrderProductDetailDOs.push({
+        list[index].produceOrderProductDetailVOs.push({
             shoeCode:"",
             shoeNum:""
         });
@@ -62,7 +83,7 @@ export default class Order extends React.Component{
                 produceAsk : "",
                 productUrl : "",
                 remark : "",
-                produceOrderProductDetailDOs:[
+                produceOrderProductDetailVOs:[
                     {
                         shoeCode:"",
                         shoeNum:""
@@ -81,7 +102,6 @@ export default class Order extends React.Component{
     handleChange(type,e){
         let {request} = this.state;
         request[type] = e.target.value;
-        this.setState({});
     }
     dateChange(e){
         let {request} = this.state;
@@ -95,7 +115,21 @@ export default class Order extends React.Component{
     }
     submit(){
         let {request,list} = this.state;
-        request.produceOrderProductVOs = list;
+        let reList = $.extend(true,[],list);
+        let query = this.props.location.query;
+        reList.map((item)=>{
+            item.produceOrderProductDetailDOs = item.produceOrderProductDetailVOs;
+            delete item.produceOrderProductDetailVOs;
+            delete item.orderNo;
+            delete item.id;
+            item.produceOrderProductDetailDOs.map((sItem)=>{
+                delete sItem.id;
+                delete sItem.orderNo;
+                delete sItem.produceOrderProductDistributeDOs;
+                delete sItem.produceOrderProductId;
+            })
+        });
+        request.produceOrderProductVOs = reList; //produceOrderProductDetailDOs
         $.ajax({
             url:commonBaseUrl + "/order/add.htm",
             type:"post",
@@ -103,7 +137,10 @@ export default class Order extends React.Component{
             data:{d:JSON.stringify(request)},
             success(data){
                 if(data.success){
-                    Pubsub.publish("showMsg",["success","创建成功"]);
+                    Pubsub.publish("showMsg",["success",query.id?"修改成功":"创建成功"]);
+                    this.timer = setTimeout(()=>{
+                        hashHistory.push("/production/order");
+                    },2000)
                 }else{
                     Pubsub.publish("showMsg",["wrong",data.description]);
                 }
@@ -122,27 +159,28 @@ export default class Order extends React.Component{
     }
     shoeChange(type,index,sonIndex,e){
         let {list} = this.state;
-        list[index].produceOrderProductDetailDOs[sonIndex][type] = e.target.value;
+        list[index].produceOrderProductDetailVOs[sonIndex][type] = e.target.value;
         this.setState({});
     }
     shoeDelete(index,sonIndex){
         let {list} = this.state;
-        list[index].produceOrderProductDetailDOs.splice(sonIndex,1);
+        list[index].produceOrderProductDetailVOs.splice(sonIndex,1);
         this.setState({});
     }
     render(){
-        let {imgUrl,list,deliveryDate} = this.state;
+        let {imgUrl,list,deliveryDate,request,defaultSelect} = this.state;
+        let query = this.props.location.query;
         return(
             <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
                 <div className="order-div">
-                    <h3>创建订单</h3>
-                    <LabelInput onChange = {this.handleChange.bind(this,"orderName")} label="订单名称：" require = {true}/>
+                    <h3>{query.id?"修改订单":"创建订单"}</h3>
+                    <LabelInput value = {request.orderName} onChange = {this.handleChange.bind(this,"orderName")} label="订单名称：" require = {true}/>
                     <LabelSelect
                         require = {true}
                         label = "是否加急："
                         data = {[{key:"是",value:1},{key:"否",value:2}]}
                         callback = {this.select}
-                        default = {{key:"是",value:"1"}}/>
+                        default = {defaultSelect}/>
                     <LabelDate
                         value = {deliveryDate}
                         require = {true}
@@ -161,7 +199,7 @@ export default class Order extends React.Component{
                                         }
                                         <div className = "clearfix">
                                             <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
-                                            <Upload callback = {this.uploadCallback.bind(this,index)} uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {imgUrl}/>
+                                            <Upload callback = {this.uploadCallback.bind(this,index)} uploadBtn = "p-l-100" onClick = {this.clickImg}  url = {item.productUrl || imgUrl}/>
                                         </div>
                                         <div>
                                             <LabelInput value = {item.productName} label="产品名称："
@@ -180,7 +218,7 @@ export default class Order extends React.Component{
                                                 </thead>
                                                 <tbody>
                                                 {
-                                                    item.produceOrderProductDetailDOs.map((sonItem,sonIndex)=>{
+                                                    item.produceOrderProductDetailVOs.map((sonItem,sonIndex)=>{
                                                         return(
                                                             <tr key = {sonIndex}>
                                                                 <td>
@@ -205,8 +243,10 @@ export default class Order extends React.Component{
                                             <RUI.Button className="m-t-10 primary" onClick = {this.addLine.bind(this,index)}>添加一行</RUI.Button>
                                         </div>
                                         <LabelArea label="生产要求："
+                                                   value = {item.produceAsk}
                                                    onChange = {this.productChange.bind(this,"produceAsk",index)} />
                                         <LabelArea label="备注："
+                                                   value = {item.remark}
                                                    onChange = {this.productChange.bind(this,"remark",index)} />
                                     </div>
                                 )

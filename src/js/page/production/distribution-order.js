@@ -113,8 +113,15 @@ export default class Detail extends React.Component{
         let _this = this;
         let {list,employeesList} = this.state;
         let produceOrderProductVOs = list.produceOrderProductVOs;
+        let type = localStorage.type;
+        var openKey = 0;
+        switch (type*1){
+            case 1 : openKey = 2;break;
+            case 2 : openKey = 0;break;
+            case 3 : openKey = 1;break;
+        }
         return(
-            <Layout currentKey = "8" defaultOpen={"2"} bread = {["生产管理","生产订单"]}>
+            <Layout currentKey = "8" defaultOpen={openKey+""} bread = {["生产管理","生产订单"]}>
                 <div className="order-div print">
                     <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">

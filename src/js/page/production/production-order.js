@@ -71,6 +71,9 @@ const Depart = React.createClass({
     handleListSelect(item,e){
         let value = e.value;
         switch(value*1){
+            case 2:
+                this.modify(item);
+                break;
             case 4:
             case 6:
                 hashHistory.push("/order/distribution?id="+item.orderNo);
@@ -87,6 +90,14 @@ const Depart = React.createClass({
             case 9:
                 this.delete(item);
                 break;
+        }
+    },
+    modify(item){
+        let type = localStorage.type;
+        if(type==1){
+            hashHistory.push("/production/createOrder?id="+item.orderNo);
+        }else{
+            hashHistory.push("/order/distribution?id="+item.orderNo+"&type='edit'");
         }
     },
     commonHandle(type,item){
