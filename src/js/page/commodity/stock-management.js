@@ -338,8 +338,6 @@ const Depart = React.createClass({
                                     {
                                         stockDetail.length>0 && stockDetail.map((item,index)=>{
                                             let errorStyle = "";
-                                            console.log(item.shoeNum)
-                                            console.log(item.storeMax)
                                             if((item.shoeNum>item.storeMax && item.storeMax!=-1) || item.shoeNum<item.storeMin){
                                                 errorStyle = "bg-red"
                                             }

@@ -77,5 +77,15 @@ ReactDOM.render((
              cb(null, require("./js/page/production/order-statistic"))
             })
         }}/>
+        <Route path="/stock/query" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+             cb(null, require("./js/page/production/stock_query"))
+            })
+        }}/>
+        <Route path="/stock/query/detail" getComponent={function(nextState, cb) {
+            require.ensure([], (require) => {
+             cb(null, require("./js/page/production/stock_detail"))
+            })
+        }}/>
     </Router>
 ), document.getElementById('app'));

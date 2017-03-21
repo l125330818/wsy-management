@@ -63,7 +63,8 @@ const Depart = React.createClass({
         });
     },
     create(){
-        hashHistory.push("/production/createOrder");
+        hashHistory.push("/stock/query");
+        //hashHistory.push("/production/createOrder");
     },
     getVampType(type){
         return arr1[type*1];
@@ -328,6 +329,9 @@ const Depart = React.createClass({
 
                         </tbody>
                     </table>
+                    {
+                        list.length==0 && <div className="no-data">暂时没有数据哦</div>
+                    }
                     <Pager onPage ={this.getList} {...pager}/>
                 </div>
             </Layout>

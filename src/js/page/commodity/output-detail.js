@@ -202,6 +202,9 @@ const Detail = React.createClass({
 
                         </tbody>
                     </table>
+                    {
+                        list.length==0 && <div className="no-data">暂时没有数据哦</div>
+                    }
                     <Pager onPage ={this.getList} {...pager}/>
                 </div>
                 <RUI.Dialog ref="dialogDetail" title="操作明细" draggable={false} onSubmit = {this.stockSet} buttons="submit" >

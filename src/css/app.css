@@ -56,4 +56,9 @@ ul {
 .bg-red {
   background-color: red; }
 
+.no-data {
+  height: 60px;
+  text-align: center;
+  line-height: 60px; }
+
 /*# sourceMappingURL=app.css.map */

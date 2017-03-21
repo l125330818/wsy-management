@@ -251,6 +251,9 @@ const Depart = React.createClass({
                         }
                         </tbody>
                     </table>
+                    {
+                        list.length==0 && <div className="no-data">暂时没有数据哦</div>
+                    }
                     <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialog" title={this.state.title} draggable={false} buttons="submit,cancel" onCancel={this.dialogCancel} onSubmit={this.dialogSubmit}>
                         <div style={{width:'400px', wordWrap:'break-word'}}>

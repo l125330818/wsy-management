@@ -103,9 +103,9 @@ export default class Detail extends React.Component{
                     <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">
                         <div className="m-b-20">
-                            <RUI.Button className = {!typeFlag?"primary next-btn active":"primary next-btn "}
+                            <RUI.Button className = {!typeFlag?"primary next-btn order_active":"primary next-btn "}
                                         onClick = {this.typeSwitch.bind(this,false)}>上案</RUI.Button>
-                            <RUI.Button className = {typeFlag?"primary next-btn active":"primary next-btn"}
+                            <RUI.Button className = {typeFlag?"primary next-btn order_active":"primary next-btn"}
                                         onClick = {this.typeSwitch.bind(this,true)}>下案</RUI.Button>
                         </div>
                         <div className="m-b-20">

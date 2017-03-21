@@ -52,7 +52,7 @@ const Detail = React.createClass({
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;
-                    pager.totalNum = data.resultMap.iTotalDisplayRecords;
+                    pager.totalNum = data.resultMap.totalCount;
                     _this.setState({
                         list : data.resultMap.produceOrderDOs,
                         pager : pager
@@ -168,6 +168,9 @@ const Detail = React.createClass({
 
                         </tbody>
                     </table>
+                    {
+                        list.length==0 && <div className="no-data">暂时没有数据哦</div>
+                    }
                     <Pager onPage ={this.getList} {...pager}/>
                 </div>
             </Layout>

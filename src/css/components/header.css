@@ -29,7 +29,8 @@
     color: #333; }
 
 .page-content {
-  padding: 30px 10px;
+  padding: 30px 10px 100px 10px;
+  paddingBottom: 100px;
   background-color: #fff; }
   .page-content .footer {
     position: fixed;
