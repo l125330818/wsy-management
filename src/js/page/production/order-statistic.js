@@ -6,13 +6,14 @@ import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import "../../../css/page/department-management.scss";
-import {productList} from "../../components/memberAjax";
+import {memberList} from "../../components/memberAjax";
 let DateFormatter = new RUI.DateFormatter();
 const Detail = React.createClass({
     getInitialState(){
         return{
             title:"添加成员",
-            productSelect : [{key:"全部",value:""}],
+            jcSelect : [{key:"全部",value:""}],
+            zdSelect : [{key:"全部",value:""}],
             listRequest:{
                 vampEmployeeNo : "",
                 soleEmployeeNo : "",
@@ -34,7 +35,7 @@ const Detail = React.createClass({
     },
     componentDidMount(){
         this.getList();
-        this.productList();
+        this.memberLists();
     },
     getList(pageNo=1){
         let _this = this;
@@ -66,14 +67,20 @@ const Detail = React.createClass({
         });
 
     },
-    productList(){
+    memberLists(){
         let _this = this;
-        let {productSelect} = this.state;
-        productList().then((result)=>{
+        let {jcSelect,zdSelect} = this.state;
+        memberList(2).then((result)=>{
             result.rows && result.rows.map((item)=>{
-                productSelect.push({key:item.name,value:item.id})
+                jcSelect.push({key:item.name,value:item.employeeNo})
             });
-            _this.setState({productSelect});
+            _this.setState({jcSelect});
+        });
+        memberList(3).then((result)=>{
+            result.rows && result.rows.map((item)=>{
+                zdSelect.push({key:item.name,value:item.employeeNo})
+            });
+            _this.setState({zdSelect});
         });
     },
     select(type,e){
@@ -100,7 +107,7 @@ const Detail = React.createClass({
         this.getList();
     },
     render(){
-        let {productSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
+        let {zdSelect,jcSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
         return(
             <Layout currentKey = "9" defaultOpen={"2"} bread = {["生产管理","生产统计"]}>
                 <div className="depart-content">
@@ -111,7 +118,7 @@ const Detail = React.createClass({
                         <RUI.Input onChange = {this.inputChange.bind(this,"orderName")} className = "w-150"/>
                         <label htmlFor="" className="left">机车员工：</label>
                         <RUI.Select
-                            data={productSelect}
+                            data={jcSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"vampEmployeeNo")}
@@ -119,7 +126,7 @@ const Detail = React.createClass({
                         </RUI.Select>
                         <label htmlFor="" className="left">制底员工：</label>
                         <RUI.Select
-                            data={productSelect}
+                            data={zdSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"soleEmployeeNo")}
@@ -134,6 +141,10 @@ const Detail = React.createClass({
                             <td>订单名称</td>
                             <td>交货时间</td>
                             <td>双数</td>
+                            {
+                                type==1 &&
+                                <td>产品金额</td>
+                            }
                             <td>加急</td>
                             <td>创建时间</td>
                             <td>裁剪完成时间</td>
@@ -152,6 +163,10 @@ const Detail = React.createClass({
                                         <td>{item.orderName}</td>
                                         <td>{item.deliveryTime}</td>
                                         <td>{item.orderNum}</td>
+                                        {
+                                            type==1 &&
+                                            <td>{(item.orderAmount/100).toFixed(2)}</td>
+                                        }
                                         <td>{item.isUrgent==1?"是":"否"}</td>
                                         <td>{item.createTime}</td>
                                         <td>{item.tailorFinishTime}</td>

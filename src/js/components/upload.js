@@ -20,8 +20,10 @@ export default class Upload extends React.Component{
     }
 
     componentDidMount() {
-        let node = $(ReactDOM.findDOMNode(this.refs.upload));
-        this.upload(node);
+        if(!this.props.disabled){
+            let node = $(ReactDOM.findDOMNode(this.refs.upload));
+            this.upload(node);
+        }
     }
     upload(node){
         let _this = this;
@@ -53,7 +55,6 @@ export default class Upload extends React.Component{
     render(){
         let {imgUrl,visible} = this.state;
         let url = imgUrl || this.props.url;
-        console.log(url)
         return(
             <div>
                 {
@@ -66,9 +67,12 @@ export default class Upload extends React.Component{
                         <i className="upload-trigger"/>
                     </div>
                 }
-                <div className={this.props.uploadBtn}>
-                    <RUI.Button className = "primary" ref = "upload">上传</RUI.Button>
-                </div>
+                {
+                    !this.props.disabled &&
+                    <div className={this.props.uploadBtn}>
+                        <RUI.Button className = "primary" ref = "upload">上传</RUI.Button>
+                    </div>
+                }
                 <Modal visible={visible} footer={null} onCancel={this.handleCancel}>
                     <img alt="example" style={{ width: '100%' }} src={url} />
                 </Modal>

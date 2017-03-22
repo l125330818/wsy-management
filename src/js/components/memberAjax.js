@@ -62,6 +62,22 @@ export function productList(){
         }
     })
 }
+export function memberList(paramType){
+    let type = paramType || "";
+    return $.ajax({
+        url:commonBaseUrl+"/employee/findByPage.htm",
+        type:"get",
+        dataType:"json",
+        data:{d:JSON.stringify({type}),pageNo:1,pageSize:20000},
+    }).then((data)=>{
+        if(data.success){
+            return data.resultMap;
+        }else{
+            Pubsub.publish("showMsg",["wrong",data.description]);
+            return data;
+        }
+    })
+}
 export function orderDetail(orderNo,paramType){
     let loginType = localStorage.type;
     let type = 1;

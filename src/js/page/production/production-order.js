@@ -63,8 +63,8 @@ const Depart = React.createClass({
         });
     },
     create(){
-        hashHistory.push("/stock/query");
-        //hashHistory.push("/production/createOrder");
+        //hashHistory.push("/stock/query");
+        hashHistory.push("/production/createOrder");
     },
     getVampType(type){
         return arr1[type*1];
@@ -242,7 +242,10 @@ const Depart = React.createClass({
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
                             <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
-                            <RUI.Button className="add-btn primary" onClick = {this.create}>创建</RUI.Button>
+                            {
+                                type==1&&
+                                <RUI.Button className="add-btn primary" onClick = {this.create}>创建</RUI.Button>
+                            }
                         </div>
                         <div className="m-t-10">
                             <label htmlFor="">裁剪状态：</label>
@@ -287,6 +290,10 @@ const Depart = React.createClass({
                             <td>订单名称</td>
                             <td>交货时间</td>
                             <td>双数</td>
+                            {
+                                type==1 &&
+                                <td>产品金额</td>
+                            }
                             <td>加急</td>
                             <td>裁剪状态</td>
                             <td>上案状态</td>
@@ -309,6 +316,10 @@ const Depart = React.createClass({
                                         <td>{item.orderName}</td>
                                         <td>{item.deliveryTime}</td>
                                         <td>{item.orderNum}</td>
+                                        {
+                                            type==1 &&
+                                            <td>{(item.orderAmount/100).toFixed(2)}</td>
+                                        }
                                         <td>{item.isUrgent==1?"是":"否"}</td>
                                         <td>{item.tailorStatus==0?"未处理":"裁料完成"}</td>
                                         <td>{this.getVampType(item.vampStatus)}</td>

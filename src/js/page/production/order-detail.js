@@ -29,7 +29,6 @@ export default class Detail extends React.Component{
       }
 
     componentDidMount() {
-        console.log(this.state.typeFlag)
         this.getList();
     }
     getList(){
@@ -46,12 +45,24 @@ export default class Detail extends React.Component{
        window.print();
     }
     getTableHtml(produceOrderProductDetailVOs){
-        let {list} = this.state;
-        if(produceOrderProductDetailVOs.length>0){
-            return(
-                produceOrderProductDetailVOs.map((item)=>{
+        let {list,typeFlag} = this.state;
+        if((!typeFlag && list.vampStatus==0) || (typeFlag && list.soleStatus==0)){
+            let arr = [{},{}];
+            return (
+                arr.map((item,i)=>{
                     return (
-                        <tr>
+                        <tr key = {i}>
+                            <td/>
+                            <td/>
+                        </tr>
+                    )
+                })
+            )
+        }else{
+            return(
+                produceOrderProductDetailVOs.map((item,i)=>{
+                    return (
+                        <tr key = {i}>
                             <td>
                                 {item.shoeCode+"码->"+item.shoeNum+"双"}
                             </td>
@@ -59,24 +70,12 @@ export default class Detail extends React.Component{
                                 {
                                     item.produceOrderProductDistributeDOs.map((sonItem)=>{
                                             return (
-                                                <div className="table-bottom-line">{sonItem.employeeName}</div>
+                                                <div className="table-bottom-line">{sonItem.employeeNo+"("+sonItem.employeeName+") ---"+sonItem.shoeNum+"双"}</div>
                                             )
                                         }
                                     )
                                 }
                             </td>
-                        </tr>
-                    )
-                })
-            )
-        }else{
-            let arr = [{},{},{}];
-            return (
-                arr.map(()=>{
-                    return (
-                        <tr>
-                            <td/>
-                            <td/>
                         </tr>
                     )
                 })
@@ -134,6 +133,21 @@ export default class Detail extends React.Component{
                                             <div className="m-b-20">
                                                 <label>产品名称：</label><span>{item.productName}</span>
                                             </div>
+                                            <div className="m-b-20">
+                                                <label>产品数量：</label><span>{item.produceNum}</span>
+                                            </div>
+                                            {
+                                                item.producePrice &&
+                                                <div className="m-b-20">
+                                                    <label>产品单价：</label><span className="require">￥{(item.producePrice/100).toFixed(2)}</span>
+                                                </div>
+                                            }
+                                            {
+                                                item.produceAmount &&
+                                                <div className="m-b-20">
+                                                    <label>产品金额：</label><span className="require">￥{(item.produceAmount/100).toFixed(2)}</span>
+                                                </div>
+                                            }
                                             <div className="m-t-10">
                                                 <label><i className="require">*</i>生产鞋码与数量：</label>
                                                 <table className = "table m-t-10 m-b-20">

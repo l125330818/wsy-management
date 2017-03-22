@@ -146,6 +146,9 @@ export default class Detail extends React.Component{
                                             <div className="m-b-20">
                                                 <label>产品名称：</label><span>{item.productName}</span>
                                             </div>
+                                            <div className="m-b-20">
+                                                <label>产品数量：</label><span>{item.produceNum}</span>
+                                            </div>
                                             <div className="m-t-10">
                                                 <label><i className="require">*</i>生产鞋码与数量：</label>
                                                 <table className = "table m-t-10 m-b-20">
@@ -180,7 +183,7 @@ export default class Detail extends React.Component{
                                                                                                         value = {sonItem.defaultValue}
                                                                                                         callback = {_this.selectTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex)}
                                                                                                         className = "w-80 rui-theme-1"/>
-                                                                                            <span>{sonItem.defaultValue.value}</span>
+                                                                                            <span className="l-r-10">{sonItem.defaultValue.value}</span>
                                                                                             <RUI.Input value = {sonItem.shoeNum} onChange = {_this.tableInput.bind(_this,item.produceOrderProductDistributeDOs,sonIndex)}
                                                                                                        className = "w-80"/>
                                                                                             <RUI.Button onClick = {_this.addTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex,index)}>{flag?"添加":"删除"}</RUI.Button>
