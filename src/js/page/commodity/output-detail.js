@@ -44,15 +44,16 @@ const Detail = React.createClass({
         let _this = this;
         let {pager,listRequest} = this.state;
         let query = this.props.location.query;
+        let request = $.extend(true,{},listRequest);
         console.log(query)
-        listRequest.startTime = listRequest.startTime + " 00:00:00";
-        listRequest.endTime = listRequest.endTime + " 23:59:59";
-        listRequest.productId = query.id || "";
+        request.startTime = request.startTime + " 00:00:00";
+        request.endTime = request.endTime + " 23:59:59";
+        request.productId = query.id || request.productId;
         $.ajax({
             url:commonBaseUrl+"/store/inputOrOutputList.htm",
             type:"get",
             dataType:"json",
-            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            data:{d:JSON.stringify(request),pageNo:pageNo,pageSize:20},
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;

@@ -45,6 +45,7 @@ export default class Order extends React.Component{
                     ]
                 }
             ],
+            responseList:{}
         };
         this.clickImg = this.clickImg.bind(this);
         this.addSonOrder = this.addSonOrder.bind(this);
@@ -66,7 +67,8 @@ export default class Order extends React.Component{
                     item.producePrice = (item.producePrice/100).toFixed(2);
                 });
                 _this.setState({
-                    list:data.produceOrderVO.produceOrderProductVOs,
+                    list:list,
+                    responseList : data.produceOrderVO,
                     deliveryDate: DateFormatter.setSource(data.produceOrderVO.deliveryTime).getTime(),
                     defaultSelect : data.produceOrderVO.isUrgent == 1?{key:"是",value:1}:{key:"否",value:1},
                 });
@@ -179,10 +181,10 @@ export default class Order extends React.Component{
         this.setState({});
     }
     render(){
-        let {imgUrl,list,deliveryDate,request,defaultSelect} = this.state;
+        let {imgUrl,list,deliveryDate,request,defaultSelect,responseList} = this.state;
         let query = this.props.location.query;
         let editFlag =true;
-        if(query.id && (list.vampStatus!=0 || list.tailorStatus!=0 || list.soleStatus!=0 || list.qcStatus!=0)){
+        if(query.id && (responseList.vampStatus!=0 || responseList.tailorStatus!=0 || responseList.soleStatus!=0 || responseList.qcStatus!=0)){
             editFlag = false;
         }
         return(

@@ -50,8 +50,8 @@ ul {
 .w-80 {
   width: 80px !important; }
 
-.rui-input[disabled] {
-  background-color: #dfdfdf; }
+.rui-input[disabled], .rui-textarea[disabled] {
+  background-color: #f2f2f2; }
 
 .bg-red {
   background-color: red; }

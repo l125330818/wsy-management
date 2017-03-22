@@ -66,12 +66,26 @@ const Depart = React.createClass({
     add(){
         hashHistory.push("/commodity/add/")
     },
-    delete(){
+    delete(productId){
+        let _this = this;
         RUI.DialogManager.confirm({
             message:'您确定要删除吗？?',
             title:'删除成员',
             submit:function() {
-                console.log(222)
+                $.ajax({
+                    url:commonBaseUrl+"/product/delete.htm",
+                    type:"post",
+                    dataType:"json",
+                    data:{d:JSON.stringify({productId})},
+                    success(data){
+                        if(data.success){
+                            Pubsub.publish("showMsg",["success","删除成功"]);
+                            _this.getList();
+                        }else{
+                            Pubsub.publish("showMsg",["wrong",data.description]);
+                        }
+                    }
+                })
             },
         });
     },
@@ -84,7 +98,9 @@ const Depart = React.createClass({
     select(e){
         let {listRequest} = this.state;
         listRequest.classifyId = e.value;
-        this.setState({listRequest});
+        this.setState({listRequest},()=>{
+            this.getList();
+        });
     },
     search(){
         this.getList();
@@ -140,7 +156,7 @@ const Depart = React.createClass({
                                         <td>{item.minCode+ "~"+item.maxCode}</td>
                                         <td>
                                             <Link to={"/commodity/add/?id="+item.id} className="handle-a">修改</Link>
-                                            <a href="javascript:;" className="handle-a" onClick = {this.delete}>删除</a>
+                                            <a href="javascript:;" className="handle-a" onClick = {this.delete.bind(this,item.id)}>删除</a>
                                         </td>
                                     </tr>
                                 )

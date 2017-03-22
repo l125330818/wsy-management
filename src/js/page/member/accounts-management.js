@@ -16,7 +16,7 @@ const Depart = React.createClass({
                 username : "",
                 mobile : "",
                 realname : "",
-                type : 1,
+                type : 2,
             },
             listRequest:{
                 username : "",
@@ -253,13 +253,12 @@ const Depart = React.createClass({
                                 require = {true}
                                 label = "类型："
                                 data = {[
-                                {key:"超级管理员",value:1},
                                 {key:"上案管理员",value:2},
                                 {key:"下案管理员",value:3},
                                 {key:"质检管理员",value:4},
                                 {key:"库存管理员",value:5}]}
                                 callback = {this.dialogSelect}
-                                default = {{key:"超级管理员",value:"1"}}/>
+                                default = {{key:"上案管理员",value:"2"}}/>
                         </div>
                     </RUI.Dialog>
                     <RUI.Dialog ref="pwddialog" title={"修改密码"} draggable={false} buttons="submit,cancel" onSubmit={this.pwddialogSubmit}>

@@ -387,7 +387,6 @@ const Depart = React.createClass({
                                     }
                                     </tbody>
                                 </table>
-                                <LabelInput require={true} onChange = {this.handleInput.bind(this,"name")} label = "经办人："/>
                                 <div className="m-t-10">
                                     <label htmlFor="" className="left-label left">备注：</label>
                                     <RUI.Textarea onChange = {this.handleInput.bind(this,"remak")}   className ="w-245"/>

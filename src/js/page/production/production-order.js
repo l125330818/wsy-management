@@ -158,10 +158,10 @@ const Depart = React.createClass({
                     data:{d:JSON.stringify({orderNo})},
                     success(data){
                         if(data.success){
-                            RUI.DialogManager.alert("删除成功");
+                            Pubsub.publish("showMsg",["success","删除成功"]);
                             _this.getList();
                         }else{
-                            RUI.DialogManager.alert(data.description);
+                            Pubsub.publish("showMsg",["wrong",data.description]);
                         }
                     }
                 })

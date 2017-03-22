@@ -7,6 +7,7 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import "../../../css/page/department-management.scss";
 import {memberList} from "../../components/memberAjax";
+import {hashHistory} from "react-router";
 let DateFormatter = new RUI.DateFormatter();
 const Detail = React.createClass({
     getInitialState(){
@@ -44,7 +45,6 @@ const Detail = React.createClass({
         let query = this.props.location.query;
         request.startTime = request.startTime + " 00:00:00";
         request.endTime = request.endTime + " 23:59:59";
-        listRequest.productId = query.id || "";
         $.ajax({
             url:commonBaseUrl+"/order/orderStatistic.htm",
             type:"get",
@@ -106,6 +106,9 @@ const Detail = React.createClass({
     search(){
         this.getList();
     },
+    checkDetail(orderNo){
+        hashHistory.push("/order/detail?id="+orderNo);
+    },
     render(){
         let {zdSelect,jcSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
         return(
@@ -113,7 +116,13 @@ const Detail = React.createClass({
                 <div className="depart-content">
                     <div className="tbn-div clearfix">
                         <label htmlFor="" className="left">操作时间：</label>
-                        <RUI.DatePicker max = {Date.now()}  className = "left" startValue={startValue} endValue={endValue} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
+                        <RUI.DatePicker max = {Date.now()}
+                                        className = "left"
+                                        startValue={startValue}
+                                        endValue={endValue}
+                                        formatter={new RUI.DateFormatter("Y-m-d")}
+                                        range={true}
+                                        onChange={this.datePickerChange} />
                         <label htmlFor="">订单名称：</label>
                         <RUI.Input onChange = {this.inputChange.bind(this,"orderName")} className = "w-150"/>
                         <label htmlFor="" className="left">机车员工：</label>
@@ -174,7 +183,7 @@ const Detail = React.createClass({
                                         <td>{item.soleFinishTime}</td>
                                         <td>{item.qcFinishTime}</td>
                                         <td>
-                                            <a href="javascript:;" className="handle-a" >查看</a>
+                                            <a href="javascript:;" className="handle-a" onClick = {this.checkDetail.bind(this,item.orderNo)}>查看</a>
                                         </td>
                                     </tr>
                                 )

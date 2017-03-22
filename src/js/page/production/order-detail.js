@@ -137,13 +137,13 @@ export default class Detail extends React.Component{
                                                 <label>产品数量：</label><span>{item.produceNum}</span>
                                             </div>
                                             {
-                                                item.producePrice &&
+                                                !!item.producePrice &&
                                                 <div className="m-b-20">
                                                     <label>产品单价：</label><span className="require">￥{(item.producePrice/100).toFixed(2)}</span>
                                                 </div>
                                             }
                                             {
-                                                item.produceAmount &&
+                                                !!item.produceAmount &&
                                                 <div className="m-b-20">
                                                     <label>产品金额：</label><span className="require">￥{(item.produceAmount/100).toFixed(2)}</span>
                                                 </div>
