@@ -195,8 +195,8 @@ const Detail = React.createClass({
                                         <td>{item.type==1?"出库":"入库"}</td>
                                         <td>{item.createTime}</td>
                                         <td>{item.createUser}</td>
-                                        <td>{item.storeAfterNum}</td>
                                         <td>{item.storeOperateNum}</td>
+                                        <td>{item.storeAfterNum}</td>
                                         <td>{item.remak}</td>
                                         <td>
                                             <a href="javascript:;" className="handle-a" onClick = {this.detail.bind(this,item)}>明细</a>
@@ -217,7 +217,7 @@ const Detail = React.createClass({
                     <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                         <div className="">
                             <label htmlFor="" className="c">产品信息：</label>
-                            <span>{currList.productName}&nbsp;&nbsp;&nbsp;{currList.storeOperateNum}双</span>
+                            <span>{currList.productName}&nbsp;&nbsp;&nbsp;{currList.storeAfterNum}双</span>
                             <table className="table">
                                 <thead>
                                 <tr>

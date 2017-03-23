@@ -8,7 +8,8 @@ import Pager from "../../components/pager";
 import "../../../css/page/department-management.scss";
 import {departList} from "../../components/memberAjax";
 import Pubsub from "../../util/pubsub";
-let DateFormatter = new RUI.DateFormatter();
+import DatePicker  from 'antd/lib/date-picker';
+import moment from 'moment';
 const Depart = React.createClass({
     getInitialState(){
         return{
@@ -20,7 +21,7 @@ const Depart = React.createClass({
                 employeeNo : "",
                 name : "",
                 mobile : "",
-                entryTime : DateFormatter.setPattern("Y-m-d").format(Date.now()),
+                entryTime :  moment(new Date()).format("YYYY-MM-DD"),
             },
             listRequest:{
                 departmentId : "",
@@ -85,7 +86,7 @@ const Depart = React.createClass({
             employeeNo : "",
             name : "",
             mobile : "",
-            entryTime : Date.now(),
+            entryTime : moment(new Date()).format("YYYY-MM-DD"),
         };
         this.setState({title:"添加成员",request,type:"add",defaultSelectValue : {key:"全部",value:""}},()=>{
             this.refs.dialog.show();
@@ -95,7 +96,6 @@ const Depart = React.createClass({
         let {request,defaultSelectValue} = this.state;
         let jsonStr = JSON.stringify(item);
         request = JSON.parse(jsonStr);
-        request.entryTime = DateFormatter.setSource(request.entryTime).getTime();
         defaultSelectValue = {key:request.departmentName,value:request.departmentId};
         this.setState({title:"编辑成员",request,type:"edit",defaultSelectValue},()=>{
             this.refs.dialog.show();
@@ -132,7 +132,6 @@ const Depart = React.createClass({
         let _this = this;
         let jsonStr = JSON.stringify(request);
         let requestJson = JSON.parse(jsonStr);
-        requestJson.entryTime = DateFormatter.setPattern("Y-m-d").format(requestJson.entryTime);
         let url = type=="add"?"/employee/add.htm":"/employee/update.htm";
         $.ajax({
             url:commonBaseUrl + url,
@@ -193,9 +192,10 @@ const Depart = React.createClass({
     search(){
         this.getList();
     },
-    datePickerChange(e){
+    datePickerChange(e,d){
         let {request} = this.state;
-        request.entryTime = e.data;
+        request.entryTime = d;
+        this.setState({})
     },
     selectFn(e){
         let {request} = this.state;
@@ -203,8 +203,12 @@ const Depart = React.createClass({
         request.departmentId = e.value;
         this.setState({request});
     },
+    disabledDate(current){
+        return current && current.valueOf() > Date.now();
+    },
     render(){
         let {list,pager,request,defaultSelectValue,selectValue,type} = this.state;
+        console.log(request.entryTime)
         return(
             <Layout currentKey = "2" defaultOpen={"0"} bread = {["部门成员","成员管理"]}>
                 <div className="depart-content">
@@ -264,11 +268,12 @@ const Depart = React.createClass({
                             <LabelInput placeholder = "请输入手机号" require={true} value = {request.mobile} onChange = {this.handleInput.bind(this,"mobile")} label = "手机号："/>
                             <div className = "m-t-10 clearfix">
                                 <label className = "left-label left"><i className="require">*</i>入职时间</label>
-                                <RUI.DatePicker max = {Date.now()}
-                                                className = "left"
-                                                value={request.entryTime}
-                                                formatter={new RUI.DateFormatter("Y-m-d")}
-                                                onChange={this.datePickerChange} />
+                                <DatePicker onChange={this.datePickerChange}
+                                             disabledDate={this.disabledDate}
+                                             size = "large"
+                                             allowClear ={false}
+                                             value={moment(request.entryTime, 'YYYY-MM-DD')}
+                                             defaultValue={moment(request.entryTime, 'YYYY-MM-DD')}/>
                             </div>
                             <LabelSelect
                                 require = {true}

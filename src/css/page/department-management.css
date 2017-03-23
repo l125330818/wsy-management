@@ -49,4 +49,8 @@
 .w-168 {
   width: 168px !important; }
 
+.total-num {
+  text-align: right;
+  padding-right: 150px; }
+
 /*# sourceMappingURL=department-management.css.map */

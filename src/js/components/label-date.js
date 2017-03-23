@@ -1,6 +1,8 @@
 /**
  * Created by Administrator on 2017-2-19.
  */
+import DatePicker  from 'antd/lib/date-picker';
+import moment from 'moment';
 const Input = React.createClass({
     render(){
         return(

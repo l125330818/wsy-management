@@ -61,4 +61,7 @@ ul {
   text-align: center;
   line-height: 60px; }
 
+.ant-calendar-picker-container {
+  z-index: 99999 !important; }
+
 /*# sourceMappingURL=app.css.map */

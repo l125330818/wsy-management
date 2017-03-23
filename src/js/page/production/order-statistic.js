@@ -8,7 +8,13 @@ import Pager from "../../components/pager";
 import "../../../css/page/department-management.scss";
 import {memberList} from "../../components/memberAjax";
 import {hashHistory} from "react-router";
-let DateFormatter = new RUI.DateFormatter();
+import DatePicker  from 'antd/lib/date-picker';
+const { RangePicker } = DatePicker;
+import moment from 'moment';
+
+// 推荐在入口文件全局设置 locale
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 const Detail = React.createClass({
     getInitialState(){
         return{
@@ -19,11 +25,9 @@ const Detail = React.createClass({
                 vampEmployeeNo : "",
                 soleEmployeeNo : "",
                 orderName : "",
-                startTime : DateFormatter.setPattern("Y-m-d").format(Date.now()-86400*30*1000),
-                endTime : DateFormatter.setPattern("Y-m-d").format(Date.now()),
+                startTime : moment(new Date()-86400*30*1000).format("YYYY-MM-DD"),
+                endTime : moment(new Date()).format("YYYY-MM-DD"),
             },
-            startValue :Date.now()-86400*30*1000,
-            endValue :Date.now(),
             pager:{
                 currentPage:1,
                 pageSize:20,
@@ -90,12 +94,12 @@ const Detail = React.createClass({
             this.getList();
         });
     },
-    datePickerChange(e){
+    datePickerChange(e,d){
         let data = e.data;
         let {listRequest} = this.state;
-        listRequest.startTime = DateFormatter.setPattern("Y-m-d").format(data.startValue);
-        listRequest.endTime = DateFormatter.setPattern("Y-m-d").format(data.endValue);
-        this.setState({listRequest,startValue:data.startValue,endValue:data.endValue},()=>{
+        listRequest.startTime = d[0]
+        listRequest.endTime = d[1]
+        this.setState({listRequest},()=>{
             this.getList();
         });
     },
@@ -109,42 +113,51 @@ const Detail = React.createClass({
     checkDetail(orderNo){
         hashHistory.push("/order/detail?id="+orderNo);
     },
+    disabledDate(current){
+        return current && current.valueOf() > Date.now();
+    },
     render(){
-        let {zdSelect,jcSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
+        let a = moment(new Date()).format("YYYY-MM-DD");
+        let {zdSelect,jcSelect,pager,list,listRequest,stockDetail,type} = this.state;
+        console.log(listRequest.startTime)
+
         return(
             <Layout currentKey = "9" defaultOpen={"2"} bread = {["生产管理","生产统计"]}>
                 <div className="depart-content">
                     <div className="tbn-div clearfix">
-                        <label htmlFor="" className="left">操作时间：</label>
-                        <RUI.DatePicker max = {Date.now()}
-                                        className = "left"
-                                        startValue={startValue}
-                                        endValue={endValue}
-                                        formatter={new RUI.DateFormatter("Y-m-d")}
-                                        range={true}
-                                        onChange={this.datePickerChange} />
+                        <label htmlFor="">操作时间：</label>
+
+                        <RangePicker onChange={this.datePickerChange}
+                                     disabledDate={this.disabledDate}
+                                     size = "large"
+                                     allowClear ={false}
+                                     value={[moment(listRequest.startTime, 'YYYY-MM-DD'),moment(listRequest.endTime, 'YYYY-MM-DD')]}
+                                    defaultValue={[moment(listRequest.startTime, 'YYYY-MM-DD'),moment(listRequest.endTime, 'YYYY-MM-DD')]}/>
                         <label htmlFor="">订单名称：</label>
                         <RUI.Input onChange = {this.inputChange.bind(this,"orderName")} className = "w-150"/>
-                        <label htmlFor="" className="left">机车员工：</label>
+                        <label htmlFor="" className="">机车员工：</label>
                         <RUI.Select
                             data={jcSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"vampEmployeeNo")}
-                            className="rui-theme-1 w-120 left">
+                            className="rui-theme-1 w-120 ">
                         </RUI.Select>
-                        <label htmlFor="" className="left">制底员工：</label>
+                        <label htmlFor="" className="">制底员工：</label>
                         <RUI.Select
                             data={zdSelect}
                             value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"soleEmployeeNo")}
-                            className="rui-theme-1 w-120 left">
+                            className="rui-theme-1 w-120 ">
                         </RUI.Select>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                     </div>
                     <table className="table">
                         <thead>
+                        <tr>
+                            <td className = "total-num" colSpan = {type==1?12:11}>总计： <span className="require">{pager.totalNum}双</span></td>
+                        </tr>
                         <tr>
                             <td>订单编号</td>
                             <td>订单名称</td>
