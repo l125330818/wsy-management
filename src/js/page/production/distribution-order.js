@@ -10,7 +10,7 @@ import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
 import {hashHistory } from 'react-router';
-import {orderDetail,employeeList} from "../../components/memberAjax";
+import {orderDetail,memberList} from "../../components/memberAjax";
 import Data from "./testData"
 let DateFormatter = new RUI.DateFormatter();
 export default class Detail extends React.Component{
@@ -38,7 +38,9 @@ export default class Detail extends React.Component{
     getEmployee(){
         let employeesList = [];
         let _this = this;
-        employeeList().then((data)=>{
+        let type = localStorage.type;
+        let num = type==2?2:3;
+        memberList(num).then((data)=>{
             data.rows.map((item)=>{
                 employeesList.push({key:item.employeeNo,value:item.name});
             });
@@ -202,10 +204,10 @@ export default class Detail extends React.Component{
                                                 </table>
                                             </div>
                                             <div className="m-b-20">
-                                                <label>生产要求：</label><span>没有要求</span>
+                                                <label>生产要求：</label><span>{item.produceAsk || "无"}</span>
                                             </div>
                                             <div className="m-b-20">
-                                                <label>备注：</label><span>备注一下</span>
+                                                <label>备注：</label><span>{item.remark || "无"}</span>
                                             </div>
                                         </div>
                                     )
@@ -214,7 +216,7 @@ export default class Detail extends React.Component{
 
                         </div>
                         <div className="m-t-30 not-print">
-                            <RUI.Button className = "cancel-btn">取消</RUI.Button>
+                            <RUI.Button className = "cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>
                             <RUI.Button className = "primary" onClick = {this.submit} >确定</RUI.Button>
                         </div>
                     </div>

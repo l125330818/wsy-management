@@ -141,18 +141,6 @@ const Add = React.createClass({
         }else if(!request.minCode || !request.maxCode){
             msg = "请输入鞋码区间";
             flag = false;
-        }else if(!request.vampMaterial){
-            msg = "请输入鞋面材质";
-            flag = false;
-        }else if(!request.soleMaterial){
-            msg = "请输入鞋底材质";
-            flag = false;
-        }else if(!request.flowerType){
-            msg = "请输入花型";
-            flag = false;
-        }else if(!request.remark){
-            msg = "请输入备注";
-            flag = false;
         }else{
             msg = "";
             flag = true;
@@ -236,7 +224,7 @@ const Add = React.createClass({
                         <LabelInput value = {request.flowerType} onChange = {this.changeInput.bind(this,"flowerType")}   label = "花型"/>
                         <LabelInput value = {request.remark} onChange = {this.changeInput.bind(this,"remark")}  label = "备注"/>
                     </div>
-                    <RUI.Button className="add-cancel-btn">取消</RUI.Button>
+                    <RUI.Button className="add-cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>
                     <RUI.Button className="primary" onClick = {this.submit} ref = "submit">确定</RUI.Button>
                 </div>
 

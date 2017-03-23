@@ -182,7 +182,9 @@ const Depart = React.createClass({
     selectDepart(e){
         let {listRequest} = this.state;
         listRequest.departmentId = e.value;
-        this.setState({listRequest});
+        this.setState({listRequest},()=>{
+            this.getList();
+        });
     },
     nameInput(e){
         let {listRequest} = this.state;

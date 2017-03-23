@@ -4,14 +4,18 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");  //css单独打包
 
 module.exports = {
-    devtool: 'eval-source-map',
-
-    entry: __dirname + '/src/entry.js', //唯一入口文件
+    devtool : false,
+    entry: {
+        index: './src/entry.js',
+    },
     output: {
         path: __dirname + '/dist', //打包后的文件存放的地方
-        filename: 'bundle.js' //打包后输出文件的文件名
+        filename: "[name].js", //打包后输出文件的文件名
     },
-
+    externals: {
+        "react": 'React',
+        "react-dom": "ReactDOM",
+    },
     module: {
         loaders: [
             { test: /\.js$/, loader: "jsx!babel", include: /src/},
@@ -31,7 +35,18 @@ module.exports = {
             "ReactDOM":"react-dom",
             "$": "jquery",
         }),
-        new webpack.OldWatchingPlugin()
+        new webpack.OldWatchingPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            output: {
+                comments: false
+            },
+            compress: {
+                warnings: false
+            }
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['common'],
+        }),
     ]
 
 }

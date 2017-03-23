@@ -49,11 +49,14 @@ export default class Detail extends React.Component{
         if((!typeFlag && list.vampStatus==0) || (typeFlag && list.soleStatus==0)){
             let arr = [{},{}];
             return (
-                arr.map((item,i)=>{
+                produceOrderProductDetailVOs.map((item,i)=>{
                     return (
                         <tr key = {i}>
-                            <td/>
-                            <td/>
+                            <td>
+                                {item.shoeCode+"码->"+item.shoeNum+"双"}
+                            </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     )
                 })
@@ -115,11 +118,11 @@ export default class Detail extends React.Component{
                         </div>
                         <div className="m-b-20">
                             <label>创建时间：</label><span className="m-r-20">{list.createTime}</span>
-                            <label>裁剪完成时间：</label><span className="m-r-20">{list.tailorFinishTime}</span>
+                            <label>{typeFlag?"底工完成时间：":"裁剪完成时间："}</label><span className="m-r-20">{typeFlag?list.soleHandleTime:list.tailorFinishTime}</span>
                         </div>
                         <div className="m-b-20">
-                            <label>机车分配时间：</label><span className="m-r-20">{list.vampHandleTime}</span>
-                            <label>机车完成时间：</label><span className="m-r-20">{list.vampFinishTime}</span>
+                            <label>{typeFlag?"底工分配时间：":"机车分配时间："}</label><span className="m-r-20">{typeFlag?list.soleFinishTime:list.vampHandleTime}</span>
+                            <label>{typeFlag?"质检完成时间：":"机车完成时间："}</label><span className="m-r-20">{typeFlag?list.qcFinishTime:list.vampFinishTime}</span>
                         </div>
                         <div className="order-content clearfix">
                             {
@@ -170,7 +173,7 @@ export default class Detail extends React.Component{
 
                         </div>
                         <div className="m-t-30 not-print">
-                            <RUI.Button className = "cancel-btn">取消</RUI.Button>
+                            <RUI.Button className = "cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>
                             <RUI.Button className = "primary" onClick = {this.submit} >打印</RUI.Button>
                         </div>
                     </div>

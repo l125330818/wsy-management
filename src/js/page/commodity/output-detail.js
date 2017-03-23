@@ -30,11 +30,16 @@ const Detail = React.createClass({
             type : 1,//1==出库，2==入库
             list :[],
             stockDetail :[],
+            currList:{}
         }
     },
     componentDidMount(){
         this.getList();
-        this.productList();
+        let query = this.props.location.query;
+        let detailType = query.type;
+        if(detailType!=1){
+            this.productList();
+        }
     },
     componentWillReceiveProps(nextProps){
         this.props.location.query = nextProps.location.query;
@@ -115,14 +120,14 @@ const Detail = React.createClass({
         storeOperate.map((item,index)=>{
             stockDetail[index].operateNum = item.shoeNum;
         });
-        this.setState({stockDetail,type:item.type},()=>{
+        this.setState({stockDetail,type:item.type,currList:item},()=>{
             this.refs.dialogDetail.show();
         });
     },
     render(){
         let query = this.props.location.query;
         let detailType = query.type;
-        let {productSelect,pager,list,startValue,endValue,stockDetail,type} = this.state;
+        let {productSelect,pager,list,startValue,endValue,stockDetail,type,currList} = this.state;
         let loginType = localStorage.type;
         var openKey = 0;
         switch (loginType*1){
@@ -185,7 +190,7 @@ const Detail = React.createClass({
                                     <tr key = {index}>
                                         {
                                             detailType!=1 &&
-                                            <td>{item.productId}</td>
+                                            <td>{item.productName}</td>
                                         }
                                         <td>{item.type==1?"出库":"入库"}</td>
                                         <td>{item.createTime}</td>
@@ -212,7 +217,7 @@ const Detail = React.createClass({
                     <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>
                         <div className="">
                             <label htmlFor="" className="c">产品信息：</label>
-                            <span>{stockDetail.length}双</span>
+                            <span>{currList.productName}&nbsp;&nbsp;&nbsp;{currList.storeOperateNum}双</span>
                             <table className="table">
                                 <thead>
                                 <tr>

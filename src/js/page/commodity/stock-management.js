@@ -152,6 +152,7 @@ const Depart = React.createClass({
     outPut(){
         let {outputRequest,stockDetail,currList} = this.state;
         let _this = this;
+        let detail = $.extend(true,[],stockDetail);
         outputRequest.productStoreVOs = stockDetail;
         outputRequest.productName = currList.name;
         $.ajax({
@@ -191,7 +192,7 @@ const Depart = React.createClass({
         this.setState({});
     },
     stockSet(){
-        let {stockDetail} = this.state;
+        let {stockDetail,currList} = this.state;
         let request = [];
         stockDetail.map((item)=>{
             request.push({id:item.id,storeMin:item.storeMin,storeMax:item.storeMax});
@@ -200,7 +201,7 @@ const Depart = React.createClass({
             url:commonBaseUrl + "/store/updateStoreSet.htm",
             type:"post",
             dataType:"json",
-            data:{d:JSON.stringify({productStoreDOs:request})},
+            data:{d:JSON.stringify({productStoreDOs:request,productId:currList.id})},
             success(data){
                 if(data.success){
                     Pubsub.publish("showMsg",["success","设置成功"]);
@@ -233,11 +234,13 @@ const Depart = React.createClass({
         }else{
             if(value+shoeNum>storeMax && storeMax!=-1){
                 stockDetail[index].tips = "入库后大于库存最大值";
+            }else if(value+shoeNum<storeMin && storeMin!=-1){
+                stockDetail[index].tips = "入库后小于库存最小值";
             }else{
                 stockDetail[index].tips ="";
             }
         }
-        stockDetail[index].operateNum = e.target.value;
+        stockDetail[index].operateNum = e.target.value || 0;
         this.setState({stockDetail});
     },
     render(){
@@ -247,6 +250,10 @@ const Depart = React.createClass({
         switch (type*1){
             case 1 : openKey = 1;break;
             case 3 : openKey = 0;break;
+        }
+        let listSelectValue = [{key:'库存详情',value:'1'}, {key:'出库',value:'2'}, {key:'入库',value:'3'}, {key:'出入库明细',value:'4'}];
+        if(type!=3){
+            listSelectValue.push({key:"库存设置",value:5})
         }
         return(
             <Layout currentKey = "6" defaultOpen={openKey+""} bread = {["产品库存","库存管理"]}>
@@ -307,7 +314,7 @@ const Depart = React.createClass({
                                         <td>{item.status==1?"正常":"异常"}</td>
                                         <td>
                                             <RUI.Select
-                                                data={[{key:'库存详情',value:'1'}, {key:'出库',value:'2'}, {key:'入库',value:'3'}, {key:'出入库明细',value:'4'}, {key:'库存设置',value:'5'}]}
+                                                data={listSelectValue}
                                                 value={{key:'库存详情',value:'1'}}
                                                 stuff={true}
                                                 callback = {this.handleSelect.bind(this,item)}

@@ -168,7 +168,6 @@ export default class Order extends React.Component{
     productChange(type,index,e){
         let {list} = this.state;
         list[index][type] = e.target.value;
-        this.setState({});
     }
     shoeChange(type,index,sonIndex,e){
         let {list} = this.state;
@@ -296,7 +295,7 @@ export default class Order extends React.Component{
                         }
                     </div>
                     <div className="m-t-30">
-                        <RUI.Button className = "cancel-btn">取消</RUI.Button>
+                        <RUI.Button className = "cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>
                         <RUI.Button className = "primary" onClick = {this.submit}>确定</RUI.Button>
                     </div>
                 </div>

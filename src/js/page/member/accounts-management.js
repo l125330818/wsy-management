@@ -62,7 +62,16 @@ const Depart = React.createClass({
         });
     },
     add(){
-        this.refs.dialog.show();
+        let  request = {
+            username : "",
+            mobile : "",
+            realname : "",
+            type : 2,
+            };
+        this.setState({request},()=>{
+            console.log(this.state.request)
+            this.refs.dialog.show();
+        });
     },
     dialogSubmit(){
         let _this = this;
@@ -178,7 +187,9 @@ const Depart = React.createClass({
     select(e){
         let {listRequest} = this.state;
         listRequest.type = e.value;
-        this.setState({listRequest});
+        this.setState({listRequest},()=>{
+            this.getList();
+        });
     },
     accountInput(e){
         let {listRequest} = this.state;
@@ -189,7 +200,7 @@ const Depart = React.createClass({
         this.getList();
     },
     render(){
-        let {pager,list,modifyRequest} = this.state;
+        let {pager,list,modifyRequest,request} = this.state;
         return(
             <Layout currentKey = "3" defaultOpen={"0"} bread = {["部门成员","帐号管理"]}>
                 <div className="depart-content">
@@ -246,9 +257,9 @@ const Depart = React.createClass({
                     <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialog" title={"添加帐号"} draggable={false} buttons="submit,cancel" onSubmit={this.dialogSubmit}>
                         <div style={{width:'400px', wordWrap:'break-word'}}>
-                            <LabelInput placeholder = "请输入帐号" require={true} onChange = {this.handleInput.bind(this,"username")} label = "帐号："/>
-                            <LabelInput placeholder = "请输入姓名" require={true} onChange = {this.handleInput.bind(this,"realname")} label = "姓名："/>
-                            <LabelInput placeholder = "请输入手机号" require={true} onChange = {this.handleInput.bind(this,"mobile")} label = "手机号："/>
+                            <LabelInput placeholder = "请输入帐号" require={true} value = {request.username} onChange = {this.handleInput.bind(this,"username")} label = "帐号："/>
+                            <LabelInput placeholder = "请输入姓名" require={true} value = {request.realname} onChange = {this.handleInput.bind(this,"realname")} label = "姓名："/>
+                            <LabelInput placeholder = "请输入手机号" require={true} value = {request.mobile} onChange = {this.handleInput.bind(this,"mobile")} label = "手机号："/>
                             <LabelSelect
                                 require = {true}
                                 label = "类型："

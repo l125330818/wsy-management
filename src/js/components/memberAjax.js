@@ -63,12 +63,12 @@ export function productList(){
     })
 }
 export function memberList(paramType){
-    let type = paramType || "";
+    let departmentId = paramType || "";
     return $.ajax({
         url:commonBaseUrl+"/employee/findByPage.htm",
         type:"get",
         dataType:"json",
-        data:{d:JSON.stringify({type}),pageNo:1,pageSize:20000},
+        data:{d:JSON.stringify({departmentId}),pageNo:1,pageSize:20000},
     }).then((data)=>{
         if(data.success){
             return data.resultMap;

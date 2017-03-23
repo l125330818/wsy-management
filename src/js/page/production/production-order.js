@@ -172,6 +172,9 @@ const Depart = React.createClass({
         let {listRequest} = this.state;
         listRequest[type] = e.value;
         this.state[type] = e;
+        this.setState({},()=>{
+            this.getList();
+        })
     },
     handleInput(type,e){
         let {listRequest} = this.state;
