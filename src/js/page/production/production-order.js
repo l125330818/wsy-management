@@ -313,7 +313,7 @@ const Depart = React.createClass({
                                 return(
                                     <tr key = {index}>
                                         <td>
-                                            <img className = "commodity-img" src={require("../../../images/yeoman.png")} alt=""/>
+                                            <img className = "commodity-img" src={item.orderPic?item.orderPic:require("../../../images/yeoman.png")} alt=""/>
                                         </td>
                                         <td>{item.orderNo}</td>
                                         <td>{item.orderName}</td>

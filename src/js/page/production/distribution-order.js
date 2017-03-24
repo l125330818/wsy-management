@@ -4,7 +4,6 @@
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
-import LabelDate from "../../components/label-date";
 import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
@@ -12,7 +11,6 @@ import "../../../css/page/order.scss";
 import {hashHistory } from 'react-router';
 import {orderDetail,memberList} from "../../components/memberAjax";
 import Data from "./testData"
-let DateFormatter = new RUI.DateFormatter();
 export default class Detail extends React.Component{
     // 构造
     constructor(props) {

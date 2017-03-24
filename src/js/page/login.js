@@ -26,6 +26,8 @@ const Login = React.createClass({
         }
     },
     login(){
+        let userName = this.refs.userName.getValue();
+        let password = this.refs.pwd.getValue();
         $.ajax({
             url:commonBaseUrl+"/login.htm",
             type:"post",
@@ -36,6 +38,8 @@ const Login = React.createClass({
                     let type = data.resultMap.loginUser.type;
                     let path = "/depart";
                     localStorage.type = type;
+                    localStorage.userName = userName;
+                    localStorage.password = password;
                     switch (type*1){
                         case 1 : path = "/depart";break;
                         case 2 : path = "/production/order";break;
@@ -50,15 +54,17 @@ const Login = React.createClass({
         //hashHistory.push("/depart");
     },
     render(){
+        let userName = localStorage.userName;
+        let password = localStorage.password;
         return(
             <div className="login-wrapper">
                 <div className="login-box">
                     <h3>WSY</h3>
                     <div className="user-div">
-                        <RUI.Input className = "w-280" ref = "userName" placeholder = "用户名"></RUI.Input>
+                        <RUI.Input className = "w-280" defaultValue = {userName || ""} ref = "userName" placeholder = "用户名"></RUI.Input>
                     </div>
                     <div>
-                        <RUI.Input className = "w-280" ref = "pwd" type = "password" placeholder = "密码"></RUI.Input>
+                        <RUI.Input className = "w-280" defaultValue = {password || ""} ref = "pwd" type = "password" placeholder = "密码"></RUI.Input>
                     </div>
                     <div className="login-btn">
                         <RUI.Button className = "w-280 green" onClick = {this.login}>登录</RUI.Button>

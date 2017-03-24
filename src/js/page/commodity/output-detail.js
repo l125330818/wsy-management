@@ -7,7 +7,10 @@ import LabelSelect from "../../components/label-select";
 import Pager from "../../components/pager";
 import "../../../css/page/department-management.scss";
 import {productList} from "../../components/memberAjax";
-let DateFormatter = new RUI.DateFormatter();
+import DatePicker  from 'antd/lib/date-picker';
+const { RangePicker } = DatePicker;
+import moment from 'moment';
+
 const Detail = React.createClass({
     getInitialState(){
         return{
@@ -17,11 +20,9 @@ const Detail = React.createClass({
                 productId : "",
                 type : "",
                 createUser : "",
-                startTime : DateFormatter.setPattern("Y-m-d").format(Date.now()-86400*30*1000),
-                endTime : DateFormatter.setPattern("Y-m-d").format(Date.now()),
+                startTime : moment(new Date()-86400*30*1000).format("YYYY-MM-DD"),
+                endTime : moment(new Date()).format("YYYY-MM-DD"),
             },
-            startValue :Date.now()-86400*30*1000,
-            endValue :Date.now(),
             pager:{
                 currentPage:1,
                 pageSize:20,
@@ -50,7 +51,6 @@ const Detail = React.createClass({
         let {pager,listRequest} = this.state;
         let query = this.props.location.query;
         let request = $.extend(true,{},listRequest);
-        console.log(query)
         request.startTime = request.startTime + " 00:00:00";
         request.endTime = request.endTime + " 23:59:59";
         request.productId = query.id || request.productId;
@@ -93,12 +93,11 @@ const Detail = React.createClass({
            this.getList();
         });
     },
-    datePickerChange(e){
-        let data = e.data;
+    datePickerChange(e,d){
         let {listRequest} = this.state;
-        listRequest.startTime = DateFormatter.setPattern("Y-m-d").format(data.startValue);
-        listRequest.endTime = DateFormatter.setPattern("Y-m-d").format(data.endValue);
-        this.setState({listRequest,startValue:data.startValue,endValue:data.endValue},()=>{
+        listRequest.startTime = d[0]
+        listRequest.endTime = d[1]
+        this.setState({listRequest},()=>{
             this.getList();
         });
     },
@@ -124,10 +123,13 @@ const Detail = React.createClass({
             this.refs.dialogDetail.show();
         });
     },
+    disabledDate(current){
+        return current && current.valueOf() > Date.now();
+    },
     render(){
         let query = this.props.location.query;
         let detailType = query.type;
-        let {productSelect,pager,list,startValue,endValue,stockDetail,type,currList} = this.state;
+        let {productSelect,pager,list,stockDetail,type,currList,listRequest } = this.state;
         let loginType = localStorage.type;
         var openKey = 0;
         switch (loginType*1){
@@ -138,19 +140,24 @@ const Detail = React.createClass({
             <Layout currentKey = {detailType==1?"6":"7"} defaultOpen={openKey+""} bread = {["产品库存",detailType==1?"库存管理":"出入库明细"]}>
                 <div className="depart-content">
                     <div className="tbn-div clearfix">
-                        <label htmlFor="" className="left">库存操作：</label>
+                        <label htmlFor="" className="">库存操作：</label>
                         <RUI.Select
                             data={[{key:'全部',value:''}, {key:'出库',value:'1'}, {key:'入库',value:'2'}]}
                             value={{key:'全部',value:''}}
                             stuff={true}
                             callback = {this.select.bind(this,"type")}
-                            className="rui-theme-1 w-120 left">
+                            className="rui-theme-1 w-120 ">
                         </RUI.Select>
-                        <label htmlFor="" className="left">操作时间：</label>
-                        <RUI.DatePicker max = {Date.now()}  className = "left" startValue={startValue} endValue={endValue} formatter={new RUI.DateFormatter("Y-m-d")} range={true} onChange={this.datePickerChange} />
+                        <label htmlFor="" className="">操作时间：</label>
+                        <RangePicker onChange={this.datePickerChange}
+                                     disabledDate={this.disabledDate}
+                                     size = "large"
+                                     allowClear ={false}
+                                     value={[moment(listRequest.startTime, 'YYYY-MM-DD'),moment(listRequest.endTime, 'YYYY-MM-DD')]}
+                                     defaultValue={[moment(listRequest.startTime, 'YYYY-MM-DD'),moment(listRequest.endTime, 'YYYY-MM-DD')]}/>
                         {
                             detailType!=1 &&
-                            <label htmlFor="" className="left">产品：</label>
+                            <label htmlFor="" className="">产品：</label>
 
                         }
                         {
@@ -160,11 +167,11 @@ const Detail = React.createClass({
                                 value={{key:'全部',value:''}}
                                 stuff={true}
                                 callback = {this.select.bind(this,"productId")}
-                                className="rui-theme-1 w-120 left">
+                                className="rui-theme-1 w-120 ">
                             </RUI.Select>
                         }
-                        <label htmlFor="" className = "left">操作人：</label>
-                        <RUI.Input onChange = {this.inputChange.bind(this,"createUser")} className = "w-150 left"/>
+                        <label htmlFor="" className = "">操作人：</label>
+                        <RUI.Input onChange = {this.inputChange.bind(this,"createUser")} className = "w-150 "/>
                         <RUI.Button className="primary" onClick = {this.search}>搜索</RUI.Button>
                     </div>
                     <table className="table">

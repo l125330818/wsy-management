@@ -4,7 +4,6 @@
 import Layout from "../../components/layout";
 import LabelInput from "../../components/label-input";
 import LabelSelect from "../../components/label-select";
-import LabelDate from "../../components/label-date";
 import LabelArea from "../../components/label-textarea";
 import Upload from "../../components/upload";
 import Pubsub from "../../util/pubsub";
@@ -13,7 +12,6 @@ import {orderDetail} from "../../components/memberAjax";
 import Data from "./testData"
 let type = localStorage.type;
 
-let DateFormatter = new RUI.DateFormatter();
 export default class Detail extends React.Component{
     // 构造
       constructor(props) {
@@ -52,7 +50,7 @@ export default class Detail extends React.Component{
                 produceOrderProductDetailVOs.map((item,i)=>{
                     return (
                         <tr key = {i}>
-                            <td>
+                            <td className="w-150">
                                 {item.shoeCode+"码->"+item.shoeNum+"双"}
                             </td>
                             <td></td>
@@ -104,7 +102,7 @@ export default class Detail extends React.Component{
                 <div className="order-div print">
                     <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">
-                        <div className="m-b-20">
+                        <div className="m-b-20 not-print">
                             <RUI.Button className = {!typeFlag?"primary next-btn order_active":"primary next-btn "}
                                         onClick = {this.typeSwitch.bind(this,false)}>上案</RUI.Button>
                             <RUI.Button className = {typeFlag?"primary next-btn order_active":"primary next-btn"}
@@ -141,13 +139,13 @@ export default class Detail extends React.Component{
                                             </div>
                                             {
                                                 !!item.producePrice &&
-                                                <div className="m-b-20">
+                                                <div className="m-b-20 not-print">
                                                     <label>产品单价：</label><span className="require">￥{(item.producePrice/100).toFixed(2)}</span>
                                                 </div>
                                             }
                                             {
                                                 !!item.produceAmount &&
-                                                <div className="m-b-20">
+                                                <div className="m-b-20 not-print">
                                                     <label>产品金额：</label><span className="require">￥{(item.produceAmount/100).toFixed(2)}</span>
                                                 </div>
                                             }

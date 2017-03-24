@@ -7,8 +7,9 @@ import Depart from "./js/page/member/department-management";
 //最终渲染
 ReactDOM.render((
     <Router history={hashHistory}>
-        <Route path='/' component={Login}></Route>
-        <Route path='/depart' component={Depart}></Route>
+        <Route path='/' component={Login}/>
+        <Route path='/login' component={Login}/>
+        <Route path='/depart' component={Depart}/>
         <Route path="/member" getComponent={function(nextState, cb) {
                 require.ensure([], (require) => {
                      cb(null, require("./js/page/member/member-management"))

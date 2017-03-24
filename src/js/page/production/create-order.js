@@ -11,9 +11,8 @@ import Pubsub from "../../util/pubsub";
 import {orderDetail} from "../../components/memberAjax";
 import {hashHistory} from "react-router"
 import "../../../css/page/order.scss";
+import moment from 'moment';
 
-
-let DateFormatter = new RUI.DateFormatter();
 export default class Order extends React.Component{
     // 构造
       constructor(props) {
@@ -21,13 +20,12 @@ export default class Order extends React.Component{
         // 初始状态
         this.state = {
             imgUrl : "",
-            deliveryDate : Date.now(),
             defaultSelect:{key:"是",value:"1"},
             request:{
                 orderName:"",
                 orderNo:"",
                 isUrgent:1,
-                deliveryTime:DateFormatter.setPattern("Y-m-d").format(Date.now()),
+                deliveryTime:moment(new Date()).format("YYYY-MM-DD"),
 
             },
             list:[
@@ -69,7 +67,6 @@ export default class Order extends React.Component{
                 _this.setState({
                     list:list,
                     responseList : data.produceOrderVO,
-                    deliveryDate: DateFormatter.setSource(data.produceOrderVO.deliveryTime).getTime(),
                     defaultSelect : data.produceOrderVO.isUrgent == 1?{key:"是",value:1}:{key:"否",value:1},
                 });
             })
@@ -114,8 +111,8 @@ export default class Order extends React.Component{
     }
     dateChange(e){
         let {request} = this.state;
-        request.deliveryTime = DateFormatter.setPattern("Y-m-d").format(e.data);
-        this.setState({deliveryDate: e.data});
+        request.deliveryTime = e;
+        this.setState({});
     }
     select(e){
         let {request} = this.state;
@@ -180,7 +177,7 @@ export default class Order extends React.Component{
         this.setState({});
     }
     render(){
-        let {imgUrl,list,deliveryDate,request,defaultSelect,responseList} = this.state;
+        let {imgUrl,list,request,defaultSelect,responseList} = this.state;
         let query = this.props.location.query;
         let editFlag =true;
         if(query.id && (responseList.vampStatus!=0 || responseList.tailorStatus!=0 || responseList.soleStatus!=0 || responseList.qcStatus!=0)){
@@ -198,7 +195,8 @@ export default class Order extends React.Component{
                         callback = {this.select}
                         default = {defaultSelect}/>
                     <LabelDate
-                        value = {deliveryDate}
+                        value = {request.deliveryTime}
+                        defaultValue = {request.deliveryTime}
                         require = {true}
                         label = "交货时间："
                         onChange = {this.dateChange.bind(this)}

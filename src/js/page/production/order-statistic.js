@@ -156,7 +156,7 @@ const Detail = React.createClass({
                     <table className="table">
                         <thead>
                         <tr>
-                            <td className = "total-num" colSpan = {type==1?12:11}>总计： <span className="require">{pager.totalNum}双</span></td>
+                            <td className = "total-num" colSpan = {type==1?12:11}>总计： <span className="require">{pager.totalShoeNum}双</span></td>
                         </tr>
                         <tr>
                             <td>订单编号</td>

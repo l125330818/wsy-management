@@ -4,6 +4,15 @@
 import DatePicker  from 'antd/lib/date-picker';
 import moment from 'moment';
 const Input = React.createClass({
+    getDefaultProps(){
+        return{
+            value:moment(new Date()).format("YYYY-MM-DD"),
+            defaultValue:moment(new Date()).format("YYYY-MM-DD"),
+        }
+    },
+    datePickerChange(_,d){
+        this.props.onChange && this.props.onChange(d);
+    },
     render(){
         return(
             <div className = "m-t-10 clearfix">
@@ -14,11 +23,11 @@ const Input = React.createClass({
                         <i className="require">*</i>
                     }
                     {this.props.label || ""}</label>
-                <RUI.DatePicker
-                    value = {this.props.value}
-                    className = "left"
-                    formatter={new RUI.DateFormatter("Y-m-d")}
-                    onChange = {(e)=>{this.props.onChange && this.props.onChange(e)}}/>
+                <DatePicker onChange={this.datePickerChange}
+                            size = "large"
+                            allowClear ={false}
+                            value={moment(this.props.value, 'YYYY-MM-DD')}
+                            defaultValue={moment(this.props.defaultValue, 'YYYY-MM-DD')}/>
             </div>
         )
     }

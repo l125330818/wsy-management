@@ -4,7 +4,24 @@
 import "../../css/components/header.scss";
 import  Icon  from 'antd/lib/Icon';
 import  Breadcrumb  from 'antd/lib/Breadcrumb';
+import {hashHistory} from "react-router"
+import Pubsub from "../util/pubsub";
 const Header = React.createClass({
+    loginOut(){
+        $.ajax({
+            url:commonBaseUrl+"/logout.htm",
+            dataType:"json",
+            type:"get",
+            data:{},
+            success(data){
+                if(data.success){
+                    hashHistory.push("/login");
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
+            }
+        })
+    },
     render(){
         return(
             <div>
@@ -25,7 +42,7 @@ const Header = React.createClass({
                     </Breadcrumb>
                 </div>
                 <div className="login-out">
-                    <a href="#/member">退出</a>
+                    <a onClick = {this.loginOut}>退出</a>
                 </div>
             </div>
         )
