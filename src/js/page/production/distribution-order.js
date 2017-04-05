@@ -96,7 +96,7 @@ export default class Detail extends React.Component{
     addTable(item,sonIndex,index){
         let {list} = this.state;
         if(sonIndex == item.length-1){
-            item.push({shoeNum:0,employeeNo:"",employeeName:"",defaultValue:{key:"请选择",value:""}});
+            item.push({shoeNum:"",employeeNo:"",employeeName:"",defaultValue:{key:"请选择",value:""}});
         }else{
             item.splice(index,1);
         }
@@ -107,9 +107,12 @@ export default class Detail extends React.Component{
         item[sonIndex].shoeNum = e.target.value;
         this.setState({list});
     }
-    selectTable(item,sonIndex,e){
+    selectTable(item,sonIndex,index,e){
         let {list} = this.state;
         item[sonIndex].defaultValue = e;
+        let inputRefs = "input"+index+sonIndex;
+        let node = ReactDOM.findDOMNode(this.refs[inputRefs]);
+        $(node).focus();
         this.setState({list});
     }
     render(){
@@ -163,7 +166,7 @@ export default class Detail extends React.Component{
                                                                 {
                                                                     (function(){
                                                                         if(item.produceOrderProductDistributeDOs.length==0){
-                                                                            item.produceOrderProductDistributeDOs.push({shoeNum:0,employeeNo:"",employeeName:"",defaultValue:{key:"请选择",value:""}});
+                                                                            item.produceOrderProductDistributeDOs.push({shoeNum:"",employeeNo:"",employeeName:"",defaultValue:{key:"请选择",value:""}});
                                                                         }
                                                                         let query = _this.props.location.query;
                                                                         if(query.id){
@@ -181,10 +184,12 @@ export default class Detail extends React.Component{
                                                                                         <div className="table-bottom-line" key = {sonIndex}>
                                                                                             <RUI.Select data = {employeesList}
                                                                                                         value = {sonItem.defaultValue}
-                                                                                                        callback = {_this.selectTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex)}
+                                                                                                        callback = {_this.selectTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex,index)}
                                                                                                         className = "w-80 rui-theme-1"/>
                                                                                             <span className="l-r-10">{sonItem.defaultValue.value}</span>
-                                                                                            <RUI.Input value = {sonItem.shoeNum} onChange = {_this.tableInput.bind(_this,item.produceOrderProductDistributeDOs,sonIndex)}
+                                                                                            <RUI.Input value = {sonItem.shoeNum}
+                                                                                                       ref = {"input"+index+sonIndex}
+                                                                                                       onChange = {_this.tableInput.bind(_this,item.produceOrderProductDistributeDOs,sonIndex)}
                                                                                                        className = "w-80"/>
                                                                                             <RUI.Button onClick = {_this.addTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex,index)}>{flag?"添加":"删除"}</RUI.Button>
                                                                                         </div>

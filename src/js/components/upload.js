@@ -31,6 +31,12 @@ export default class Upload extends React.Component{
             action: "http://www.bigxigua.com/product/upload.htm",
             name: "upload",
             responseType: "json",
+            onChange(file){
+                if(!/\.(gif|bmp|jpg|jpeg|png|GIF|JPG|PNG|image)$/.test(file)){
+                    RUI.DialogManager.alert("图片格式不对，请重新上传！");
+                    return false;
+                }
+            },
             onComplete:function(e,data){
                 if(data.success){
                     _this.props.callback && _this.props.callback(data.resultMap.picPath);

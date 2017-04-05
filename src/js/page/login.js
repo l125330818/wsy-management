@@ -59,7 +59,7 @@ const Login = React.createClass({
         return(
             <div className="login-wrapper">
                 <div className="login-box">
-                    <h3>WSY</h3>
+                    <h3>舞思韵后台管理系统</h3>
                     <div className="user-div">
                         <RUI.Input className = "w-280" defaultValue = {userName || ""} ref = "userName" placeholder = "用户名"></RUI.Input>
                     </div>
