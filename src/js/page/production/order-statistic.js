@@ -36,6 +36,7 @@ const Detail = React.createClass({
             type : 1,//1==出库，2==入库
             list :[],
             stockDetail :[],
+            totalShoeNum:0
         }
     },
     componentDidMount(){
@@ -60,7 +61,8 @@ const Detail = React.createClass({
                     pager.totalNum = data.resultMap.totalCount;
                     _this.setState({
                         list : data.resultMap.produceOrderDOs,
-                        pager : pager
+                        pager : pager,
+                        totalShoeNum:data.resultMap.totalShoeNum
                     })
                 }else{
                     pager.currentPage = 1;
@@ -118,7 +120,7 @@ const Detail = React.createClass({
     },
     render(){
         let a = moment(new Date()).format("YYYY-MM-DD");
-        let {zdSelect,jcSelect,pager,list,listRequest,stockDetail,type} = this.state;
+        let {zdSelect,jcSelect,pager,list,listRequest,stockDetail,type,totalShoeNum} = this.state;
         console.log(listRequest.startTime)
 
         return(
@@ -156,7 +158,7 @@ const Detail = React.createClass({
                     <table className="table">
                         <thead>
                         <tr>
-                            <td className = "total-num" colSpan = {type==1?12:11}>总计： <span className="require">{pager.totalShoeNum}双</span></td>
+                            <td className = "total-num" colSpan = {type==1?12:11}>总计： <span className="require">{totalShoeNum}双</span></td>
                         </tr>
                         <tr>
                             <td>订单编号</td>
