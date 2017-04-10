@@ -6,7 +6,7 @@ import Nav from "./nav-bar";
 import Header from "./header";
 import Message from "./message";
 import Pubsub from "../util/pubsub";
-window.commonBaseUrl = "http://www.bigxigua.com"
+window.commonBaseUrl = ""
 const Layout = React.createClass({
     getInitialState(){
         return({
