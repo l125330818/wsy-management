@@ -28,7 +28,7 @@ export default class Upload extends React.Component{
     upload(node){
         let _this = this;
         new AjaxUpload(node,{
-            action: "http://www.bigxigua.com/product/upload.htm",
+            action: "/product/upload.htm",
             name: "upload",
             responseType: "json",
             onChange(file){
