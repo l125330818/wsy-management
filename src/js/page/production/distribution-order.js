@@ -40,7 +40,7 @@ export default class Detail extends React.Component{
         let num = type==2?2:3;
         memberList(num).then((data)=>{
             data.rows.map((item)=>{
-                employeesList.push({key:item.employeeNo,value:item.name});
+                employeesList.push({key:(item.employeeNo+"("+item.name+")"),value:item.name,no:item.employeeNo});
             });
             _this.setState({employeesList});
         });
@@ -67,7 +67,7 @@ export default class Detail extends React.Component{
                         produceOrderProductDetailId:sItem.id,
                         shoeCode:sItem.shoeCode,
                         shoeNum:ssItem.shoeNum,
-                        employeeNo:ssItem.defaultValue.key,
+                        employeeNo:ssItem.defaultValue.no,
                         employeeName:ssItem.defaultValue.value})
                 })
             });
@@ -185,7 +185,7 @@ export default class Detail extends React.Component{
                                                                                             <RUI.Select data = {employeesList}
                                                                                                         value = {sonItem.defaultValue}
                                                                                                         callback = {_this.selectTable.bind(_this,item.produceOrderProductDistributeDOs,sonIndex,index)}
-                                                                                                        className = "w-80 rui-theme-1"/>
+                                                                                                        className = "w-100 rui-theme-1"/>
                                                                                             <span className="l-r-10">{sonItem.defaultValue.value}</span>
                                                                                             <RUI.Input value = {sonItem.shoeNum}
                                                                                                        ref = {"input"+index+sonIndex}

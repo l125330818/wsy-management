@@ -11,7 +11,7 @@ import "../../../css/page/order.scss";
 import {orderDetail} from "../../components/memberAjax";
 import Data from "./testData"
 let type = localStorage.type;
-
+import  Modal  from 'antd/lib/Modal';
 export default class Detail extends React.Component{
     // 构造
       constructor(props) {
@@ -21,9 +21,12 @@ export default class Detail extends React.Component{
             list:{
                 produceOrderProductVOs :[],
             },
-            typeFlag : type==3?true : false
+            typeFlag : type==3?true : false,
+            modalImg:"",
+            visible:false
         };
         this.submit = this.submit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
       }
 
     componentDidMount() {
@@ -88,17 +91,29 @@ export default class Detail extends React.Component{
             this.getList();
         });
     }
+    clickImg(item){
+        this.setState({modalImg:item.productUrl,visible:true})
+    }
+    handleCancel(){
+        this.setState({visible:false})
+    }
     render(){
-        let {list,typeFlag} = this.state;
+        let {list,typeFlag,modalImg,visible } = this.state;
+        let query = this.props.location.query;
         let produceOrderProductVOs = list.produceOrderProductVOs;
         var openKey = 0;
+        var currentKey = 8;
         switch (type*1){
             case 1 : openKey = 2;break;
             case 2 : openKey = 0;break;
             case 3 : openKey = 1;break;
         }
+        if(query.type){
+            openKey = 2;
+            currentKey = 9;
+        }
         return(
-            <Layout currentKey = "8" defaultOpen={openKey+""} bread = {["生产管理","生产订单"]}>
+            <Layout currentKey = {currentKey+""} defaultOpen={openKey+""} bread = {["生产管理","生产订单"]}>
                 <div className="order-div print">
                     <h3 className="not-print">查看订单</h3>
                     <div className="p-l-100">
@@ -127,10 +142,13 @@ export default class Detail extends React.Component{
                                 produceOrderProductVOs.map((item,index)=>{
                                     return(
                                         <div className="list left" key = {index}>
-                                            <div className = "clearfix">
-                                                <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
-                                                <img src={item.productUrl} onClick = {this.clickImg} className="upload-img" alt=""/>
-                                            </div>
+                                            {
+                                                item.productUrl!=""&&
+                                                <div className = "clearfix">
+                                                    <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
+                                                    <img src={item.productUrl} onClick = {this.clickImg.bind(this,item)} className="upload-img" alt=""/>
+                                                </div>
+                                            }
                                             <div className="m-b-20">
                                                 <label>产品名称：</label><span>{item.productName}</span>
                                             </div>
@@ -168,7 +186,9 @@ export default class Detail extends React.Component{
                                     )
                                 })
                             }
-
+                        <Modal visible={visible} footer={null} onCancel={this.handleCancel}>
+                            <img alt="example" style={{ width: '100%' }} src={modalImg} />
+                        </Modal>
                         </div>
                         <div className="m-t-30 not-print">
                             <RUI.Button className = "cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>

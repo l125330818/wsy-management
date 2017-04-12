@@ -23,7 +23,7 @@ const Depart = React.createClass({
             },
             pager:{
                 currentPage:1,
-                pageSize:20,
+                pageSize:10,
                 totalNum:0,
             },
             handleSelect:[{key:"裁剪完成",value:"1"},{key:"机车分配",value:"2"},{key:"机车完成",value:"3"},{key:"查看",value:"4"},{key:"修改",value:"5"},{key:"删除",value:"6"}],
@@ -45,7 +45,7 @@ const Depart = React.createClass({
             url:commonBaseUrl+"/order/findOrderList.htm",
             type:"get",
             dataType:"json",
-            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:10},
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;
@@ -259,7 +259,7 @@ const Depart = React.createClass({
                                 callback = {this.handleSelect.bind(this,"tailorStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
-                            <label htmlFor="">上案状态：</label>
+                            <label htmlFor="">机车状态：</label>
                             <RUI.Select
                                 data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'处理中',value:'1'}, {key:'已完成',value:'2'}]}
                                 value={vampStatus}
@@ -267,7 +267,7 @@ const Depart = React.createClass({
                                 callback = {this.handleSelect.bind(this,"vampStatus")}
                                 className="rui-theme-1 w-120">
                             </RUI.Select>
-                            <label htmlFor="">下案状态：</label>
+                            <label htmlFor="">底工状态：</label>
                             <RUI.Select
                                 data={[{key:'全部',value:''}, {key:'未处理',value:'0'}, {key:'处理中',value:'1'}, {key:'已完成',value:'2'}]}
                                 value={soleStatus}
@@ -299,8 +299,8 @@ const Depart = React.createClass({
                             }
                             <td>加急</td>
                             <td>裁剪状态</td>
-                            <td>上案状态</td>
-                            <td>下案状态</td>
+                            <td>机车状态</td>
+                            <td>底工状态</td>
                             <td>质检状态</td>
                             <td>剩余时间</td>
                             <td>操作方式</td>
@@ -313,7 +313,7 @@ const Depart = React.createClass({
                                 return(
                                     <tr key = {index}>
                                         <td>
-                                            <img className = "commodity-img" src={item.orderPic?item.orderPic:require("../../../images/yeoman.png")} alt=""/>
+                                            <img className = "commodity-img" src={item.orderPic?item.orderPic:require("../../../images/picList.jpg")} alt=""/>
                                         </td>
                                         <td>{item.orderNo}</td>
                                         <td>{item.orderName}</td>
@@ -328,7 +328,7 @@ const Depart = React.createClass({
                                         <td>{this.getVampType(item.vampStatus)}</td>
                                         <td>{this.getVampType(item.soleStatus)}</td>
                                         <td>{item.qcStatus==0?"未处理":"已处理"}</td>
-                                        <td>{item.residueTime}</td>
+                                        <td>{item.residueTime+"天"}</td>
                                         <td>
                                             <RUI.Select data = {selectData}
                                                         value = {{key:"查看",value:"1"}}

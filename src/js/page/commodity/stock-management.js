@@ -32,7 +32,7 @@ const Depart = React.createClass({
             },
             pager:{
                 currentPage:1,
-                pageSize:20,
+                pageSize:10,
                 totalNum:0,
             },
             list:[],
@@ -54,7 +54,7 @@ const Depart = React.createClass({
             url:commonBaseUrl+"/store/findStoreList.htm",
             type:"get",
             dataType:"json",
-            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:10},
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;
@@ -327,6 +327,9 @@ const Depart = React.createClass({
                         }
                         </tbody>
                     </table>
+                    {
+                        list.length==0 && <div className="no-data">暂时没有数据哦</div>
+                    }
                     <Pager onPage ={this.getList} {...pager}/>
                     <RUI.Dialog ref="dialogDetail" title="库存详情" draggable={false} buttons="submit" >
                         <div style={{width:'500px', wordWrap:'break-word',maxHeight:"350px",overflow:"auto"}}>

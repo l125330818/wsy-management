@@ -113,7 +113,7 @@ const Detail = React.createClass({
         this.getList();
     },
     checkDetail(orderNo){
-        hashHistory.push("/order/detail?id="+orderNo);
+        hashHistory.push("/order/detail?id="+orderNo+"&type=1");  //type==1表示从订单统计过去的。
     },
     disabledDate(current){
         return current && current.valueOf() > Date.now();
@@ -171,10 +171,6 @@ const Detail = React.createClass({
                             }
                             <td>加急</td>
                             <td>创建时间</td>
-                            <td>裁剪完成时间</td>
-                            <td>上案完成时间</td>
-                            <td>下案完成时间</td>
-                            <td>质检时间</td>
                             <td>操作</td>
                         </tr>
                         </thead>
@@ -193,10 +189,6 @@ const Detail = React.createClass({
                                         }
                                         <td>{item.isUrgent==1?"是":"否"}</td>
                                         <td>{item.createTime}</td>
-                                        <td>{item.tailorFinishTime}</td>
-                                        <td>{item.vampFinishTime}</td>
-                                        <td>{item.soleFinishTime}</td>
-                                        <td>{item.qcFinishTime}</td>
                                         <td>
                                             <a href="javascript:;" className="handle-a" onClick = {this.checkDetail.bind(this,item.orderNo)}>查看</a>
                                         </td>

@@ -18,7 +18,7 @@ const Depart = React.createClass({
             },
             pager:{
                 currentPage:1,
-                pageSize:20,
+                pageSize:10,
                 totalNum:0,
             },
             selectValue:[{key:"全部",value:""}],
@@ -46,7 +46,7 @@ const Depart = React.createClass({
             url:commonBaseUrl+"/product/findByPage.htm",
             type:"get",
             dataType:"json",
-            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:20},
+            data:{d:JSON.stringify(listRequest),pageNo:pageNo,pageSize:10},
             success(data){
                 if(data.success){
                     pager.currentPage = pageNo;
