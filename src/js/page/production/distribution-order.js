@@ -10,6 +10,7 @@ import Pubsub from "../../util/pubsub";
 import "../../../css/page/order.scss";
 import {hashHistory } from 'react-router';
 import {orderDetail,memberList} from "../../components/memberAjax";
+import  Modal  from 'antd/lib/Modal';
 import Data from "./testData"
 export default class Detail extends React.Component{
     // 构造
@@ -20,9 +21,12 @@ export default class Detail extends React.Component{
             list:{
                     produceOrderProductVOs :[]
             },
-            employeesList :[]
+            employeesList :[],
+            modalImg:"",
+            visible:false
         };
         this.submit = this.submit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
     }
 
     componentDidMount() {
@@ -115,9 +119,15 @@ export default class Detail extends React.Component{
         $(node).focus();
         this.setState({list});
     }
+    clickImg(item){
+        this.setState({modalImg:item.productUrl,visible:true})
+    }
+    handleCancel(){
+        this.setState({visible:false})
+    }
     render(){
         let _this = this;
-        let {list,employeesList} = this.state;
+        let {list,employeesList,visible,modalImg } = this.state;
         let produceOrderProductVOs = list.produceOrderProductVOs;
         let type = localStorage.type;
         var openKey = 0;
@@ -142,10 +152,13 @@ export default class Detail extends React.Component{
                                 produceOrderProductVOs.map((item,i)=>{
                                     return(
                                         <div className="list left" key = {i}>
-                                            <div className = "clearfix">
-                                                <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
-                                                <img src={item.productUrl} onClick = {this.clickImg} className="upload-img" alt=""/>
-                                            </div>
+                                            {
+                                                item.productUrl!=""&&
+                                                <div className = "clearfix">
+                                                    <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
+                                                    <img src={item.productUrl} onClick = {this.clickImg.bind(this,item)} className="upload-img" alt=""/>
+                                                </div>
+                                            }
                                             <div className="m-b-20">
                                                 <label>产品名称：</label><span>{item.productName}</span>
                                             </div>
@@ -218,6 +231,9 @@ export default class Detail extends React.Component{
                             }
 
                         </div>
+                        <Modal visible={visible} footer={null} onCancel={this.handleCancel}>
+                            <img alt="example" style={{ width: '100%' }} src={modalImg} />
+                        </Modal>
                         <div className="m-t-30 not-print">
                             <RUI.Button className = "cancel-btn" onClick = {()=>{history.go(-1)}}>取消</RUI.Button>
                             <RUI.Button className = "primary" onClick = {this.submit} >确定</RUI.Button>

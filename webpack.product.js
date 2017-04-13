@@ -1,15 +1,16 @@
 
 'use strict';
+var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");  //css单独打包
 
 module.exports = {
     devtool : false,
     entry: {
-        index: './src/entry.js',
+        index:path.resolve( __dirname,'./src/entry.js'),
     },
     output: {
-        path: __dirname + '/dist', //打包后的文件存放的地方
+        path: path.resolve( __dirname, './dist'), //打包后的文件存放的地方
         filename: "[name].js", //打包后输出文件的文件名
     },
     externals: {
@@ -21,7 +22,7 @@ module.exports = {
             { test: /\.js$/, loader: "jsx!babel", include: /src/},
             { test: /\.css$/, loader: ExtractTextPlugin.extract("style", "css!postcss")},
             { test: /\.scss$/, loader: ExtractTextPlugin.extract("style", "css!postcss!sass")},
-            { test: /\.(png|jpg)$/, loader: 'url?limit=8192'}
+            { test: /\.(png|jpg)$/, loader: 'url?limit=8192&name=images/[name].[hash:8].[ext]'}
         ]
     },
 
