@@ -123,19 +123,49 @@ export default class Order extends React.Component{
         let {request,list} = this.state;
         let reList = $.extend(true,[],list);
         let query = this.props.location.query;
+        let flag = true;
+        let msg = "";
+        if(!request.orderName){
+            Pubsub.publish("showMsg",["wrong","请输入订单名称"]);
+            return false;
+        }
         reList.map((item)=>{
             item.produceOrderProductDetailDOs = item.produceOrderProductDetailVOs;
             item.producePrice = item.producePrice*100;
+            if(!item.productName){
+                flag = false;
+                msg = "请输入产品名称";
+                return;
+            }
+            if(!item.producePrice){
+                flag = false;
+                msg = "请输入产品单价";
+                return;
+            }
             delete item.produceOrderProductDetailVOs;
             delete item.orderNo;
             delete item.id;
             item.produceOrderProductDetailDOs.map((sItem)=>{
+                if(!sItem.shoeCode){
+                    flag = false;
+                    msg = "请输入鞋码";
+                    return;
+                }
+                if(!sItem.shoeNum){
+                    flag = false;
+                    msg = "请输入生产数量";
+                    return;
+                }
                 delete sItem.id;
                 delete sItem.orderNo;
                 delete sItem.produceOrderProductDistributeDOs;
                 delete sItem.produceOrderProductId;
             })
         });
+        if(!flag){
+            Pubsub.publish("showMsg",["wrong",msg]);
+            return false;
+        }
         request.orderNo = query.id || "";
         request.produceOrderProductVOs = reList; //produceOrderProductDetailDOs
         let url = "";
@@ -215,7 +245,7 @@ export default class Order extends React.Component{
                                             <RUI.Button className = "delete" onClick = {this.delete.bind(this,index)}>删除子订单</RUI.Button>
                                         }
                                         <div className = "clearfix">
-                                            <label htmlFor="" className = "left-label left"><i className="require">*</i>生产样图：</label>
+                                            <label htmlFor="" className = "left-label left">生产样图：</label>
                                             <Upload
                                                 callback = {this.uploadCallback.bind(this,index)}
                                                 uploadBtn = "p-l-100"
