@@ -32,7 +32,11 @@ const Depart = React.createClass({
             tailorStatus:{key:"全部",value:""},
             vampStatus:{key:"全部",value:""},
             qcStatus:{key:"全部",value:""},
-            soleStatus:{key:"全部",value:""}
+            soleStatus:{key:"全部",value:""},
+            smsIsOpen:1,
+            confirmMsg:"",
+            confirmUrl:"",
+            currListItem:{}
         }
     },
     componentDidMount(){
@@ -112,7 +116,8 @@ const Depart = React.createClass({
             case 5:  //机车完成
                 url = "/order/vampFinish.htm";
                 msg = "确认是否机车完成？";
-                break;
+                this.handleConfirm(url,msg,item);
+                return;
             case 7:  //底工完成
                 url = "/order/soleFinish.htm";
                 msg = "确认是否底工完成？";
@@ -120,7 +125,8 @@ const Depart = React.createClass({
             case 8:  //质检完成
                 url = "/order/qcFinish.htm";
                 msg = "确认是否质检完成？";
-                break;
+                this.handleConfirm(url,msg,item);
+                return;
         }
         RUI.DialogManager.confirm({
             message:msg,
@@ -143,6 +149,11 @@ const Depart = React.createClass({
             },
         });
 
+    },
+    handleConfirm(url,msg,item){
+        this.setState({smsIsOpen:1,confirmMsg:msg,currListItem:item,confirmUrl:url},()=>{
+            this.refs.dialog.show();
+        })
     },
     delete(item){
         let orderNo = item.orderNo;
@@ -217,9 +228,30 @@ const Depart = React.createClass({
         }
         return arr;
     },
+    dialogSubmit(){
+        let _this = this;
+        let {confirmUrl,smsIsOpen,currListItem} = this.state;
+        $.ajax({
+            url:commonBaseUrl+confirmUrl,
+            type:"post",
+            dataType:"json",
+            data:{d:JSON.stringify({orderNo:currListItem.orderNo,smsIsOpen})},
+            success(data){
+                if(data.success){
+                    Pubsub.publish("showMsg",["success","操作成功"]);
+                    _this.getList();
+                }else{
+                    Pubsub.publish("showMsg",["wrong",data.description]);
+                }
+            }
+        })
+    },
+    checkSms(e){
+        this.setState({smsIsOpen:e.data.selected});
+    },
     render(){
         let _this = this;
-        let {pager,list,handleSelect,isUrgent,tailorStatus,vampStatus,soleStatus,qcStatus} = this.state;
+        let {pager,list,handleSelect,isUrgent,tailorStatus,vampStatus,soleStatus,qcStatus,smsIsOpen,confirmMsg} = this.state;
         let type = localStorage.type;
         var openKey = 0;
         switch (type*1){
@@ -347,6 +379,14 @@ const Depart = React.createClass({
                         list.length==0 && <div className="no-data">暂时没有数据哦</div>
                     }
                     <Pager onPage ={this.getList} {...pager}/>
+                    <RUI.Dialog ref="dialog" title={"提示"} draggable={false} buttons="submit,cancel"  onSubmit={this.dialogSubmit}>
+                        <div style={{width:'300px', wordWrap:'break-word'}}>
+                            <div>{confirmMsg}</div>
+                            <div>
+                                <RUI.Checkbox selected = {smsIsOpen==1?1:0} onChange = {this.checkSms}>是否发送短信</RUI.Checkbox>
+                            </div>
+                        </div>
+                    </RUI.Dialog>
                 </div>
             </Layout>
         )

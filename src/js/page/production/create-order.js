@@ -25,6 +25,7 @@ export default class Order extends React.Component{
                 orderName:"",
                 orderNo:"",
                 isUrgent:1,
+                smsIsOpen:1,
                 deliveryTime:moment(new Date()).format("YYYY-MM-DD"),
 
             },
@@ -49,6 +50,7 @@ export default class Order extends React.Component{
         this.addSonOrder = this.addSonOrder.bind(this);
         this.select = this.select.bind(this);
         this.submit = this.submit.bind(this);
+        this.checkSms = this.checkSms.bind(this);
       }
 
     componentDidMount(){
@@ -206,6 +208,13 @@ export default class Order extends React.Component{
         list[index].produceOrderProductDetailVOs.splice(sonIndex,1);
         this.setState({});
     }
+    checkSms(e){
+        let {request} = this.state;
+        request.smsIsOpen = e.data.selected;
+        this.setState({request},()=>{
+            console.log(this.state.request);
+        });
+    }
     render(){
         let {imgUrl,list,request,defaultSelect,responseList} = this.state;
         let query = this.props.location.query;
@@ -231,6 +240,9 @@ export default class Order extends React.Component{
                         label = "交货时间："
                         onChange = {this.dateChange.bind(this)}
                     />
+                    <div className="m-t-10">
+                        <RUI.Checkbox selected = {request.smsIsOpen==1?1:0} onChange = {this.checkSms}>是否发送短信</RUI.Checkbox>
+                    </div>
                     {
                         editFlag &&
                         <RUI.Button className = "m-t-10 primary" onClick = {this.addSonOrder}>添加子订单</RUI.Button>
